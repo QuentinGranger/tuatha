@@ -1,0 +1,409 @@
+/* ─── Visio page — Lobby + Call ─── */
+
+.lobbyMain {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #070b14;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.lobbyCard {
+  width: 100%;
+  max-width: 480px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  @media (max-width: 480px) {
+    padding: 16px;
+    gap: 16px;
+  }
+}
+
+.lobbyTitle {
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  font-weight: 700;
+  text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
+}
+
+.lobbyRoom {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Camera preview */
+.previewWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #111827;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+
+  @media (max-width: 480px) {
+    border-radius: 12px;
+  }
+}
+
+.previewVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #0f172a;
+  transform: scaleX(-1);
+}
+
+.camOffOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.previewBadge {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.6);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Audio level meter */
+.meterWrap {
+  width: 100%;
+}
+
+.meterHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.meterLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.meterBars {
+  display: flex;
+  gap: 2px;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.meterBar {
+  flex: 1;
+  border-radius: 2px;
+  transition: background 0.08s;
+}
+
+/* Error */
+.lobbyError {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  font-size: 12px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Lobby controls */
+.lobbyControls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btnToggle {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+
+  @media (max-width: 360px) {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+}
+
+.btnToggleOn {
+  background: #1f2937;
+}
+
+.btnToggleOff {
+  background: #7f1d1d;
+}
+
+/* Join button */
+.btnJoin {
+  width: 100%;
+  padding: 14px 0;
+  border-radius: 12px;
+  border: none;
+  font-size: 15px;
+  font-weight: 700;
+  transition: all 0.2s;
+  letter-spacing: -0.2px;
+
+  @media (max-width: 480px) {
+    padding: 12px 0;
+    font-size: 14px;
+  }
+}
+
+.btnJoinReady {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btnJoinDisabled {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.3);
+  cursor: not-allowed;
+}
+
+/* Cancel */
+.btnCancel {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* ─── Call screen ─── */
+
+.callMain {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #070b14;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.callHeader {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  @media (max-width: 480px) {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+}
+
+.callHeaderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.callHeaderTitle {
+  font-size: 15px;
+  font-weight: 700;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
+}
+
+.callHeaderStatus {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.68);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+  }
+}
+
+/* Quality indicator */
+.qualityWrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.qualityBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+}
+
+.qualityBar {
+  width: 3px;
+  border-radius: 1px;
+}
+
+.qualityLabel {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* Video grid */
+.videoGrid {
+  flex: 1;
+  padding: 18px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (max-width: 640px) {
+    padding: 8px;
+    gap: 8px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
+.videoCard {
+  position: relative;
+  background: #111827;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  min-height: 240px;
+
+  @media (max-width: 640px) {
+    min-height: 0;
+    border-radius: 10px;
+  }
+}
+
+.videoEl {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #0f172a;
+}
+
+.videoBadge {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.55);
+
+  @media (max-width: 480px) {
+    left: 6px;
+    bottom: 6px;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
+
+/* Footer controls */
+.callFooter {
+  padding: 14px 18px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  @media (max-width: 480px) {
+    padding: 10px 8px calc(env(safe-area-inset-bottom, 0px) + 12px);
+    gap: 6px;
+  }
+}
+
+.btnControl {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+}
+
+.btnControlOn {
+  background: #1f2937;
+}
+
+.btnControlOff {
+  background: #7f1d1d;
+}
+
+.btnHangup {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: #991b1b;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+}
+
+.btnClose {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  white-space: nowrap;
+
+  @media (max-width: 480px) {
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+  }
+}

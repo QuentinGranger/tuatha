@@ -1,0 +1,252 @@
+$orange: #f47b20;
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$dot-color: #ffeb3b;
+
+/* ── Page ── */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  overflow: hidden;
+  padding: 20px;
+  gap: 16px;
+}
+
+/* ── Text content ── */
+.content {
+  text-align: center;
+}
+
+.errorCode {
+  font-size: 72px;
+  font-weight: 800;
+  letter-spacing: -3px;
+  line-height: 1;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, $dot-color 0%, $orange 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: $text-light;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: $text-muted;
+  max-width: 360px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ── Canvas ── */
+.canvasWrap {
+  position: relative;
+  border: 2px solid rgba(57, 73, 171, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0a0a1a;
+  box-shadow: 0 0 40px rgba(26, 35, 126, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.canvas {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* ── Overlay (idle / end) ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(2px);
+  z-index: 5;
+}
+
+.playBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 36px;
+  background: $orange;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Courier New', monospace;
+
+  svg { width: 20px; height: 20px; }
+
+  &:hover {
+    background: #d06919;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba($orange, 0.4);
+  }
+}
+
+.endScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.endEmoji {
+  font-size: 48px;
+}
+
+.endScore {
+  font-size: 20px;
+  font-weight: 700;
+  color: $dot-color;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+/* ── HUD ── */
+.hud {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: $text-muted;
+  letter-spacing: 1px;
+}
+
+.hudItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  span {
+    color: $dot-color;
+    font-weight: 700;
+  }
+}
+
+.life {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: $dot-color;
+  border-radius: 50%;
+  clip-path: polygon(100% 0%, 100% 100%, 55% 60%, 0% 100%, 0% 0%);
+}
+
+/* ── Controls row ── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.controlHint {
+  font-size: 11px;
+  color: $text-muted;
+  font-family: 'Courier New', monospace;
+}
+
+.homeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.06);
+  color: $text-muted;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover {
+    background: rgba($orange, 0.1);
+    border-color: rgba($orange, 0.3);
+    color: $text-light;
+  }
+}
+
+/* ── Mobile D-Pad ── */
+.mobileControls {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.dpadRow {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.dpadBtn {
+  width: 52px;
+  height: 52px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: $text-light;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.1s;
+
+  &:active {
+    background: rgba($orange, 0.25);
+    border-color: rgba($orange, 0.5);
+  }
+}
+
+.dpadCenter {
+  width: 52px;
+  height: 52px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .mobileControls { display: flex; }
+  .controlHint { display: none; }
+  .errorCode { font-size: 56px; }
+  .title { font-size: 18px; }
+  .subtitle { font-size: 12px; }
+  .hud { gap: 16px; font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .page { padding: 12px; gap: 10px; }
+  .errorCode { font-size: 44px; }
+  .canvasWrap { transform: scale(0.85); transform-origin: center; }
+  .homeBtn { padding: 8px 14px; font-size: 12px; }
+  .dpadBtn { width: 46px; height: 46px; font-size: 16px; }
+  .dpadCenter { width: 46px; height: 46px; }
+}

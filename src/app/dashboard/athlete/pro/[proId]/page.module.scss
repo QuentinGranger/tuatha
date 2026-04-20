@@ -1,0 +1,3945 @@
+$orange: #e67e22;
+$orange-light: #f0a500;
+$bg-gradient: linear-gradient(135deg, #0c2442 0%, #000000 100%);
+$border: rgba(255, 255, 255, 0.06);
+$card-bg: rgba(255, 255, 255, 0.03);
+
+.page {
+  min-height: 100dvh;
+  background: $bg-gradient;
+  color: #fff;
+  overflow-y: auto;
+}
+
+.container {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+}
+
+.loadingText {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  text-align: center;
+  padding: 60px 0;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 0;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+}
+
+// ─── Banner ───
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+}
+
+.bannerImg {
+  width: 100%;
+  height: 300%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.bannerFallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba($orange, 0.18) 0%, rgba($orange, 0.06) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  span {
+    font-size: 56px;
+    font-weight: 700;
+    color: rgba($orange, 0.5);
+    letter-spacing: 4px;
+  }
+}
+
+.bannerFade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70%;
+  background: linear-gradient(to bottom, transparent 0%, rgba(12, 36, 66, 0.6) 50%, #0a0a12 100%);
+  pointer-events: none;
+}
+
+.bannerInfo {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  right: 24px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+// ─── Back ───
+
+.backBtn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 8px 14px;
+  transition: background 0.2s;
+  z-index: 2;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+// ─── Pro Header ───
+
+.proName {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+  margin: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.proSpec {
+  font-size: 14px;
+  font-weight: 600;
+  color: $orange;
+}
+
+.proSince {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 2px;
+}
+
+// ─── Section ───
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: $orange;
+  margin-bottom: 18px;
+  margin-top: 0;
+
+  svg {
+    color: $orange;
+    flex-shrink: 0;
+  }
+}
+
+// ─── RDV Section ───
+
+.rdvSection {
+  margin-bottom: 32px;
+}
+
+.rdvList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nextRdvCard {
+  background: rgba($orange, 0.05);
+  border: 1px solid rgba($orange, 0.12);
+  border-radius: 14px;
+  padding: 20px 22px;
+  position: relative;
+}
+
+.nextRdvCardFirst {
+  background: rgba($orange, 0.08);
+  border-color: rgba($orange, 0.2);
+}
+
+.nextRdvContent {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.nextRdvDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 18px;
+  min-width: 140px;
+  flex-shrink: 0;
+}
+
+.nextRdvDay {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.nextRdvTime {
+  font-size: 13px;
+  color: $orange;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.nextRdvInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.nextRdvTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.nextRdvFormat {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 500;
+}
+
+.nextRdvDesc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+.rdvEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 36px 0;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  text-align: center;
+
+  svg {
+    color: rgba(255, 255, 255, 0.2);
+  }
+
+  span {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.rdvBookBtn {
+  background: $orange;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: $orange-light;
+  }
+}
+
+// ─── Tabs ───
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 3px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  svg {
+    flex-shrink: 0;
+    width: 15px; height: 15px;
+  }
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.tabActive {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+// Kept for backward compat — no longer changes layout
+.tabsCompact { border-color: $border; }
+
+.tabContent {
+  margin-bottom: 32px;
+}
+
+.tabEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 48px 0;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  text-align: center;
+
+  svg {
+    color: rgba(255, 255, 255, 0.15);
+  }
+
+  span {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+// ─── Plans ───
+
+.planGroup {
+  margin-bottom: 24px;
+}
+
+.planGroupTitle {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0 0 12px 0;
+}
+
+.planCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+
+  & + & {
+    margin-top: 10px;
+  }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.planCardCompleted {
+  opacity: 0.7;
+}
+
+.planCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.planCardLeft {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.planTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.planMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.planBadge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.planObj {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.planExCount {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.planProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.planProgressBar {
+  width: 60px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.planProgressFill {
+  height: 100%;
+  background: $orange;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.planProgressLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: $orange;
+  min-width: 30px;
+}
+
+.planChevron {
+  color: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.planChevronOpen {
+  transform: rotate(180deg);
+}
+
+.planCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.planBody {
+  padding: 0 18px 18px;
+  border-top: 1px solid $border;
+}
+
+.planDetailInfo {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.planInfoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.planInfoLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.planInstructions {
+  margin-top: 14px;
+  background: rgba($orange, 0.06);
+  border: 1px solid rgba($orange, 0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+
+  strong {
+    font-size: 12px;
+    font-weight: 600;
+    color: $orange;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin: 6px 0 0;
+  }
+}
+
+.planConclusion {
+  margin-top: 10px;
+  background: rgba(99, 102, 241, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.12);
+  border-radius: 10px;
+  padding: 12px 14px;
+
+  strong {
+    font-size: 12px;
+    font-weight: 600;
+    color: #818cf8;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin: 6px 0 0;
+  }
+}
+
+.planExSection {
+  margin-top: 16px;
+}
+
+.planExHeader {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 10px;
+}
+
+.planExEmpty {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+.planExercises {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+// ─── Exercise row ───
+
+.exerciseRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.exerciseNum {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.25);
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.exerciseThumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.exerciseThumbPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// ─── Exercise card (athlete, matching pro exCard layout) ───
+
+.exCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.exCardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.exCardLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.exPos {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba($orange, 0.12);
+  color: $orange;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.exCardInfo {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.exName {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.exCat {
+  font-size: 11px;
+  font-weight: 500;
+  color: $orange;
+  text-transform: capitalize;
+}
+
+.exCardActions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.exActionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid $border;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+
+  svg { flex-shrink: 0; }
+}
+
+.exPlayBtn {
+  color: rgba(255, 255, 255, 0.6);
+  &:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+}
+
+.exLogBtn {
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.2);
+  &:hover { background: rgba(34, 197, 94, 0.1); }
+}
+
+// ── Inline video player inside exercise card ──
+
+.exPlayerWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+
+.exPlayerIframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.exPlayerVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.exPlayerClose {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  &:hover { background: rgba(0, 0, 0, 0.85); }
+}
+
+// ── Exercise params (pill badges) ──
+
+.exParams {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.exParam {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px 8px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+// ── Consignes block ──
+
+.exConsignes {
+  background: rgba($orange, 0.05);
+  border: 1px solid rgba($orange, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+
+  strong {
+    font-size: 11px;
+    font-weight: 600;
+    color: $orange;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  p {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin: 4px 0 0;
+  }
+}
+
+// ── Alternative / Régression block ──
+
+.exAlternative {
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+
+  strong {
+    font-size: 11px;
+    font-weight: 600;
+    color: #818cf8;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  p {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.5;
+    margin: 4px 0 0;
+  }
+}
+
+// ─── Coach Sessions (Séances) ───
+
+.sessionCard {
+  composes: planCard;
+}
+
+.sessionBlocks {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sessionExercise {
+  composes: exCard;
+}
+
+.sessionPrescription {
+  background: rgba(99, 102, 241, 0.04);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.sessionFeedback {
+  background: rgba($orange, 0.04);
+  border: 1px solid rgba($orange, 0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.sessionFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.sessionFilterBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid $border;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.sessionFilterActive {
+  background: rgba($orange, 0.1);
+  border-color: rgba($orange, 0.3);
+  color: $orange;
+}
+
+.sessionFilterCount {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+
+  .sessionFilterActive & {
+    background: rgba($orange, 0.15);
+  }
+}
+
+.sessionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sessionTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.sessionTag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.15);
+}
+
+.sessionBlock {
+  & + & {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid $border;
+  }
+}
+
+.sessionBlockName {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 8px;
+}
+
+.sessionExDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+
+  span {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 2px 8px;
+    border-radius: 6px;
+  }
+}
+
+.sessionSection {
+  margin-top: 18px;
+
+  &:first-child {
+    margin-top: 14px;
+  }
+}
+
+.sessionSectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $orange;
+  margin-bottom: 10px;
+
+  svg {
+    flex-shrink: 0;
+    color: $orange;
+  }
+}
+
+// ── Feedback form ──
+
+.feedbackForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.feedbackField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feedbackLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feedbackValue {
+  font-weight: 600;
+  color: $orange;
+  font-size: 14px;
+}
+
+.feedbackSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $orange;
+    cursor: pointer;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+  }
+
+  &::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: $orange;
+    cursor: pointer;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+  }
+}
+
+.feedbackSliderLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 0 2px;
+}
+
+.feedbackInput {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  outline: none;
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+.feedbackTextarea {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  outline: none;
+  resize: vertical;
+  min-height: 60px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+.feedbackActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.feedbackCancel {
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: 1px solid $border;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.7);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.feedbackSave {
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: none;
+  background: $orange;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.feedbackReadonly {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feedbackEmpty {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+  margin: 0;
+}
+
+.feedbackEditBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba($orange, 0.3);
+  background: rgba($orange, 0.06);
+  color: $orange;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  align-self: flex-start;
+
+  &:hover {
+    background: rgba($orange, 0.12);
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+// ── Session log badge ──
+
+.exLogBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #22c55e;
+
+  svg { flex-shrink: 0; }
+}
+
+// ─── Log Exercise Modal ───
+
+.logOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.logModal {
+  background: #1a1a2e;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.logHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid $border;
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+  }
+}
+
+.logClose {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+}
+
+.logBody {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+// ── Exercise name in modal ──
+
+.logExName {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $border;
+  border-radius: 10px;
+
+  svg { flex-shrink: 0; color: $orange; }
+}
+
+// ── Fait / Pas fait toggle ──
+
+.logDoneToggle {
+  display: flex;
+  gap: 8px;
+}
+
+.logDoneBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid $border;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.logDoneBtnActive {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #22c55e;
+}
+
+.logDoneBtnNotDone {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+// ── Slider (range) fields ──
+
+.logSlider {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.logSliderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.logSliderValue {
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 36px;
+  text-align: right;
+}
+
+.logRange {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  cursor: pointer;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: currentColor;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  &::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: currentColor;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.logSliderLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+// ── Text / Date fields ──
+
+.logField {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  textarea {
+    padding: 10px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.03);
+    color: rgba(255, 255, 255, 0.85);
+    outline: none;
+    resize: vertical;
+    min-height: 50px;
+    font-family: inherit;
+    &:focus { border-color: $orange; }
+    &::placeholder { color: rgba(255, 255, 255, 0.2); }
+  }
+}
+
+.logDateInput {
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.85);
+  outline: none;
+  font-family: inherit;
+  color-scheme: dark;
+  &:focus { border-color: $orange; }
+}
+
+.logError {
+  font-size: 13px;
+  color: #ef4444;
+  margin: 0;
+}
+
+.logFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid $border;
+}
+
+.logCancelBtn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid $border;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  &:hover { color: #fff; background: rgba(255, 255, 255, 0.04); }
+}
+
+.logSubmitBtn {
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  background: #22c55e;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #16a34a; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.logSuccess {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 20px;
+  color: #22c55e;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+// ─── Video filters (search + category chips) ───
+
+.videoFilters {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.videoSearchInput {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid $border;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+
+  &:focus { border-color: $orange; }
+  &::placeholder { color: rgba(255, 255, 255, 0.25); }
+}
+
+.catChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.catChip {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border: 1px solid $border;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.catChipActive {
+  background: rgba($orange, 0.12);
+  border-color: rgba($orange, 0.3);
+  color: $orange;
+}
+
+// ─── Video grid (Mes Exercices tab) ───
+
+.videoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.videoCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.videoThumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.videoThumbPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+
+  svg {
+    color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.videoPlayBtn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+  backdrop-filter: blur(4px);
+
+  .videoThumb:hover & {
+    background: rgba($orange, 0.85);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+}
+
+.videoDuration {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.videoPlayer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.videoElement {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.videoClose {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.85);
+  }
+}
+
+.videoInfo {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.videoTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.videoCat {
+  font-size: 11px;
+  font-weight: 500;
+  color: $orange;
+  text-transform: capitalize;
+}
+
+.videoDesc {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  line-height: 1.4;
+  margin: 2px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.videoDur {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.videoPlanLink {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 4px;
+}
+
+.videoCardFooter {
+  padding: 0 14px 12px;
+  margin-top: auto;
+}
+
+.videoWatchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba($orange, 0.25);
+  background: rgba($orange, 0.08);
+  color: $orange;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    background: rgba($orange, 0.15);
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+// ─── Responsive ───
+
+// ─── Suivi Tab ───
+
+.suiviPlans { display: flex; flex-direction: column; gap: 20px; }
+
+.suiviCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.suiviCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.suiviTitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.suiviMeta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.suiviChip {
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba($orange, 0.1);
+  color: $orange;
+  border: 1px solid rgba($orange, 0.2);
+}
+
+.suiviPhase {
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.suiviProgress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.suiviProgressVal {
+  font-size: 14px;
+  font-weight: 700;
+  color: $orange;
+  white-space: nowrap;
+}
+
+.suiviProgressBar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.suiviProgressFill {
+  height: 100%;
+  background: $orange;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.suiviInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.suiviInfoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  span:last-child {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.suiviInfoLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.suiviRdv {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  border-radius: 10px;
+  padding: 12px 16px;
+
+  svg { flex-shrink: 0; margin-top: 2px; color: #60a5fa; }
+}
+
+.suiviRdvLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  display: block;
+}
+
+.suiviRdvValue {
+  font-size: 13px;
+  color: #fff;
+  font-weight: 500;
+  display: block;
+}
+
+.suiviRdvLoc {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  display: block;
+  margin-top: 2px;
+}
+
+.suiviNotes {
+  background: rgba($orange, 0.04);
+  border: 1px solid rgba($orange, 0.1);
+  border-radius: 10px;
+  padding: 12px 16px;
+
+  strong {
+    font-size: 11px;
+    color: $orange;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 6px 0 0;
+    white-space: pre-wrap;
+  }
+}
+
+.suiviExSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.suiviExTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+// ─── Signalements Tab ───
+
+.suiviSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.suiviSectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.suiviBtnPrimary {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  background: $orange;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+
+  &:hover { filter: brightness(1.1); }
+}
+
+.suiviAlertList { display: flex; flex-direction: column; gap: 8px; }
+
+.suiviAlertItem {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { border-color: rgba(255, 255, 255, 0.1); }
+}
+
+.suiviAlertItemOpen {
+  border-color: rgba($orange, 0.2);
+  background: rgba($orange, 0.02);
+}
+
+.suiviAlertHead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.suiviAlertDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.suiviAlertInfo { flex: 1; }
+
+.suiviAlertTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  display: block;
+}
+
+.suiviAlertMeta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+  display: block;
+}
+
+.suiviAlertBadge {
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  border: 1px solid;
+  white-space: nowrap;
+  background: transparent;
+}
+
+.suiviAlertDetail {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid $border;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.suiviAlertDesc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.suiviAlertPlan {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
+.suiviAlertClosed {
+  font-size: 12px;
+  color: #4ade80;
+  margin: 0;
+}
+
+// ─── Historique Tab ───
+
+.suiviHistList { display: flex; flex-direction: column; gap: 10px; }
+
+.suiviHistCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { border-color: rgba(255, 255, 255, 0.1); }
+}
+
+.suiviHistCardOpen {
+  border-color: rgba($orange, 0.2);
+  background: rgba($orange, 0.02);
+}
+
+.suiviHistTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.suiviHistTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  display: block;
+}
+
+.suiviHistPathology {
+  font-size: 12px;
+  color: $orange;
+  display: block;
+  margin-top: 2px;
+}
+
+.suiviHistScore {
+  font-size: 14px;
+  font-weight: 700;
+  color: #22c55e;
+  white-space: nowrap;
+}
+
+.suiviHistMeta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.suiviHistDetail {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid $border;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.suiviHistRow {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+
+  strong {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.suiviHistExList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 12px;
+}
+
+.suiviHistExItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+// ─── Tab Badge ───
+
+.tabBadge {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 10px;
+  min-width: 16px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 0 16px 24px;
+  }
+
+  .banner {
+    height: 240px;
+  }
+
+  .bannerInfo {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .proName {
+    font-size: 22px;
+  }
+
+  .nextRdvContent {
+    flex-direction: column;
+  }
+
+  .nextRdvDate {
+    align-self: stretch;
+    min-width: 0;
+  }
+
+  .tabs {
+    margin-bottom: 16px;
+    gap: 0;
+  }
+
+  .tab {
+    font-size: 12px;
+    padding: 6px 10px;
+    gap: 4px;
+
+    svg { width: 13px; height: 13px; }
+  }
+
+  .planCardHeader {
+    padding: 14px 14px;
+    flex-wrap: wrap;
+  }
+
+  .planProgress {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  .planProgressBar {
+    flex: 1;
+  }
+
+  .exCardTop {
+    flex-wrap: wrap;
+  }
+
+  .exCardActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .videoGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .suiviCardHeader {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .suiviProgress {
+    width: 100%;
+  }
+
+  .suiviInfoGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .suiviSectionHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .suiviBtnPrimary {
+    text-align: center;
+  }
+
+  .docCard {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .docDlBtn {
+    align-self: flex-end;
+  }
+
+  /* Medical tab responsive */
+  .medSubTabs {
+    gap: 4px; padding-bottom: 10px;
+  }
+
+  .medSubTab {
+    padding: 5px 10px; font-size: 11px; gap: 4px;
+  }
+
+  .medGrid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .medCard {
+    padding: 14px;
+  }
+
+  .medCardTypeWrap {
+    min-width: 0;
+  }
+
+  .medCardType {
+    font-size: 12px;
+  }
+
+  .medPhaseChips {
+    gap: 4px;
+  }
+
+  .medPhaseChip {
+    padding: 4px 10px; font-size: 11px;
+  }
+
+  .medPhaseDetail {
+    padding: 12px;
+  }
+
+  .medModal {
+    max-height: 90vh;
+  }
+
+  .medModalInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .medModalBody {
+    padding: 16px;
+  }
+
+  .medModalFooter {
+    flex-wrap: wrap;
+    padding: 12px 16px;
+  }
+}
+
+/* ═══════════════ DOCUMENTS SECTION ═══════════════ */
+
+.docSection {
+  padding: 0 24px 32px;
+}
+
+.docList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.docCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.docIconBox {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+
+.docEmoji {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.docInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.docName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.docMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 4px;
+}
+
+.docCat {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.docDirection {
+  font-size: 12px;
+}
+
+.docReceived {
+  color: #60a5fa;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.docSent {
+  color: #f97316;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.docNote {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  font-style: italic;
+}
+
+.docDlBtn {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.35);
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f97316;
+  }
+}
+
+/* ── Drop Zone (upload modal) ── */
+
+.docDropZone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 28px 16px;
+  margin-bottom: 14px;
+  border: 2px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+
+  &:hover {
+    border-color: rgba(249, 115, 22, 0.4);
+    background: rgba(249, 115, 22, 0.03);
+  }
+}
+
+.docDropPreview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.docDropName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  word-break: break-all;
+  text-align: center;
+}
+
+.docDropSize {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+// ═══════════════════════════════════════════
+// ── Indicateurs Tab ──
+// Mirrors coach /dashboard/coach/indicateurs
+// ═══════════════════════════════════════════
+
+$indic-radius: 14px;
+$indic-card: $card-bg;
+$indic-muted: rgba(255,255,255,0.4);
+
+/* ─── Header controls ─── */
+.headerControls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.periodSelect {
+  background: $indic-card; border: 1px solid $border; color: #fff;
+  padding: 8px 14px; border-radius: 10px; font-size: 13px;
+  cursor: pointer; outline: none;
+  &:focus { border-color: $orange; }
+  option { background: #1a1a2e; color: #fff; }
+}
+.ctaSecondary {
+  background: $indic-card; color: $indic-muted; border: 1px solid $border;
+  padding: 8px 18px; border-radius: 10px; font-size: 13px; cursor: pointer;
+  transition: all .15s; margin-left: auto;
+  &:hover { border-color: rgba(255,255,255,0.15); color: #fff; }
+}
+
+.filterChips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; }
+.chip {
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  color: $indic-muted; padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; cursor: pointer; transition: all .15s;
+  &:hover { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+}
+.chipActive {
+  @extend .chip;
+  background: rgba($orange, 0.15); border-color: rgba($orange, 0.3); color: $orange;
+}
+.chipSep {
+  width: 1px; height: 22px; background: rgba(255,255,255,0.1);
+  align-self: center; margin: 0 4px;
+}
+
+/* ─── KPI Cards ─── */
+.kpiGrid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 18px;
+  @media (max-width: 700px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 420px) { grid-template-columns: 1fr; }
+}
+.kpiCard {
+  background: $indic-card; border: 1px solid $border; border-radius: $indic-radius;
+  padding: 20px; position: relative; overflow: hidden;
+  &::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+}
+.kpiCard_adherence::before { background: $orange; }
+.kpiCard_volume::before { background: #4fc3f7; }
+.kpiCard_intensity::before { background: #ab47bc; }
+.kpiCard_risk_ok::before { background: #66bb6a; }
+.kpiCard_risk_watch::before { background: #ffa726; }
+.kpiCard_risk_alert::before { background: #ef5350; }
+
+.kpiLabel { font-size: 11px; color: $indic-muted; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.kpiValue { font-size: 28px; font-weight: 700; color: #fff; line-height: 1; }
+.kpiSub { font-size: 12px; color: $indic-muted; margin-top: 6px; }
+.kpiDelta {
+  display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px;
+  border-radius: 10px; margin-left: 6px;
+}
+.kpiDeltaUp { background: rgba(#66bb6a, 0.15); color: #66bb6a; }
+.kpiDeltaDown { background: rgba(#ef5350, 0.15); color: #ef5350; }
+.kpiHint { font-size: 11px; color: rgba(255,255,255,0.2); font-style: italic; margin-top: 8px; }
+
+/* ─── Card generic ─── */
+.card {
+  background: $indic-card; border: 1px solid $border; border-radius: $indic-radius;
+  padding: 24px; margin-bottom: 14px;
+}
+.cardTitle {
+  font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cardTitleIcon { width: 18px; height: 18px; color: $orange; flex-shrink: 0; }
+.cardTitleRight { margin-left: auto; font-size: 11px; font-weight: 400; color: $indic-muted; }
+
+/* ─── Chart section ─── */
+.chartToggles { display: flex; gap: 6px; margin-bottom: 10px; }
+.chartToggle {
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  color: $indic-muted; padding: 5px 14px; border-radius: 8px;
+  font-size: 12px; cursor: pointer; transition: all .15s;
+  &:hover { color: #fff; }
+}
+.chartToggleActive {
+  @extend .chartToggle;
+  background: rgba($orange, 0.15); border-color: rgba($orange, 0.3); color: $orange;
+}
+.chartCanvas {
+  width: 100%; position: relative;
+  background: rgba(0,0,0,0.15); border-radius: 10px;
+  overflow-x: auto; padding-bottom: 4px;
+}
+.chartSvg { width: 100%; height: auto; min-height: 180px; }
+.chartGrid { stroke: rgba(255,255,255,0.05); stroke-width: 1; }
+.chartBarPlanned { fill: rgba(255,255,255,0.1); rx: 3; }
+.chartBarRealized { fill: $orange; rx: 3; opacity: 0.8; }
+.chartLineRealized { fill: none; stroke: $orange; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.chartDot {
+  fill: $orange; cursor: pointer; transition: r .15s;
+  &:hover { r: 6; }
+}
+.chartLabel { fill: $indic-muted; font-size: 10px; text-anchor: middle; }
+.chartNoData {
+  text-align: center; color: rgba(255,255,255,0.2); font-size: 13px; padding: 40px 0;
+}
+
+/* ─── Quality / Feedback (prefixed qual* to avoid conflicts) ─── */
+.qualGrid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;
+  @media (max-width: 520px) { grid-template-columns: 1fr; }
+}
+.qualBox {
+  background: rgba(0,0,0,0.15); border-radius: 10px; padding: 16px;
+}
+.qualLabel { font-size: 11px; color: $indic-muted; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.qualValue { font-size: 22px; font-weight: 700; color: #fff; }
+.qualSub { font-size: 12px; color: $indic-muted; margin-top: 4px; }
+
+.commentsList { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.commentsTitle { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px; }
+.commentItem {
+  background: rgba(0,0,0,0.15); border-radius: 10px; padding: 14px;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.commentMeta { font-size: 11px; color: $indic-muted; display: flex; justify-content: space-between; }
+.commentText { font-size: 13px; color: rgba(255,255,255,0.7); font-style: italic; }
+.noFeedback { text-align: center; font-size: 13px; color: rgba(255,255,255,0.25); padding: 20px; }
+
+/* ─── Alerts ─── */
+.alertsList { display: flex; flex-direction: column; gap: 8px; }
+.alertItem {
+  display: flex; align-items: center; gap: 12px; padding: 14px;
+  border-radius: 10px; background: rgba(0,0,0,0.15);
+}
+.alertDot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.alertDot_red { background: #ef5350; }
+.alertDot_orange { background: #ffa726; }
+.alertDot_yellow { background: #ffee58; }
+.alertMsg { font-size: 13px; color: rgba(255,255,255,0.7); flex: 1; }
+.alertActions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.alertActionBtn {
+  flex: 1; background: rgba($orange, 0.08); border: 1px solid rgba($orange, 0.25);
+  color: $orange; padding: 8px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 500; cursor: pointer; transition: all .15s;
+  &:hover { background: rgba($orange, 0.15); }
+}
+.alertEmpty { font-size: 13px; color: rgba(#66bb6a, 0.7); text-align: center; padding: 20px; }
+
+/* ─── Videos ─── */
+.videosList { display: flex; flex-direction: column; gap: 8px; }
+.videoItem {
+  display: flex; align-items: center; gap: 12px; padding: 10px;
+  background: rgba(0,0,0,0.15); border: 1px solid $border; border-radius: 10px;
+  cursor: pointer; transition: background .15s;
+  &:hover { background: rgba(255,255,255,0.05); }
+}
+.videoThumb {
+  position: relative; width: 72px; height: 48px; border-radius: 6px;
+  overflow: hidden; flex-shrink: 0; background: #000;
+  video { width: 100%; height: 100%; object-fit: cover; }
+}
+.videoPlay {
+  position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: center; background: rgba(0,0,0,0.4);
+}
+.videoInfo { flex: 1; min-width: 0; }
+.videoName {
+  font-size: 13px; font-weight: 600; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.videoMeta { display: flex; gap: 8px; font-size: 11px; color: $indic-muted; margin-top: 2px; }
+.videoNote { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 2px; font-style: italic; }
+.videoViewed { font-size: 11px; color: #66bb6a; flex-shrink: 0; }
+.videoNotViewed { width: 8px; height: 8px; border-radius: 50%; background: $orange; flex-shrink: 0; }
+.videoShareBtn {
+  flex-shrink: 0; background: none; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px; padding: 6px; cursor: pointer; color: rgba(255,255,255,0.4);
+  transition: all 0.15s; display: flex; align-items: center; justify-content: center;
+  &:hover { color: $orange; border-color: rgba($orange, 0.3); background: rgba($orange, 0.08); }
+}
+
+/* ─── Video upload ─── */
+.videoUploadBtn {
+  margin-left: auto;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px;
+  background: linear-gradient(135deg, $orange, #ff9a44);
+  color: #fff; font-size: 12px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.85; }
+}
+.videoUploadZone {
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 12px; padding: 16px;
+  margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;
+}
+.videoUploadPreview {
+  display: flex; align-items: center; gap: 10px;
+}
+.videoUploadIcon { font-size: 28px; }
+.videoUploadFileInfo { flex: 1; min-width: 0; }
+.videoUploadFileName {
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.videoUploadFileSize { font-size: 11px; color: $indic-muted; }
+.videoUploadRemove {
+  background: none; border: none; color: rgba(255,255,255,0.35);
+  font-size: 16px; cursor: pointer; padding: 4px;
+  &:hover { color: #ef4444; }
+}
+.videoUploadNote {
+  width: 100%; padding: 8px 12px; border-radius: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+  color: #fff; font-size: 13px; font-family: inherit;
+  outline: none; resize: vertical;
+  &::placeholder { color: rgba(255,255,255,0.25); }
+}
+.videoUploadError { color: #ef4444; font-size: 12px; }
+.videoUploadSubmit {
+  align-self: flex-end;
+  padding: 8px 20px; border-radius: 8px;
+  background: linear-gradient(135deg, $orange, #ff9a44);
+  color: #fff; font-size: 13px; font-weight: 600;
+  border: none; cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.85; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+.videoEmptyState {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; padding: 32px; cursor: pointer;
+  border: 2px dashed rgba(255,255,255,0.08); border-radius: 14px;
+  transition: border-color 0.15s;
+  color: rgba(255,255,255,0.4);
+  &:hover { border-color: rgba($orange, 0.3); }
+  svg { stroke: rgba(255,255,255,0.2); }
+  span { font-size: 13px; }
+}
+.videoEmptyHint { font-size: 11px; color: rgba(255,255,255,0.25); }
+.videoEmptyActions {
+  display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap; justify-content: center;
+}
+.videoEmptyBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 10px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+  svg { stroke: rgba(255,255,255,0.4); }
+  &:hover { background: rgba($orange, 0.1); border-color: rgba($orange, 0.3); color: #fff; svg { stroke: $orange; } }
+}
+
+/* ─── Drill-down overlay & modal ─── */
+.drillOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+}
+.drillPanel {
+  background: #1a1a2e; border: 1px solid $border; border-radius: $indic-radius;
+  width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; padding: 24px;
+}
+.drillTitle { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 14px; }
+.drillItem {
+  display: flex; align-items: center; gap: 12px; padding: 10px;
+  border-radius: 8px; margin-bottom: 6px;
+  background: rgba(0,0,0,0.15);
+}
+.drillItemInfo { flex: 1; min-width: 0; }
+.drillItemName { font-size: 13px; color: #fff; font-weight: 500; }
+.drillItemMeta { font-size: 11px; color: $indic-muted; }
+.drillItemStatus {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,255,255,0.06); color: $indic-muted;
+}
+
+/* ─── Video preview modal ─── */
+.videoModal {
+  background: #1a1a2e; border: 1px solid rgba(255,255,255,0.1);
+  border-radius: $indic-radius; max-width: 720px; width: 95%;
+  max-height: 90vh; overflow: auto;
+}
+.videoModalHeader {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 16px 18px; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.videoModalTitle { font-size: 15px; font-weight: 600; color: #fff; }
+.videoModalMeta { font-size: 12px; color: $indic-muted; margin-top: 2px; }
+.videoModalActions {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+.videoModalShareBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+  &:hover { background: rgba($orange, 0.1); border-color: rgba($orange, 0.3); color: #fff; svg { stroke: $orange; } }
+}
+.videoModalClose {
+  background: none; border: none; color: $indic-muted;
+  font-size: 18px; cursor: pointer; padding: 4px;
+  &:hover { color: #fff; }
+}
+.videoModalBody { padding: 16px 18px; }
+
+/* ═══════════════ NUTRI PLAN ═══════════════ */
+
+.nutriPlanSelector {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px;
+}
+.nutriPlanPill {
+  padding: 6px 14px; border-radius: 20px; border: 1px solid $border;
+  background: transparent; color: rgba(255,255,255,0.5); font-size: 12px;
+  font-weight: 500; cursor: pointer; transition: all 0.2s;
+  &:hover { border-color: rgba($orange,0.4); color: rgba(255,255,255,0.8); }
+}
+.nutriPlanPillActive {
+  background: rgba($orange,0.15); border-color: $orange; color: $orange;
+}
+.nutriPlanVersion { opacity: 0.6; margin-left: 4px; }
+
+.nutriPlanHeader {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.nutriPlanName { font-size: 16px; font-weight: 600; color: #fff; margin: 0; }
+.nutriPlanBadge {
+  font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  background: rgba($orange,0.15); color: $orange;
+}
+
+.nutriObjGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.nutriObjCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 14px;
+}
+.nutriObjLabel { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+.nutriObjValue {
+  font-size: 18px; font-weight: 700; color: #fff;
+  span { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.4); }
+}
+.nutriObjBar {
+  height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08);
+  margin-top: 8px; overflow: hidden;
+}
+.nutriObjFill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+
+.nutriNote {
+  display: flex; align-items: flex-start; gap: 8px; padding: 12px 14px;
+  background: rgba($orange,0.06); border: 1px solid rgba($orange,0.15);
+  border-radius: 10px; margin-bottom: 16px;
+  font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5;
+  svg { flex-shrink: 0; margin-top: 2px; stroke: $orange; }
+}
+
+.nutriMealList { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.nutriMealCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  overflow: hidden; transition: border-color 0.2s;
+  &:hover { border-color: rgba(255,255,255,0.12); }
+}
+.nutriMealHead {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  cursor: pointer; user-select: none;
+}
+.nutriMealInfo { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+.nutriMealName { font-size: 14px; font-weight: 600; color: #fff; }
+.nutriMealTime {
+  font-size: 11px; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.06);
+  padding: 2px 8px; border-radius: 8px;
+}
+.nutriMealTotals { display: flex; gap: 10px; align-items: center; }
+.nutriMealKcal { font-size: 13px; font-weight: 600; color: $orange; }
+.nutriMealMacro { font-size: 11px; font-weight: 500; }
+.nutriChevron {
+  color: rgba(255,255,255,0.3); transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.nutriMealBody {
+  border-top: 1px solid $border; padding: 12px 16px;
+}
+.nutriEmptyItems { font-size: 12px; color: rgba(255,255,255,0.35); text-align: center; padding: 12px; }
+
+.nutriFoodItem { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); &:last-child { border-bottom: none; } }
+.nutriFoodMain {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+}
+.nutriFoodName { font-size: 13px; color: #fff; font-weight: 500; min-width: 100px; }
+.nutriFoodQty { font-size: 12px; color: rgba(255,255,255,0.5); }
+.nutriFoodKcal { font-size: 12px; color: $orange; font-weight: 600; }
+.nutriFoodMacro { font-size: 11px; color: rgba(255,255,255,0.4); }
+.nutriOptional {
+  font-size: 10px; color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.06);
+  padding: 1px 6px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.3px;
+}
+
+.nutriAlts { margin-top: 6px; padding-left: 12px; }
+.nutriAltItem {
+  display: flex; align-items: center; gap: 6px; padding: 4px 0;
+  font-size: 12px; color: rgba(255,255,255,0.5);
+}
+.nutriAltIcon { color: rgba(255,255,255,0.25); font-size: 13px; }
+.nutriAltKcal { color: rgba($orange,0.7); font-weight: 500; }
+.nutriAltConstraint {
+  font-size: 10px; background: rgba(139,92,246,0.15); color: #a78bfa;
+  padding: 1px 6px; border-radius: 6px;
+}
+
+/* Journal */
+.nutriJournalSection {
+  margin-top: 20px; padding-top: 20px; border-top: 1px solid $border;
+}
+.nutriJournalTitle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 14px; font-weight: 600; color: #fff; margin: 0 0 14px;
+  svg { stroke: $orange; }
+}
+
+.nutriJournalForm {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 16px; margin-bottom: 16px;
+}
+.nutriJournalRow {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 10px; margin-bottom: 12px;
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  @media (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
+}
+.nutriJournalField {
+  display: flex; flex-direction: column; gap: 4px;
+  span { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.3px; }
+  input {
+    background: rgba(255,255,255,0.06); border: 1px solid $border;
+    border-radius: 8px; padding: 8px 10px; color: #fff; font-size: 14px;
+    font-weight: 600; outline: none; transition: border-color 0.2s;
+    width: 100%; min-width: 0; box-sizing: border-box;
+    &:focus { border-color: $orange; }
+    &::placeholder { color: rgba(255,255,255,0.2); }
+  }
+}
+.nutriJournalActions {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  @media (max-width: 400px) {
+    flex-direction: column; align-items: stretch; gap: 10px;
+  }
+}
+.nutriJournalCheck {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: rgba(255,255,255,0.6); cursor: pointer;
+  input { accent-color: $orange; width: 16px; height: 16px; }
+}
+.nutriJournalSubmit {
+  padding: 8px 20px; border-radius: 8px; border: none;
+  background: $orange; color: #fff; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.2s;
+  &:hover { opacity: 0.9; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+  @media (max-width: 400px) { width: 100%; text-align: center; }
+}
+
+.nutriJournalHistory {
+  margin-top: 8px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+.nutriJournalHistoryHeader {
+  display: grid; grid-template-columns: minmax(70px, 1fr) repeat(5, 48px) 28px;
+  gap: 4px; padding: 6px 10px; font-size: 10px; color: rgba(255,255,255,0.35);
+  text-transform: uppercase; letter-spacing: 0.4px; border-bottom: 1px solid $border;
+  min-width: 360px;
+}
+.nutriJournalHistoryRow {
+  display: grid; grid-template-columns: minmax(70px, 1fr) repeat(5, 48px) 28px;
+  gap: 4px; padding: 8px 10px; font-size: 13px; color: rgba(255,255,255,0.7);
+  align-items: center; border-bottom: 1px solid rgba(255,255,255,0.04);
+  min-width: 360px;
+  &:last-child { border-bottom: none; }
+  svg { display: block; }
+}
+
+/* ═══════════════ NUTRI BILAN (athlete) ═══════════════ */
+
+.nutriBilanSection {
+  margin-top: 24px; padding-top: 24px; border-top: 1px solid $border;
+}
+.nutriBilanHeader {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.nutriBilanTitle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 15px; font-weight: 600; color: #fff; margin: 0;
+  svg { stroke: $orange; }
+}
+.nutriBilanPeriods { display: flex; gap: 4px; }
+.nutriBilanPeriodBtn {
+  padding: 4px 12px; border-radius: 6px; border: 1px solid $border;
+  background: transparent; color: rgba(255,255,255,0.45); font-size: 12px;
+  font-weight: 500; cursor: pointer; transition: all 0.2s;
+  &:hover { border-color: rgba($orange,0.3); color: rgba(255,255,255,0.7); }
+}
+.nutriBilanPeriodActive {
+  background: rgba($orange,0.12); border-color: $orange; color: $orange;
+}
+
+.nutriGoalBadge {
+  display: inline-block; padding: 3px 10px; border-radius: 8px;
+  background: rgba($orange,0.1); color: $orange; font-size: 12px;
+  font-weight: 600; margin-bottom: 14px;
+}
+
+/* Plan banner (athlete read-only) */
+.nutriPlanBanner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: 10px; margin-bottom: 14px;
+  background: rgba(255,255,255,0.02); border: 1px solid $border;
+  > svg { flex-shrink: 0; color: $orange; }
+}
+.nutriPlanBannerInfo { flex: 1; min-width: 0; }
+.nutriPlanBannerName {
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+.nutriPlanBannerVersion {
+  font-size: 11px; color: $orange; font-weight: 600; margin-left: 4px;
+}
+.nutriPlanBannerMeta {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;
+}
+.nutriPlanDot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+
+/* Objectives grid (athlete read-only) */
+.nutriObjCardAthlete {
+  display: flex; align-items: center; gap: 10px;
+  background: $card-bg; border: 1px solid $border; border-radius: 10px;
+  padding: 12px 14px;
+}
+.nutriObjIconSvg {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  svg { width: 16px; height: 16px; }
+}
+.nutriObjLabelAthlete {
+  font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+.nutriObjValueAthlete {
+  font-size: 15px; font-weight: 700; color: #fff; margin-top: 1px;
+}
+
+/* KPI grid */
+.nutriKpiGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.nutriKpiCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 14px; display: flex; flex-direction: column; gap: 8px;
+}
+.nutriKpiIcon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nutriKpiContent { flex: 1; }
+.nutriKpiLabel { font-size: 11px; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
+.nutriKpiValue {
+  font-size: 20px; font-weight: 700; color: #fff;
+  span { font-size: 12px; font-weight: 400; color: rgba(255,255,255,0.4); margin-left: 2px; }
+}
+.nutriKpiSub { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.nutriKpiBar {
+  height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden;
+}
+.nutriKpiFill { height: 100%; border-radius: 2px; transition: width 0.4s ease; }
+.nutriKpiMacros {
+  display: flex; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.7);
+  b { color: #fff; font-weight: 600; }
+}
+.nutriKpiTrends {
+  display: flex; flex-direction: column; gap: 2px; font-size: 12px; color: rgba(255,255,255,0.6);
+}
+
+/* Chart card */
+.nutriChartCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 16px; margin-bottom: 16px;
+}
+.nutriChartLabel { font-size: 13px; font-weight: 600; color: #fff; margin: 0 0 12px; }
+
+.nutriKcalChart { position: relative; height: 140px; }
+.nutriKcalTarget {
+  position: absolute; left: 0; right: 0; border-top: 1px dashed rgba($orange,0.4);
+  z-index: 1;
+}
+.nutriKcalTargetLabel {
+  position: absolute; left: 4px; top: -16px;
+  font-size: 10px; color: $orange; font-weight: 600;
+}
+.nutriKcalBars {
+  display: flex; align-items: flex-end; gap: 4px; height: 100%;
+}
+.nutriKcalBarWrap {
+  flex: 1; display: flex; flex-direction: column; align-items: center; height: 100%; justify-content: flex-end;
+}
+.nutriKcalBar {
+  width: 100%; max-width: 28px; border-radius: 4px 4px 0 0;
+  background: rgba($orange,0.6); transition: height 0.3s ease;
+}
+.nutriKcalBarLow { background: rgba(239,68,68,0.6); }
+.nutriKcalBarHigh { background: rgba(239,68,68,0.8); }
+.nutriKcalBarLabel { font-size: 9px; color: rgba(255,255,255,0.3); margin-top: 4px; }
+
+/* Macros grid */
+.nutriMacrosGrid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px;
+}
+.nutriMacroCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px; padding: 14px;
+}
+.nutriMacroHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.nutriMacroName { font-size: 13px; font-weight: 600; color: #fff; }
+.nutriMacroPct { font-size: 14px; font-weight: 700; }
+.nutriMacroBarOuter {
+  height: 6px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 6px;
+}
+.nutriMacroBarInner { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
+.nutriMacroValues {
+  display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5);
+}
+.nutriMacroTarget { color: rgba(255,255,255,0.3); }
+
+/* Body composition */
+.nutriBodySection { margin-bottom: 16px; }
+.nutriBodyHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.nutriBodyAddBtn {
+  padding: 5px 12px; border-radius: 8px; border: 1px solid $border;
+  background: rgba($orange, 0.08); color: $orange; font-size: 11px;
+  font-weight: 600; cursor: pointer; transition: all 0.15s;
+  &:hover { background: rgba($orange, 0.18); border-color: $orange; }
+}
+.nutriBodyGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px; margin-bottom: 8px;
+}
+.nutriBodyCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 10px; padding: 12px;
+}
+.nutriBodyLabel { font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 4px; }
+.nutriBodyValue {
+  font-size: 18px; font-weight: 700; color: #fff;
+  span { font-size: 11px; font-weight: 400; color: rgba(255,255,255,0.35); margin-left: 2px; }
+}
+.nutriBodyDiff { font-size: 11px; font-weight: 600; margin-top: 2px; }
+.nutriBodyTag {
+  display: inline-block; font-size: 9px; font-weight: 600; padding: 2px 7px;
+  border-radius: 6px; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.nutriBodyTagGood { background: rgba(34,197,94,0.12); color: #22c55e; }
+.nutriBodyTagWarn { background: rgba(249,115,22,0.12); color: #f97316; }
+.nutriBodyMeta { font-size: 11px; color: rgba(255,255,255,0.3); }
+
+/* Measure modal */
+.nutriMeasureOverlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center;
+}
+.nutriMeasureModal {
+  background: $card-bg; border: 1px solid $border; border-radius: 14px;
+  width: 90%; max-width: 380px; overflow: hidden;
+}
+.nutriMeasureModalHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px 12px; border-bottom: 1px solid $border;
+  h4 { margin: 0; font-size: 15px; font-weight: 700; color: #fff; }
+}
+.nutriMeasureModalClose {
+  background: none; border: none; color: rgba(255,255,255,0.4); font-size: 20px;
+  cursor: pointer; padding: 0 4px;
+  &:hover { color: #fff; }
+}
+.nutriMeasureModalBody { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+.nutriMeasureField {
+  display: flex; flex-direction: column; gap: 4px;
+  label { font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 500; }
+  input {
+    padding: 8px 12px; border-radius: 8px; border: 1px solid $border;
+    background: rgba(255,255,255,0.04); color: #fff; font-size: 14px;
+    &::placeholder { color: rgba(255,255,255,0.2); }
+    &:focus { outline: none; border-color: $orange; }
+  }
+}
+.nutriMeasureModalFooter {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding: 12px 18px 16px; border-top: 1px solid $border;
+}
+.nutriMeasureCancelBtn {
+  padding: 7px 14px; border-radius: 8px; border: 1px solid $border;
+  background: none; color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 500;
+  cursor: pointer;
+  &:hover { color: #fff; border-color: rgba(255,255,255,0.2); }
+}
+.nutriMeasureSaveBtn {
+  padding: 7px 16px; border-radius: 8px; border: none;
+  background: $orange; color: #fff; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: opacity 0.15s;
+  &:hover { opacity: 0.9; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+/* Évolutions */
+.nutriEvoSection { margin-bottom: 16px; }
+.nutriEvoHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px; gap: 10px; flex-wrap: wrap;
+}
+.nutriEvoNav { display: flex; gap: 4px; }
+.nutriEvoNavBtn {
+  padding: 5px 12px; border-radius: 20px; border: 1px solid $border;
+  background: transparent; color: rgba(255,255,255,0.5); font-size: 11px;
+  font-weight: 500; cursor: pointer; transition: all 0.2s;
+  &:hover { border-color: rgba($orange, 0.4); color: rgba(255,255,255,0.8); }
+}
+.nutriEvoNavActive {
+  background: rgba($orange, 0.15); border-color: $orange; color: $orange;
+}
+.nutriEvoCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 16px;
+}
+.nutriEvoMeta {
+  display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px;
+}
+.nutriEvoLast { font-size: 22px; font-weight: 700; color: #fff; }
+.nutriEvoDiff { font-size: 13px; font-weight: 600; }
+.nutriEvoPeriod { font-size: 11px; color: rgba(255,255,255,0.4); }
+.nutriEvoSvg { width: 100%; height: 100px; }
+.nutriEvoLabels {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 6px;
+}
+.nutriEvoEmpty {
+  padding: 24px; text-align: center; color: rgba(255,255,255,0.35);
+  font-size: 12px; border: 1px dashed rgba(255,255,255,0.08); border-radius: 10px;
+}
+
+/* Alerts */
+.nutriAlertSection { margin-bottom: 16px; }
+.nutriAlertFilters {
+  display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;
+}
+.nutriAlertFilterGroup {
+  display: flex; gap: 2px; background: rgba(255,255,255,0.03);
+  border-radius: 8px; padding: 2px;
+}
+.nutriAlertFilterBtn {
+  padding: 4px 10px; border-radius: 6px; border: none; background: none;
+  color: rgba(255,255,255,0.4); font-size: 11px; cursor: pointer; font-weight: 500;
+  transition: all 0.15s;
+  &:hover { color: rgba(255,255,255,0.7); }
+}
+.nutriAlertFilterActive {
+  background: rgba(255,255,255,0.08); color: #fff;
+}
+.nutriAlertList { display: flex; flex-direction: column; gap: 6px; }
+.nutriAlertItem {
+  display: flex; flex-direction: column; gap: 0; padding: 12px 14px;
+  background: $card-bg; border: 1px solid $border; border-radius: 10px;
+  cursor: pointer; transition: border-color 0.15s;
+  &:hover { border-color: rgba(255,255,255,0.12); }
+}
+.nutriAlertItemOpen { border-color: rgba($orange, 0.3); }
+.nutriAlertHead {
+  display: flex; align-items: center; gap: 10px;
+}
+.nutriAlertDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.nutriAlertInfo { flex: 1; min-width: 0; }
+.nutriAlertTitle { font-size: 13px; color: #fff; font-weight: 500; }
+.nutriAlertMeta { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 1px; }
+.nutriAlertSeverityBadge {
+  font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 8px;
+  border: 1px solid; white-space: nowrap;
+}
+.nutriAlertDetail {
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid $border;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.nutriAlertDesc {
+  font-size: 12.5px; color: rgba(255,255,255,0.65); margin: 0; line-height: 1.5;
+}
+.nutriAlertAction {
+  font-size: 12px; color: $orange; font-weight: 500;
+}
+.nutriAlertClosed {
+  font-size: 12px; color: #22c55e; font-weight: 500;
+}
+
+/* Notes */
+.nutriNotesSection { margin-bottom: 8px; }
+.nutriNotesCount {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; border-radius: 9px; margin-left: 6px;
+  background: rgba($orange, 0.15); color: $orange; font-size: 10px; font-weight: 700;
+  padding: 0 5px; vertical-align: middle;
+}
+.nutriNotesList { display: flex; flex-direction: column; gap: 8px; }
+.nutriNoteSeparator {
+  font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3);
+  text-transform: capitalize; padding: 8px 0 4px; margin-top: 4px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  &:first-child { border-top: none; margin-top: 0; padding-top: 0; }
+}
+.nutriNoteCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 10px;
+  padding: 12px 14px;
+}
+.nutriNoteDate { font-size: 11px; color: rgba(255,255,255,0.35); margin-bottom: 6px; }
+.nutriNoteBody {
+  font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5;
+  p { margin: 0; }
+}
+.nutriNoteEmpty {
+  color: rgba(255,255,255,0.25); font-style: italic;
+}
+.nutriNoteFocusBadge {
+  display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 8px;
+  background: rgba($orange, 0.12); color: $orange; font-size: 11px; font-weight: 600;
+}
+
+/* Journal alimentaire */
+.nutriJournalSection { margin-bottom: 16px; }
+.nutriJournalHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.nutriJournalTable {
+  background: $card-bg; border: 1px solid $border; border-radius: 10px;
+  overflow: hidden;
+}
+.nutriJournalRow {
+  display: grid; grid-template-columns: 1.4fr repeat(5, 1fr) 32px;
+  align-items: center; padding: 8px 12px; font-size: 12px; color: rgba(255,255,255,0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  &:last-child { border-bottom: none; }
+}
+.nutriJournalRowHead {
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35);
+  text-transform: uppercase; letter-spacing: 0.3px;
+  background: rgba(255,255,255,0.02); padding: 6px 12px;
+}
+.nutriJournalRowDone {
+  color: rgba(255,255,255,0.8);
+}
+.nutriJournalCheck {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: rgba(255,255,255,0.5); cursor: pointer;
+  input[type="checkbox"] {
+    accent-color: $orange; width: 15px; height: 15px;
+  }
+}
+.nutriJournalFormGrid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MEDICAL TAB – Suivi Médical
+   ═══════════════════════════════════════════════════════ */
+
+/* Critical alert banner */
+.medCriticalBanner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 16px; border-radius: 10px; margin-bottom: 12px;
+  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3);
+}
+.medCriticalIcon { font-size: 16px; flex-shrink: 0; }
+.medCriticalText {
+  font-size: 13px; font-weight: 600; color: #ef4444; line-height: 1.3;
+}
+
+/* Clinical summary banner */
+.medSummaryBanner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  padding: 14px 16px; border-radius: 12px; margin-bottom: 16px;
+  background: rgba(255,255,255,0.02); border: 1px solid $border;
+}
+.medSummaryLeft {
+  display: flex; align-items: center; gap: 10px;
+}
+.medSummaryEpisode {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 600; color: #fff;
+  svg { color: $orange; flex-shrink: 0; }
+}
+.medSummaryDot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.medSummaryStatus {
+  font-size: 12px; font-weight: 600;
+}
+.medSummaryRight {
+  display: flex; align-items: center; gap: 12px;
+}
+.medSummaryEvent {
+  font-size: 11px; color: rgba(255,255,255,0.5);
+}
+.medSummaryUpdated {
+  font-size: 10px; color: rgba(255,255,255,0.25);
+}
+
+/* Vitals tiles */
+.medVitalsSection { margin-bottom: 18px; }
+.medVitalsSectionTitle {
+  font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 10px;
+}
+.medVitalsGrid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  @media (max-width: 600px) { grid-template-columns: repeat(2, 1fr); }
+}
+.medVitalTile {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 14px; cursor: pointer; transition: border-color 0.15s;
+  &:hover { border-color: rgba(255,255,255,0.15); }
+}
+.medVitalHeader {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+}
+.medVitalLabel { font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 500; }
+.medVitalTrend { font-size: 13px; }
+.medVitalTrendUp { color: #ef4444; }
+.medVitalTrendDown { color: #22c55e; }
+.medVitalValue {
+  font-size: 22px; font-weight: 700; line-height: 1.1;
+}
+.medVitalUnit { font-size: 12px; font-weight: 400; margin-left: 2px; opacity: 0.5; }
+.medVitalAction {
+  display: block; margin-top: 8px; font-size: 9px; color: rgba(255,255,255,0.2);
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+
+/* Vital input modal extras */
+.medVitalInputDisplay {
+  text-align: center; padding: 12px 0 4px;
+}
+.medVitalInputValue {
+  font-size: 36px; font-weight: 800; line-height: 1;
+}
+.medVitalInputUnit {
+  font-size: 14px; font-weight: 400; margin-left: 4px; opacity: 0.6;
+}
+.medVitalSlider {
+  width: 100%; height: 6px; cursor: pointer; margin: 4px 0;
+}
+.medVitalRangeLabels {
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: rgba(255,255,255,0.25);
+}
+
+/* Medical alerts */
+.medAlertsSection { margin-bottom: 18px; }
+.medAlertsSectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.medAlertsSectionTitle {
+  font-size: 14px; font-weight: 700; color: #fff; margin: 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.medAlertsCount {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; border-radius: 9px; padding: 0 5px;
+  background: #ef4444; color: #fff; font-size: 10px; font-weight: 700;
+}
+.medAlertsFilters {
+  display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;
+}
+.medAlertsFilterBtn {
+  padding: 4px 12px; border-radius: 14px; font-size: 11px; font-weight: 500;
+  background: transparent; border: 1px solid $border; color: rgba(255,255,255,0.4);
+  cursor: pointer; transition: all 0.15s;
+  &:hover { border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+}
+.medAlertsFilterActive {
+  background: $orange; border-color: $orange; color: #fff;
+}
+.medAlertsEmpty {
+  font-size: 12px; color: rgba(255,255,255,0.25); font-style: italic; padding: 10px 0;
+}
+.medAlertsList { display: flex; flex-direction: column; gap: 6px; }
+.medAlertItem {
+  background: $card-bg; border: 1px solid $border; border-radius: 10px;
+  overflow: hidden; transition: border-color 0.15s;
+}
+.medAlertItemOpen { border-color: rgba(255,255,255,0.12); }
+.medAlertRow {
+  display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer;
+  &:hover { background: rgba(255,255,255,0.02); }
+}
+.medAlertIcon { font-size: 14px; flex-shrink: 0; }
+.medAlertInfo { flex: 1; min-width: 0; }
+.medAlertTitle {
+  display: block; font-size: 13px; font-weight: 600; color: #fff;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.medAlertMeta { display: block; font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 2px; }
+.medAlertChevron { font-size: 14px; color: rgba(255,255,255,0.2); flex-shrink: 0; }
+.medAlertDetail {
+  padding: 0 14px 12px; border-top: 1px solid $border;
+}
+.medAlertDesc { font-size: 12px; color: rgba(255,255,255,0.6); margin: 10px 0 6px; line-height: 1.5; }
+.medAlertContext { font-size: 11px; color: rgba(255,255,255,0.35); margin: 0 0 6px; font-style: italic; }
+.medAlertComment {
+  font-size: 11px; color: $orange; margin: 0 0 8px;
+  display: flex; align-items: flex-start; gap: 6px;
+  svg { flex-shrink: 0; margin-top: 1px; }
+}
+.medAlertStatusBadge {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  padding: 3px 10px; border-radius: 10px; border: 1px solid;
+}
+
+/* Medical timeline */
+.medTimelineSection { margin-top: 24px; }
+.medTimelineSectionTitle {
+  font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 10px;
+}
+.medTimelineFilters {
+  display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.medTimeline { position: relative; }
+.medTlEntry {
+  display: flex; gap: 12px; position: relative;
+  &:hover .medTlContent { background: rgba(255,255,255,0.02); }
+}
+.medTlDotCol {
+  display: flex; flex-direction: column; align-items: center; width: 14px; flex-shrink: 0;
+  padding-top: 4px;
+}
+.medTlDot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+}
+.medTlLine {
+  width: 2px; flex: 1; background: $border; margin-top: 2px;
+}
+.medTlContent {
+  flex: 1; padding: 6px 10px 14px; border-radius: 8px; transition: background 0.12s;
+}
+.medTlHead {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+}
+.medTlBadge {
+  font-size: 9px; font-weight: 600; padding: 1px 8px; border-radius: 8px;
+  border: 1px solid; text-transform: uppercase; letter-spacing: 0.3px;
+}
+.medTlDate {
+  font-size: 10px; color: rgba(255,255,255,0.3);
+}
+.medTlTitle {
+  font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 2px;
+}
+.medTlSummary {
+  font-size: 11px; color: rgba(255,255,255,0.4); line-height: 1.4;
+}
+
+/* Plan & décisions */
+.medPlanSection { margin-top: 24px; }
+.medPlanSectionTitle {
+  font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 10px;
+}
+.medPlanCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 16px; display: flex; flex-direction: column; gap: 16px;
+}
+.medPlanBlock { min-width: 0; }
+.medPlanBlockTitle {
+  font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 0.4px; margin: 0 0 8px;
+}
+.medPlanList {
+  margin: 0; padding-left: 18px; list-style: disc;
+  li {
+    font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.6;
+  }
+}
+.medPlanChips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.medPlanChip {
+  padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 600;
+  background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.25);
+}
+.medPlanSteps {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.medPlanStep {
+  display: flex; align-items: center; gap: 8px;
+}
+.medPlanStepDot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.medPlanStepDone { background: #22c55e; }
+.medPlanStepProgress { background: #f59e0b; }
+.medPlanStepPending { background: rgba(255,255,255,0.15); }
+.medPlanStepLabel {
+  flex: 1; font-size: 13px; color: rgba(255,255,255,0.75);
+}
+.medPlanStepStatus {
+  font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.35);
+}
+
+/* Tendances / Graphs */
+.medTrendsSection { margin-top: 24px; }
+.medTrendsSectionHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; flex-wrap: wrap; margin-bottom: 10px;
+}
+.medTrendsSectionTitle {
+  font-size: 14px; font-weight: 700; color: #fff; margin: 0;
+}
+.medTrendsNav {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.medTrendsEmpty {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 28px 16px; text-align: center;
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  svg { color: rgba(255,255,255,0.12); }
+  span { font-size: 12px; color: rgba(255,255,255,0.25); }
+}
+.medTrendsHint { font-size: 10px !important; color: rgba(255,255,255,0.15) !important; }
+.medTrendsCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 16px;
+}
+.medTrendsSvg {
+  width: 100%; height: auto; display: block;
+}
+.medTrendsMeta {
+  display: flex; align-items: baseline; gap: 8px; margin-top: 8px;
+}
+.medTrendsLast {
+  font-size: 22px; font-weight: 700; line-height: 1;
+  small { font-size: 12px; font-weight: 400; margin-left: 2px; opacity: 0.5; }
+}
+.medTrendsDiff {
+  font-size: 13px; font-weight: 600;
+}
+.medTrendsLabels {
+  display: flex; justify-content: space-between; margin-top: 4px;
+  font-size: 10px; color: rgba(255,255,255,0.2);
+}
+
+/* Sub-tabs navigation */
+.medSubTabs {
+  display: flex; gap: 6px; margin-bottom: 18px;
+  border-bottom: 1px solid $border; padding-bottom: 12px;
+  overflow-x: auto;
+}
+.medSubTab {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 20px;
+  background: transparent; border: 1px solid $border;
+  color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  svg { opacity: 0.6; }
+  &:hover { border-color: rgba($orange, 0.4); color: rgba(255,255,255,0.8); }
+}
+.medSubTabActive {
+  background: rgba($orange, 0.15); color: $orange;
+  border-color: $orange;
+  svg { opacity: 1; }
+}
+.medSubTabCount {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 9px; font-size: 11px; font-weight: 600;
+  background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5);
+  .medSubTabActive & { background: rgba($orange, 0.2); color: $orange; }
+}
+
+/* Section + Grid */
+.medSection { margin-bottom: 16px; }
+.medGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+/* ── Ordonnance Card ── */
+.medCard {
+  background: $card-bg; border: 1px solid $border; border-radius: 12px;
+  padding: 16px; cursor: pointer; transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 10px;
+  &:hover { border-color: rgba($orange, 0.35); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+}
+.medCardHeader {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.medCardTypeWrap {
+  display: flex; align-items: center; gap: 8px; min-width: 0;
+}
+.medCardIcon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px; flex-shrink: 0;
+}
+.medCardType {
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.medCardTypeSmall {
+  font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.6);
+}
+.medCardBadge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  border: 1px solid; white-space: nowrap; flex-shrink: 0;
+}
+.medCardDiag {
+  font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.4;
+}
+.medCardEpisode {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; color: rgba(255,255,255,0.45);
+  svg { opacity: 0.5; flex-shrink: 0; }
+}
+.medCardDates {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.medCardDateRow {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11.5px; color: rgba(255,255,255,0.4);
+  svg { flex-shrink: 0; opacity: 0.5; }
+}
+.medCardMeta {
+  display: flex; flex-wrap: wrap; gap: 6px 12px;
+  font-size: 11.5px; color: rgba(255,255,255,0.4);
+}
+.medCardSig {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: rgba(#22c55e, 0.8);
+  code {
+    font-family: monospace; font-size: 10px;
+    background: rgba(#22c55e, 0.1); padding: 1px 5px;
+    border-radius: 4px; color: #22c55e;
+  }
+}
+.medCardFooter {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: auto; padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.medCardVersion {
+  font-size: 11px; color: rgba(255,255,255,0.3); font-weight: 500;
+}
+.medCardPdfBtn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 6px;
+  background: rgba($orange, 0.12); color: $orange;
+  border: 1px solid rgba($orange, 0.25); font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  &:hover { background: rgba($orange, 0.2); border-color: rgba($orange, 0.4); }
+}
+
+/* ── Ordonnance card extras: title, list, red flags ── */
+.medCardTitle {
+  font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85);
+}
+.medCardList {
+  margin: 0; padding-left: 18px; font-size: 12.5px; color: rgba(255,255,255,0.6);
+  li { margin-bottom: 2px; }
+}
+.medCardMore { color: rgba(255,255,255,0.35); font-style: italic; }
+.medCardRedFlags {
+  display: flex; align-items: flex-start; gap: 7px;
+  font-size: 11.5px; color: #ef4444; font-weight: 500;
+  padding: 8px 10px; border-radius: 8px;
+  background: rgba(#ef4444, 0.06); border: 1px solid rgba(#ef4444, 0.15);
+  line-height: 1.4;
+  svg { flex-shrink: 0; margin-top: 1px; }
+}
+.medCardObj {
+  display: flex; flex-wrap: wrap; gap: 4px;
+  span {
+    font-size: 11px; padding: 2px 8px; border-radius: 20px;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+  }
+}
+
+/* ── Protocol phase chips ── */
+.medPhaseChips {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.medPhaseChip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.05); border: 1px solid $border;
+  color: rgba(255,255,255,0.6); font-size: 12px; cursor: pointer;
+  transition: all 0.2s;
+  &:hover { border-color: rgba($orange, 0.3); color: rgba(255,255,255,0.8); }
+}
+.medPhaseChipActive {
+  background: rgba($orange, 0.12); border-color: rgba($orange, 0.35); color: $orange;
+}
+.medPhaseNum {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(255,255,255,0.08); font-size: 10px; font-weight: 700;
+  .medPhaseChipActive & { background: rgba($orange, 0.25); }
+}
+
+/* Phase detail (expanded) */
+.medPhaseDetail {
+  margin-top: 8px; padding: 14px;
+  background: rgba(255,255,255,0.03); border: 1px solid $border;
+  border-radius: 10px;
+}
+.medPhaseDetailTitle {
+  font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.85);
+  margin: 0 0 10px;
+}
+.medPhaseBlock {
+  margin-bottom: 10px;
+  ul {
+    margin: 4px 0 0; padding-left: 18px;
+    font-size: 12.5px; color: rgba(255,255,255,0.6);
+    li { margin-bottom: 2px; }
+  }
+}
+.medPhaseBlockLabel {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.3px; color: rgba(255,255,255,0.4);
+  svg { flex-shrink: 0; }
+}
+.medPhaseDetailNum {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 50%; margin-right: 8px;
+  background: rgba($orange, 0.15); color: $orange;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.medPhaseBlockGreen {
+  border-left: 3px solid rgba(#22c55e, 0.4); padding-left: 12px;
+  .medPhaseBlockLabel { color: #22c55e; }
+}
+.medPhaseBlockRed {
+  border-left: 3px solid rgba(#ef4444, 0.4); padding-left: 12px;
+  .medPhaseBlockLabel { color: #ef4444; }
+}
+.medPhaseBlockBlue {
+  border-left: 3px solid rgba(#3b82f6, 0.4); padding-left: 12px;
+  .medPhaseBlockLabel { color: #3b82f6; }
+}
+.medPhaseBlockAmber {
+  border-left: 3px solid rgba(#f59e0b, 0.4); padding-left: 12px;
+  .medPhaseBlockLabel { color: #f59e0b; }
+}
+
+/* Protocol card sections */
+.protoObjSection {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.protoObjLabel {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.3px; color: rgba(255,255,255,0.4);
+  svg { opacity: 0.5; }
+}
+.protoPhaseSection {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.protoPhaseLabel {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.3px; color: rgba(255,255,255,0.4);
+  svg { opacity: 0.5; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   MEDICAL – Preview Modal (read-only)
+   ═══════════════════════════════════════════════════════ */
+.medOverlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.medModal {
+  background: $card-bg; border: 1px solid $border; border-radius: 16px;
+  width: 100%; max-width: 560px; max-height: 85vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.medModalHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid $border;
+  h3 { margin: 0; font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.9); }
+}
+.medModalClose {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: rgba(255,255,255,0.06); border: none;
+  color: rgba(255,255,255,0.5); font-size: 18px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  &:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+}
+.medModalBody {
+  padding: 20px; overflow-y: auto; flex: 1;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.medModalInfoGrid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+.medModalInfoItem {
+  display: flex; flex-direction: column; gap: 3px;
+}
+.medModalInfoLabel {
+  font-size: 11px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.3px; color: rgba(255,255,255,0.4);
+}
+.medModalInfoValue {
+  font-size: 13.5px; color: rgba(255,255,255,0.8);
+}
+.medModalField {
+  font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.5;
+  strong { color: rgba(255,255,255,0.85); }
+}
+.medModalContent {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px; padding: 14px;
+  font-size: 13px; color: rgba(255,255,255,0.65); line-height: 1.6;
+  p { margin: 0 0 8px; &:last-child { margin-bottom: 0; } }
+  strong { color: rgba(255,255,255,0.8); }
+  em { color: rgba(255,255,255,0.45); }
+}
+.medModalMedLine {
+  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+  &:last-child { border-bottom: none; padding-bottom: 0; }
+  p { margin: 0 0 2px; }
+}
+.medModalSig {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(#22c55e, 0.06); border: 1px solid rgba(#22c55e, 0.15);
+  font-size: 12.5px; color: rgba(#22c55e, 0.85);
+  code {
+    font-family: monospace; font-size: 11px;
+    background: rgba(#22c55e, 0.12); padding: 2px 6px;
+    border-radius: 4px;
+  }
+}
+.medModalFooter {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  padding: 14px 20px; border-top: 1px solid $border;
+}
+.medModalBtn {
+  padding: 8px 20px; border-radius: 8px;
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  color: rgba(255,255,255,0.6); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s;
+  &:hover { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); }
+}
+.medModalPdfBtn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: 8px;
+  background: $orange; color: #fff; border: none;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s;
+  &:hover { filter: brightness(1.1); transform: translateY(-1px); }
+}

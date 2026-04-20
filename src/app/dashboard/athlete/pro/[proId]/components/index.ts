@@ -1,0 +1,12 @@
+export { default as TabSeances } from "./TabSeances";
+export { default as TabIndicateurs } from "./TabIndicateurs";
+export { default as TabNutriPlan } from "./TabNutriPlan";
+export { default as TabNutriBilan } from "./TabNutriBilan";
+export { default as TabMedSuivi } from "./TabMedSuivi";
+export { default as TabMedIndicateurs } from "./TabMedIndicateurs";
+export { default as LogExerciseModal } from "./LogExerciseModal";
+export { default as CreateAlertModal } from "./CreateAlertModal";
+export { default as UploadDocModal } from "./UploadDocModal";
+export { default as AlertsList } from "./AlertsList";
+export { default as HistoryList } from "./HistoryList";
+export { default as DocumentsList } from "./DocumentsList";

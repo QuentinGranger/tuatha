@@ -1,0 +1,572 @@
+$orange: #f47b20;
+$orange-light: #f5a623;
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$glass-border: rgba(255, 255, 255, 0.08);
+
+.page {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  display: flex;
+  justify-content: center;
+  padding: 50px 40px;
+  position: relative;
+  overflow-y: auto;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 50%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba($orange, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 680px;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  color: $orange;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: $text-muted;
+  font-weight: 300;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+
+  > * {
+    flex: 1;
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.2px;
+}
+
+.input,
+.select {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: $text-muted;
+    font-weight: 300;
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 20px rgba($orange, 0.06), inset 0 0 20px rgba($orange, 0.02);
+  }
+}
+
+.select {
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+
+  option {
+    background: #0c1a30;
+    color: $text-light;
+  }
+}
+
+.avatarRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.avatarPreview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: border-color 0.3s ease;
+
+  &:hover {
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+.avatarPlaceholder {
+  font-size: 28px;
+  color: rgba(255, 255, 255, 0.2);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.avatarInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avatarButton {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($orange, 0.35);
+    color: $text-light;
+    background: rgba(255, 255, 255, 0.07);
+  }
+}
+
+.hint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 300;
+}
+
+.message {
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.messageError {
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #fca5a5;
+}
+
+.messageSuccess {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+
+.submitButton {
+  margin-top: 8px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, $orange 0%, $orange-light 100%);
+  border: none;
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px rgba($orange, 0.25), 0 0 60px rgba($orange, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    box-shadow: 0 6px 32px rgba($orange, 0.35), 0 0 80px rgba($orange, 0.12);
+    transform: translateY(-1px);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.resetButton {
+  width: 100%;
+  padding: 13px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: $text-muted;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.loginLink {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 14px;
+  color: $text-muted;
+  padding-bottom: 20px;
+
+  a {
+    color: $orange;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $orange-light;
+    }
+  }
+}
+
+/* ── Password strength meter ── */
+.pwdStrength {
+  margin-top: 10px;
+}
+.pwdStrengthBar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.pwdStrengthSeg {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 0.3s;
+}
+.pwdStrengthLabel {
+  font-size: 12px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+.pwdChecks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.pwdCheckMet {
+  font-size: 11px;
+  color: #22c55e;
+}
+.pwdCheckUnmet {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── CGU acceptance ── */
+.cguField {
+  margin-top: 4px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+
+.cguLabel {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.cguCheckbox {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  accent-color: $orange;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.cguText {
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cguLink {
+  color: $orange;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 500;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $orange-light;
+  }
+}
+
+/* ── Step indicator ── */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 6px;
+}
+
+.stepDot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.stepDotActive {
+  background: rgba($orange, 0.15);
+  color: $orange;
+  border-color: rgba($orange, 0.4);
+}
+
+.stepLine {
+  width: 60px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.3s ease;
+}
+
+.stepLineActive {
+  background: rgba($orange, 0.4);
+}
+
+.stepTitle {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 12px;
+}
+
+/* ── Chip group (antecedents) ── */
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.chip {
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($orange, 0.3);
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.chipActive {
+  background: rgba($orange, 0.12);
+  border-color: rgba($orange, 0.4);
+  color: $orange;
+
+  &:hover {
+    background: rgba($orange, 0.18);
+    color: $orange-light;
+  }
+}
+
+/* ── Health app connection cards ── */
+.healthAppGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.healthAppCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  color: inherit;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.healthAppCardActive {
+  border-color: rgba($orange, 0.45);
+  background: rgba($orange, 0.06);
+  box-shadow: 0 0 20px rgba($orange, 0.06);
+
+  &:hover {
+    border-color: rgba($orange, 0.55);
+    background: rgba($orange, 0.08);
+  }
+}
+
+.healthAppLogo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.healthAppInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.healthAppName {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.healthAppDesc {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 400;
+}
+
+.healthAppCheck {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.25);
+  transition: all 0.25s ease;
+}
+
+.healthAppCheckActive {
+  border-color: $orange;
+  background: rgba($orange, 0.15);
+  color: $orange;
+}
+
+.healthAppSelected {
+  text-align: center;
+  font-size: 13px;
+  font-weight: 500;
+  color: $orange;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 30px 16px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .row {
+    flex-direction: column;
+    gap: 22px;
+  }
+}

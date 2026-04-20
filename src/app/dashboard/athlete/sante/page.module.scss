@@ -1,0 +1,590 @@
+$orange: #f47b20;
+$orange-light: #f5a623;
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$glass-border: rgba(255, 255, 255, 0.08);
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header (reuse athlete dashboard pattern) ── */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  border-bottom: 1px solid $glass-border;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(6, 18, 34, 0.92);
+  backdrop-filter: blur(16px);
+}
+
+.logoWrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logoImg {
+  height: 32px;
+  width: auto;
+}
+
+.headerNav {
+  display: flex;
+  gap: 4px;
+}
+
+.navBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  svg { flex-shrink: 0; }
+}
+
+.navBtnActive {
+  color: $orange;
+  background: rgba($orange, 0.08);
+  font-weight: 600;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid $glass-border;
+  color: $text-muted;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: $text-light;
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* ── Main Content ── */
+
+.main {
+  flex: 1;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+.pageHeader {
+  margin-bottom: 32px;
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pageTitleIcon {
+  color: $orange;
+}
+
+.pageSubtitle {
+  font-size: 14px;
+  color: $text-muted;
+  font-weight: 300;
+}
+
+/* ── Sections ── */
+
+.section {
+  margin-bottom: 36px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.sectionTitleIcon {
+  color: $orange;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+
+  .sectionTitle {
+    margin-bottom: 0;
+  }
+}
+
+.syncBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover:not(:disabled) {
+    background: rgba($orange, 0.15);
+    border-color: rgba($orange, 0.4);
+    color: $orange;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.syncSpinner {
+  animation: spin 1s linear infinite;
+}
+
+/* ── Connection Cards Grid ── */
+
+.providerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.providerCard {
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.25s ease;
+  position: relative;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.045);
+  }
+}
+
+.providerCardConnected {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.04);
+
+  &:hover {
+    border-color: rgba(34, 197, 94, 0.4);
+  }
+}
+
+.providerCardPending {
+  border-color: rgba($orange, 0.3);
+  background: rgba($orange, 0.03);
+}
+
+.providerLogo {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.providerName {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.providerStatus {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.statusConnected {
+  color: #22c55e;
+  .statusDot { background: #22c55e; }
+}
+
+.statusPending {
+  color: $orange;
+  .statusDot { background: $orange; animation: pulse 1.5s infinite; }
+}
+
+.statusDisconnected {
+  color: $text-muted;
+  .statusDot { background: rgba(255, 255, 255, 0.2); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.providerLastSync {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.providerActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  width: 100%;
+}
+
+.connectBtn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: linear-gradient(135deg, $orange 0%, $orange-light 100%);
+  color: $text-light;
+  box-shadow: 0 2px 12px rgba($orange, 0.2);
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba($orange, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.disconnectBtn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  background: rgba(220, 38, 38, 0.06);
+  color: #fca5a5;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s;
+
+  &:hover {
+    border-color: rgba(220, 38, 38, 0.4);
+    background: rgba(220, 38, 38, 0.1);
+    color: #fecaca;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ── Data Dashboard ── */
+
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.dataCard {
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dataCardLabel {
+  font-size: 12px;
+  color: $text-muted;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dataCardValue {
+  font-size: 26px;
+  font-weight: 700;
+  color: $text-light;
+  line-height: 1;
+}
+
+.dataCardUnit {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.dataCardMeta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  margin-top: 2px;
+}
+
+/* ── Empty State ── */
+
+.emptyState {
+  text-align: center;
+  padding: 48px 24px;
+  color: $text-muted;
+}
+
+.emptyIcon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.4;
+}
+
+.emptyTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 6px;
+}
+
+.emptyText {
+  font-size: 13px;
+  color: $text-muted;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+/* ── Period Selector ── */
+
+.periodRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.periodBtn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid $glass-border;
+  background: transparent;
+  color: $text-muted;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.periodBtnActive {
+  background: rgba($orange, 0.1);
+  border-color: rgba($orange, 0.35);
+  color: $orange;
+  font-weight: 600;
+}
+
+/* ── Loading ── */
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 80px 24px;
+  color: $text-muted;
+  font-size: 14px;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.08);
+  border-top-color: $orange;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Env Warning ── */
+
+.envWarning {
+  padding: 16px 20px;
+  background: rgba($orange, 0.08);
+  border: 1px solid rgba($orange, 0.25);
+  border-radius: 10px;
+  margin-bottom: 24px;
+}
+
+.envWarningTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: $orange;
+  margin-bottom: 4px;
+}
+
+.envWarningText {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+
+  code {
+    background: rgba(255, 255, 255, 0.06);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11.5px;
+  }
+}
+
+/* ── Mobile bottom nav ── */
+
+.bottomNav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(6, 18, 34, 0.96);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid $glass-border;
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+  z-index: 200;
+  justify-content: space-around;
+}
+
+.bottomNavBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: $text-muted;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.2s;
+
+  &:hover { color: rgba(255, 255, 255, 0.7); }
+}
+
+.bottomNavBtnActive {
+  color: $orange;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 16px;
+  }
+
+  .headerNav { display: none; }
+
+  .main {
+    padding: 20px 16px 120px;
+  }
+
+  .pageTitle {
+    font-size: 22px;
+  }
+
+  .providerGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .dataGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bottomNav {
+    display: flex;
+  }
+}
+
+@media (max-width: 480px) {
+  .providerGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dataGrid {
+    grid-template-columns: 1fr;
+  }
+}

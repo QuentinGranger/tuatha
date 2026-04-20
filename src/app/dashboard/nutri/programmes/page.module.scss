@@ -1,0 +1,376 @@
+$orange: #f47b20;
+$card: #16161f;
+$surface: #12121a;
+$border: rgba(255,255,255,0.06);
+$muted: rgba(255,255,255,0.4);
+
+.page { display: flex; flex-direction: column; gap: 20px; color: rgba(255,255,255,0.9); max-width: 1200px; margin: 0 auto; }
+
+/* ─── Header ─── */
+.header {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;
+  padding-bottom: 16px; border-bottom: 1px solid $border;
+}
+.headerLeft { display: flex; flex-direction: column; gap: 10px; }
+.title { font-size: 22px; font-weight: 700; color: #fff; margin: 0; }
+.headerRight { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.headerActions { display: flex; gap: 6px; }
+.statusBadge {
+  padding: 3px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid; background: rgba(255,255,255,0.02);
+}
+.versionBadge {
+  padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+  background: rgba($orange, 0.1); color: $orange;
+}
+
+/* ─── Select ─── */
+.select {
+  padding: 8px 14px; border-radius: 8px; border: 1px solid $border;
+  background: rgba(255,255,255,0.04); color: #fff; font-size: 13px; min-width: 220px;
+  outline: none; cursor: pointer;
+  &:focus { border-color: $orange; }
+  option { background: #1a1a1a; }
+}
+
+/* ─── Athlete picker ─── */
+.athletePicker { position: relative; min-width: 280px; }
+.athleteSearch {
+  width: 100%; padding: 9px 14px; border-radius: 10px; border: 1px solid $border;
+  background: rgba(255,255,255,0.04); color: #fff; font-size: 13px;
+  outline: none;
+  &::placeholder { color: $muted; }
+  &:focus { border-color: $orange; }
+}
+.athleteDropdown {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 100;
+  background: #16161f; border: 1px solid $border; border-radius: 12px;
+  max-height: 320px; overflow-y: auto; padding: 6px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+}
+.athleteEmpty { padding: 18px; text-align: center; color: $muted; font-size: 13px; }
+.athleteCard {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+  border-radius: 8px; cursor: pointer; transition: background 0.12s;
+  &:hover { background: rgba(255,255,255,0.04); }
+}
+.athleteCardActive { background: rgba($orange, 0.08); border: 1px solid rgba($orange, 0.2); }
+.athleteAvatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba($orange, 0.12); color: $orange; font-size: 14px; font-weight: 700;
+}
+.athleteInfo { flex: 1; min-width: 0; }
+.athleteName { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.athleteMeta {
+  display: flex; gap: 8px; font-size: 11px; color: $muted; margin-top: 1px;
+  span { white-space: nowrap; }
+}
+.athleteRisk { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── Plan bar ─── */
+.planBar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* ─── Tabs ─── */
+.tabs { display: flex; gap: 2px; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 3px; width: fit-content; }
+.tab {
+  padding: 7px 18px; border-radius: 8px; border: none; background: none;
+  color: $muted; font-size: 13px; cursor: pointer; font-weight: 500;
+  &:hover { color: #fff; }
+}
+.tabActive { background: rgba(255,255,255,0.08); color: #fff; }
+
+/* ─── Patient grid (landing) ─── */
+.patientGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;
+}
+.patientCardGrid {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+  background: $card; border: 1px solid $border; border-radius: 14px;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s;
+  &:hover { border-color: rgba($orange, 0.25); background: rgba($orange, 0.03); }
+}
+.patientCardAvatar {
+  width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba($orange, 0.12); color: $orange; font-size: 17px; font-weight: 700;
+}
+.patientCardBody { flex: 1; min-width: 0; }
+.patientCardName { font-size: 14px; font-weight: 600; color: #fff; }
+.patientCardDetails {
+  display: flex; gap: 8px; font-size: 11.5px; color: $muted; margin-top: 2px;
+  span { white-space: nowrap; }
+}
+.patientCardObj { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.patientCardRisk { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* ─── Empty ─── */
+.emptyState {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 60px 20px; color: $muted; text-align: center; grid-column: 1 / -1;
+  svg { width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.3; }
+  p { font-size: 14px; }
+}
+.emptyMini {
+  padding: 32px; text-align: center; color: $muted; font-size: 13px;
+  border: 1px dashed rgba(255,255,255,0.08); border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+}
+
+/* ─── Sections ─── */
+.section { margin-bottom: 8px; }
+.sectionHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px; gap: 12px; flex-wrap: wrap;
+}
+.sectionTitle { font-size: 17px; font-weight: 600; color: #fff; margin: 0; }
+.sectionActions { display: flex; gap: 8px; }
+
+/* ─── Objectives grid ─── */
+.objGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.objCard {
+  background: $card; border: 1px solid $border; border-radius: 12px; padding: 16px;
+}
+.objLabel { font-size: 11px; color: $muted; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+.objValue { font-size: 22px; font-weight: 700; color: #fff; margin-top: 4px; span { font-size: 13px; color: $muted; font-weight: 400; } }
+.objBar { height: 4px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.objFill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+.objSub { font-size: 11.5px; color: $muted; margin-top: 4px; }
+
+.notesRow { display: flex; gap: 12px; margin-top: 14px; }
+.noteBox {
+  flex: 1; background: $card; border: 1px solid $border; border-radius: 12px; padding: 14px;
+  p { font-size: 13px; color: rgba(255,255,255,0.7); margin: 6px 0 0; }
+}
+.noteTag { font-size: 10.5px; font-weight: 600; color: $muted; text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* ─── Meal list ─── */
+.mealList { display: flex; flex-direction: column; gap: 8px; }
+.mealCard {
+  background: $card; border: 1px solid $border; border-radius: 12px;
+  overflow: hidden; transition: border-color 0.15s;
+}
+.mealCardOpen { border-color: rgba($orange, 0.3); }
+.mealHead {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px; cursor: pointer;
+  &:hover { background: rgba(255,255,255,0.02); }
+}
+.mealInfo { display: flex; flex-direction: column; gap: 2px; min-width: 130px; }
+.mealName { font-size: 14px; font-weight: 600; color: #fff; }
+.mealTime { font-size: 12px; color: $muted; }
+.mealTotals { display: flex; gap: 10px; flex: 1; }
+.mealKcal { font-size: 14px; font-weight: 700; color: $orange; }
+.mealMacro { font-size: 12px; color: rgba(255,255,255,0.55); }
+.mealRule {
+  font-size: 11px; padding: 2px 8px; border-radius: 6px;
+  background: rgba(59, 130, 246, 0.1); color: #3b82f6;
+}
+.mealActions { display: flex; gap: 4px; margin-left: auto; }
+.iconBtn {
+  width: 28px; height: 28px; border-radius: 6px; border: 1px solid $border;
+  background: none; color: $muted; font-size: 13px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  &:hover { background: rgba(255,255,255,0.04); color: #fff; }
+}
+.iconBtnSm {
+  width: 24px; height: 24px; border-radius: 5px; border: none;
+  background: none; color: $muted; font-size: 12px; cursor: pointer;
+  &:hover { color: #fff; }
+}
+
+/* ─── Meal body (editing) ─── */
+.mealBody { padding: 0 18px 18px; }
+.mealMetaRow { display: flex; gap: 10px; margin-bottom: 14px; }
+.inputSm {
+  padding: 6px 10px; border-radius: 6px; border: 1px solid $border;
+  background: rgba(255,255,255,0.03); color: #fff; font-size: 12.5px; flex: 1;
+  &:focus { outline: none; border-color: $orange; }
+}
+.emptyItems { text-align: center; color: $muted; font-size: 12.5px; padding: 16px; }
+
+/* ─── Food table ─── */
+.foodTable {
+  width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 12px;
+  th { text-align: left; padding: 6px 6px; color: $muted; font-weight: 600; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid $border; }
+  td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+}
+.foodRow td { vertical-align: middle; }
+.inputCell {
+  width: 100%; padding: 4px 6px; border-radius: 4px; border: 1px solid transparent;
+  background: none; color: #fff; font-size: 12px;
+  &:hover { border-color: rgba(255,255,255,0.08); }
+  &:focus { outline: none; border-color: $orange; background: rgba(255,255,255,0.02); }
+}
+select.inputCell { cursor: pointer; option { background: #1a1a1a; } }
+.toggleSmall {
+  padding: 2px 8px; border-radius: 4px; font-size: 10px; border: 1px solid $border;
+  background: none; color: $muted; cursor: pointer;
+}
+.toggleOn { background: rgba(34, 197, 94, 0.1); color: #22c55e; border-color: rgba(34, 197, 94, 0.3); }
+
+/* ─── Alternatives ─── */
+.altRow { background: rgba(255,255,255,0.015); }
+.altRow td { font-size: 11.5px; color: rgba(255,255,255,0.5); }
+.altIcon { color: $orange; font-weight: 600; margin-right: 4px; }
+
+/* ─── Tracking ─── */
+.trackingGrid { display: flex; flex-direction: column; gap: 0; background: $card; border: 1px solid $border; border-radius: 12px; overflow: hidden; }
+.trackHeader {
+  display: grid; grid-template-columns: 1.5fr 1.2fr 0.8fr 0.8fr 0.8fr 0.6fr;
+  padding: 10px 16px; font-size: 10.5px; font-weight: 600; color: $muted;
+  text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid $border;
+}
+.trackRow {
+  display: grid; grid-template-columns: 1.5fr 1.2fr 0.8fr 0.8fr 0.8fr 0.6fr;
+  padding: 10px 16px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.03);
+  &:last-child { border-bottom: none; }
+}
+.trackOk { color: #22c55e; }
+.trackWarn { color: #f59e0b; }
+.trackBad { color: #ef4444; }
+
+.detectionBlock { margin-top: 16px; background: $card; border: 1px solid $border; border-radius: 12px; padding: 18px; }
+.detectionTitle { font-size: 14px; font-weight: 600; color: #fff; margin: 0 0 10px; }
+.detectionItem {
+  font-size: 13px; color: rgba(255,255,255,0.7); padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  &:last-child { border-bottom: none; }
+}
+
+.quickBar { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+/* ─── Templates ─── */
+.tplSection { margin-bottom: 20px; }
+.tplSectionTitle { font-size: 14px; font-weight: 600; color: #fff; margin: 0 0 10px; }
+.tplGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.tplCard {
+  background: $card; border: 1px solid $border; border-radius: 12px; padding: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.tplName { font-size: 14px; font-weight: 600; color: #fff; }
+.tplMeta { font-size: 12px; color: $muted; }
+
+/* ─── Versions ─── */
+.versionList { display: flex; flex-direction: column; gap: 6px; }
+.versionCard {
+  background: $card; border: 1px solid $border; border-radius: 10px;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.versionNum { font-size: 14px; font-weight: 600; color: #fff; }
+.versionDate { font-size: 12.5px; color: $muted; }
+
+/* ─── Preview Modal ─── */
+.previewModal {
+  background: $surface; border: 1px solid $border; border-radius: 16px;
+  width: 420px; max-width: 95vw; max-height: 85vh; overflow-y: auto;
+}
+.previewBody { padding: 18px 22px; display: flex; flex-direction: column; gap: 16px; }
+.previewObj {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 14px 16px; border-radius: 12px;
+  background: rgba(244, 123, 32, 0.06); border: 1px solid rgba(244, 123, 32, 0.15);
+}
+.previewKcal { display: flex; align-items: baseline; gap: 4px; }
+.previewKcalVal { font-size: 28px; font-weight: 700; color: $orange; }
+.previewKcalTarget { font-size: 14px; color: $muted; }
+.previewMacros { display: flex; gap: 12px; font-size: 13px; font-weight: 600; }
+.previewNote {
+  font-size: 13px; color: rgba(255,255,255,0.65); padding: 10px 14px;
+  background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid $border;
+  line-height: 1.5;
+}
+.previewMeal {
+  background: $card; border: 1px solid $border; border-radius: 12px; overflow: hidden;
+}
+.previewMealHead {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; border-bottom: 1px solid $border;
+}
+.previewMealName { font-size: 14px; font-weight: 600; color: #fff; }
+.previewMealTime { font-size: 11.5px; color: $muted; margin-top: 1px; }
+.previewMealTotals { font-size: 12px; color: $muted; }
+.previewItem { padding: 8px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); &:last-child { border-bottom: none; } }
+.previewItemMain { display: flex; align-items: center; gap: 10px; }
+.previewItemName { font-size: 13px; color: rgba(255,255,255,0.85); flex: 1; }
+.previewItemQty { font-size: 12px; color: $muted; }
+.previewItemKcal { font-size: 12px; color: $orange; font-weight: 600; }
+.previewOptional {
+  font-size: 10px; padding: 1px 6px; border-radius: 4px;
+  background: rgba(168, 85, 247, 0.1); color: #a855f7;
+}
+.previewAlts { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; padding-left: 12px; }
+.previewAlt { font-size: 11.5px; color: rgba(255,255,255,0.4); }
+
+/* ─── Buttons ─── */
+.btnPrimary {
+  padding: 8px 18px; border-radius: 10px; border: none;
+  background: $orange; color: #fff; font-size: 13px; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+  &:hover { opacity: 0.9; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+.btnOutline {
+  padding: 8px 18px; border-radius: 10px; border: 1px solid $border;
+  background: none; color: rgba(255,255,255,0.65); font-size: 13px;
+  cursor: pointer; white-space: nowrap;
+  &:hover { background: rgba(255,255,255,0.04); color: #fff; }
+}
+.btnDanger {
+  padding: 8px 18px; border-radius: 10px; border: 1px solid rgba(239, 68, 68, 0.3);
+  background: none; color: #ef4444; font-size: 13px; cursor: pointer;
+  &:hover { background: rgba(239, 68, 68, 0.08); }
+}
+
+/* ─── Modal ─── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+.modal {
+  background: $surface; border: 1px solid $border; border-radius: 16px;
+  width: 520px; max-width: 95vw; max-height: 85vh; overflow-y: auto;
+}
+.modalHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid $border;
+  h3 { font-size: 16px; font-weight: 600; color: #fff; margin: 0; }
+}
+.modalClose {
+  width: 28px; height: 28px; border-radius: 8px; border: none;
+  background: none; color: $muted; font-size: 18px; cursor: pointer;
+  &:hover { background: rgba(255,255,255,0.06); color: #fff; }
+}
+.modalBody { padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
+.modalFooter {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 22px; border-top: 1px solid $border;
+}
+.publishInfo { font-size: 13px; color: rgba(255,255,255,0.7); margin: 0; b { color: #fff; } }
+
+/* ─── Fields ─── */
+.field {
+  display: flex; flex-direction: column; gap: 5px; flex: 1;
+  label { font-size: 12px; font-weight: 500; color: $muted; }
+  input, select, textarea {
+    padding: 8px 12px; border-radius: 8px; border: 1px solid $border;
+    background: rgba(255,255,255,0.03); color: #fff; font-size: 13px;
+    &:focus { outline: none; border-color: $orange; }
+  }
+  textarea { resize: vertical; font-family: inherit; }
+  select { option { background: #1a1a1a; } }
+}
+.fieldRow { display: flex; gap: 12px; }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .objGrid { grid-template-columns: repeat(2, 1fr); }
+  .tplGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .objGrid { grid-template-columns: 1fr; }
+  .tplGrid { grid-template-columns: 1fr; }
+  .fieldRow { flex-direction: column; }
+  .mealHead { flex-direction: column; align-items: flex-start; }
+  .mealTotals { flex-wrap: wrap; }
+  .trackHeader, .trackRow { grid-template-columns: repeat(6, 1fr); font-size: 11px; padding: 8px 10px; }
+}

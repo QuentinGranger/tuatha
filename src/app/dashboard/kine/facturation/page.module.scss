@@ -1,0 +1,993 @@
+$orange: #f47b20;
+$border: rgba(255, 255, 255, 0.06);
+$muted: rgba(255, 255, 255, 0.45);
+$card-bg: rgba(255, 255, 255, 0.03);
+$green: #22c55e;
+
+/* ─── Toast ─── */
+.toast {
+  position: fixed; top: 20px; right: 20px; z-index: 9999;
+  padding: 12px 20px; border-radius: 10px;
+  font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: toastIn 0.3s ease;
+  span { font-size: 15px; }
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.toast_success {
+  background: rgba($green, 0.15); border: 1px solid rgba($green, 0.3);
+  color: #6dffb8;
+}
+.toast_error {
+  background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+.toast_info {
+  background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+}
+
+/* ─── Skeleton ─── */
+.skeleton {
+  position: relative; overflow: hidden;
+  &::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+    animation: shimmer 1.5s infinite;
+  }
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.skeletonBar {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+}
+.skeletonLine {
+  height: 12px; border-radius: 4px;
+  background: rgba(255,255,255,0.04);
+  margin-bottom: 6px;
+}
+
+/* ═══════════════════════════════════════
+   CONTAINER
+   ═══════════════════════════════════════ */
+.container {
+  display: flex; flex-direction: column; gap: 24px;
+  padding: 0; color: rgba(255, 255, 255, 0.9);
+  max-width: 100%; height: 100%;
+}
+
+/* ═══════════════════════════════════════
+   STATS ROW
+   ═══════════════════════════════════════ */
+.statsRow {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.statCard {
+  display: flex; align-items: center; gap: 16px;
+  background: $card-bg; border: 1px solid $border;
+  border-radius: 14px; padding: 20px 24px;
+  transition: all 0.2s;
+  &:hover { border-color: rgba($orange, 0.15); }
+}
+.statCardGreen {
+  .statIcon { background: rgba($green, 0.1); svg { color: $green; } }
+}
+.statIcon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: rgba($orange, 0.1);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  svg { width: 22px; height: 22px; color: $orange; }
+}
+.statValue {
+  font-size: 20px; font-weight: 700; color: #fff;
+  display: flex; align-items: baseline; gap: 8px;
+}
+.statLabel {
+  font-size: 12px; color: $muted; margin-top: 2px;
+  display: flex; align-items: center; gap: 6px;
+}
+.statTrend {
+  font-size: 11px; font-weight: 600; padding: 1px 6px;
+  border-radius: 4px;
+}
+.statTrendUp {
+  color: $green; background: rgba($green, 0.1);
+}
+.statTrendDown {
+  color: #f87171; background: rgba(239, 68, 68, 0.1);
+}
+.statBadge {
+  font-size: 10px; font-weight: 600; padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.12); color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+.statCardWarning {
+  border-color: rgba(239, 68, 68, 0.15);
+  .statIcon { background: rgba(239, 68, 68, 0.1); svg { color: #f87171; } }
+}
+.sparkline {
+  width: 60px; height: 24px; flex-shrink: 0; margin-left: auto;
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════ */
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+}
+.title {
+  font-size: 22px; font-weight: 700; color: #fff; margin: 0;
+}
+.subtitle {
+  font-size: 13px; color: $muted; margin: 4px 0 0;
+}
+.createBtn {
+  display: flex; align-items: center; gap: 8px;
+  background: $orange; color: #fff; border: none; border-radius: 10px;
+  padding: 10px 20px; font-weight: 600; font-size: 13px;
+  cursor: pointer; transition: all 0.15s;
+  svg { width: 16px; height: 16px; }
+  &:hover { filter: brightness(1.1); transform: translateY(-1px); }
+}
+
+/* ═══════════════════════════════════════
+   TABS
+   ═══════════════════════════════════════ */
+.tabs {
+  display: flex; gap: 8px;
+  border-bottom: 1px solid $border; padding-bottom: 0;
+}
+.tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 10px 16px; font-size: 13.5px; font-weight: 500;
+  color: $muted; cursor: pointer; transition: all 0.15s;
+  &:hover { color: rgba(255, 255, 255, 0.7); }
+}
+.tabActive {
+  color: $orange; border-bottom-color: $orange;
+}
+
+/* ═══════════════════════════════════════
+   INVOICE LIST
+   ═══════════════════════════════════════ */
+.list {
+  display: flex; flex-direction: column; gap: 12px;
+  flex: 1; overflow-y: auto;
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.04) transparent;
+}
+.empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px; padding: 60px 20px;
+  background: $card-bg; border: 1px dashed $border; border-radius: 14px;
+  color: $muted; font-size: 14px;
+  svg { width: 48px; height: 48px; opacity: 0.3; }
+}
+
+/* ═══════════════════════════════════════
+   INVOICE CARD
+   ═══════════════════════════════════════ */
+.card {
+  background: $card-bg; border: 1px solid $border;
+  border-radius: 14px; padding: 20px;
+  transition: all 0.2s;
+  &:hover { border-color: rgba($orange, 0.12); transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); }
+}
+.cardTop {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 14px;
+}
+.cardId { font-weight: 600; font-size: 15px; color: #fff; }
+.badgePaid {
+  padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+  background: rgba($green, 0.12); color: #6dffb8; border: 1px solid rgba($green, 0.2);
+}
+.badgeUnpaid {
+  padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+  background: rgba($orange, 0.12); color: #ffcc99; border: 1px solid rgba($orange, 0.2);
+}
+.cardBody { margin-bottom: 16px; }
+.cardAmount { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.cardDesc { color: $muted; font-size: 13.5px; margin-bottom: 12px; }
+.cardDates {
+  display: flex; flex-direction: column; gap: 4px;
+  font-size: 12.5px; color: rgba(255, 255, 255, 0.55);
+}
+.dateLabel { color: rgba(255, 255, 255, 0.3); margin-right: 4px; }
+.cardMethod { font-size: 12.5px; color: rgba(255, 255, 255, 0.55); margin-top: 4px; }
+.cardActions { display: flex; gap: 8px; }
+
+/* ═══════════════════════════════════════
+   BUTTONS
+   ═══════════════════════════════════════ */
+.btnOutline {
+  padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  background: transparent; border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.6);
+  &:hover { background: rgba(255, 255, 255, 0.06); color: #fff; }
+}
+.btnGreen {
+  padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  background: $green; border: none; color: #fff;
+  &:hover { filter: brightness(1.1); }
+}
+.btnDanger {
+  padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  &:hover { background: rgba(239, 68, 68, 0.2); color: #fca5a5; }
+}
+
+/* ═══════════════════════════════════════
+   MODAL
+   ═══════════════════════════════════════ */
+.overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal {
+  background: #131620; border: 1px solid $border;
+  border-radius: 16px; width: 100%; max-width: 560px;
+  max-height: 85vh; display: flex; flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+.modalHeader {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 24px; border-bottom: 1px solid $border;
+  h3 { font-size: 16px; font-weight: 700; color: #fff; margin: 0; }
+}
+.modalClose {
+  width: 32px; height: 32px; border-radius: 8px; border: none;
+  background: rgba(255, 255, 255, 0.04); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  svg { width: 16px; height: 16px; color: $muted; }
+  &:hover { background: rgba(255, 255, 255, 0.08); svg { color: #fff; } }
+}
+.modalBody {
+  padding: 24px; overflow-y: auto; flex: 1;
+}
+.modalFooter {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 16px 24px; border-top: 1px solid $border;
+}
+
+/* ─── Detail grid ─── */
+.detailGrid { display: flex; flex-direction: column; gap: 10px; }
+.detailRow {
+  display: grid; grid-template-columns: 1fr 2fr; gap: 12px;
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  &:hover { background: rgba(255, 255, 255, 0.05); }
+}
+.detailLabel { font-size: 13px; color: $muted; }
+.detailValue { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.85); }
+
+/* ─── Form ─── */
+.form { display: flex; flex-direction: column; gap: 18px; }
+.formGroup {
+  display: flex; flex-direction: column; gap: 6px;
+  label { font-size: 12.5px; color: rgba(255, 255, 255, 0.6); font-weight: 500; }
+}
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.input, .textarea {
+  padding: 10px 14px; border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px; font-size: 13.5px; outline: none;
+  background: rgba(255, 255, 255, 0.03); color: rgba(255, 255, 255, 0.85);
+  transition: all 0.15s; width: 100%; box-sizing: border-box;
+  &:focus { border-color: $orange; box-shadow: 0 0 0 3px rgba($orange, 0.12); }
+  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+}
+.textarea { resize: vertical; min-height: 80px; font-family: inherit; }
+
+/* ═══════════════════════════════════════
+   AI INSIGHTS PANEL
+   ═══════════════════════════════════════ */
+.aiPanel {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.aiHeader {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: rgba(168, 85, 247, 0.04); }
+}
+.aiIcon {
+  width: 32px; height: 32px; border-radius: 10px;
+  background: rgba(168, 85, 247, 0.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 16px;
+}
+.aiTitle { font-size: 14px; font-weight: 600; color: #c084fc; }
+.aiTabs {
+  display: flex; gap: 2px; margin-left: auto;
+  background: rgba(255, 255, 255, 0.04); border-radius: 8px; padding: 2px;
+}
+.aiTabBtn {
+  background: none; border: none; color: rgba(255, 255, 255, 0.4);
+  padding: 5px 14px; border-radius: 6px; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+  &:hover { color: rgba(255, 255, 255, 0.7); }
+}
+.aiTabBtnActive {
+  background: rgba(168, 85, 247, 0.15); color: #c084fc;
+}
+.aiChevron {
+  color: rgba(255, 255, 255, 0.3); transition: transform 0.2s;
+  &.aiChevronOpen { transform: rotate(180deg); }
+}
+.aiBody { padding: 16px 20px; }
+.aiLoading {
+  text-align: center; padding: 24px;
+  color: rgba(255, 255, 255, 0.3); font-size: 13px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.aiRefresh {
+  background: none; border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #c084fc; padding: 6px 14px; border-radius: 8px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: all 0.15s;
+  &:hover { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.3); }
+}
+.aiSpinner {
+  width: 20px; height: 20px; border: 2px solid rgba(168, 85, 247, 0.15);
+  border-top-color: #c084fc; border-radius: 50%;
+  animation: spin 0.8s linear infinite; display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Health Score Gauge ─── */
+.healthRow {
+  display: flex; align-items: center; gap: 24px;
+  padding: 12px 16px; margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+.healthGauge {
+  position: relative; width: 120px; height: 70px; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+}
+.healthSvg { width: 120px; height: 70px; position: absolute; top: 0; left: 0; }
+.healthValue {
+  font-size: 24px; font-weight: 800; font-variant-numeric: tabular-nums;
+  position: relative; z-index: 1; line-height: 1;
+}
+.healthLabel {
+  font-size: 10px; font-weight: 600; color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;
+  position: relative; z-index: 1;
+}
+.healthMeta {
+  display: flex; gap: 20px; flex-wrap: wrap;
+}
+.healthMetaItem {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.healthMetaValue {
+  font-size: 16px; font-weight: 700; color: rgba(255, 255, 255, 0.85);
+  font-variant-numeric: tabular-nums;
+}
+.healthMetaLabel {
+  font-size: 10px; color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+
+/* ─── Insight Filters ─── */
+.insightFilters {
+  display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.insightFilterBtn {
+  background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.4); padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; gap: 5px;
+  &:hover { color: rgba(255, 255, 255, 0.6); border-color: rgba(255, 255, 255, 0.1); }
+}
+.insightFilterBtnActive {
+  background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.25);
+  color: #c084fc;
+}
+.insightFilterCount {
+  background: rgba(255, 255, 255, 0.08); border-radius: 8px;
+  padding: 0 5px; font-size: 10px; font-weight: 700;
+}
+
+/* ─── Insight Cards ─── */
+.insightsGrid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
+}
+.insightCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid #8b5cf6;
+  border-radius: 10px; padding: 14px 16px;
+  transition: background 0.15s;
+  &:hover { background: rgba(255, 255, 255, 0.04); }
+}
+.insightTop {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
+}
+.insightIcon { font-size: 16px; flex-shrink: 0; }
+.insightTitle {
+  font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.85); flex: 1;
+}
+.insightMetric {
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+.insightMessage {
+  font-size: 12.5px; line-height: 1.6; color: rgba(255, 255, 255, 0.55);
+}
+.insightActions {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 10px;
+}
+.insightTags {
+  display: flex; gap: 6px;
+}
+.insightTag {
+  padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600;
+  background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase; letter-spacing: 0.3px;
+}
+.insightAsk {
+  background: none; border: none; color: rgba(168, 85, 247, 0.6);
+  font-size: 11px; font-weight: 500; cursor: pointer; padding: 2px 6px;
+  transition: color 0.15s;
+  &:hover { color: #c084fc; }
+}
+
+/* ─── Chat ─── */
+.chatContainer {
+  max-height: 360px; overflow-y: auto; margin-bottom: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+  scrollbar-width: thin; scrollbar-color: rgba(168, 85, 247, 0.2) transparent;
+}
+.chatWelcome {
+  text-align: center; padding: 20px 10px;
+}
+.chatWelcomeIcon { font-size: 32px; margin-bottom: 8px; }
+.chatWelcomeTitle {
+  font-size: 15px; font-weight: 600; color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 6px;
+}
+.chatWelcomeText {
+  font-size: 13px; color: rgba(255, 255, 255, 0.4); margin-bottom: 16px;
+}
+.chatSuggestions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.chatSuggestion {
+  background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.15);
+  color: #c084fc; padding: 6px 14px; border-radius: 20px;
+  font-size: 12px; cursor: pointer; transition: all 0.15s;
+  &:hover { background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.3); }
+}
+.chatMsg {
+  display: flex; gap: 8px; align-items: flex-start;
+}
+.chatMsgUser { justify-content: flex-end; }
+.chatMsgAi { justify-content: flex-start; }
+.chatMsgAvatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(168, 85, 247, 0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.chatBubbleWrap {
+  max-width: 80%; position: relative;
+  &:hover .chatCopy { opacity: 1; }
+}
+.chatMsgBubble {
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 13px; line-height: 1.6;
+  white-space: pre-wrap; word-break: break-word;
+}
+.chatCopy {
+  position: absolute; top: 4px; right: -28px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.35); width: 22px; height: 22px;
+  border-radius: 4px; font-size: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.15s;
+  &:hover { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08); }
+}
+.chatFollowUps {
+  display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 0;
+}
+.chatMsgUser .chatMsgBubble {
+  background: rgba(168, 85, 247, 0.15); color: rgba(255, 255, 255, 0.85);
+  border-bottom-right-radius: 4px;
+}
+.chatMsgAi .chatMsgBubble {
+  background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, 0.7);
+  border-bottom-left-radius: 4px;
+}
+.chatInputRow {
+  display: flex; gap: 8px; align-items: center;
+}
+.chatInput {
+  flex: 1; padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 10px; color: rgba(255, 255, 255, 0.85);
+  font-size: 13px; outline: none;
+  &:focus { border-color: rgba(168, 85, 247, 0.4); }
+  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+  &:disabled { opacity: 0.5; }
+}
+.chatSend {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #c084fc; cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  &:hover:not(:disabled) { background: rgba(168, 85, 247, 0.25); }
+  &:disabled { opacity: 0.3; cursor: default; }
+}
+
+/* ─── Typing dots ─── */
+.typingDots {
+  display: inline-flex; gap: 4px; align-items: center; padding: 2px 0;
+  span {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(168, 85, 247, 0.5);
+    animation: typingBounce 1.2s infinite;
+    &:nth-child(2) { animation-delay: 0.2s; }
+    &:nth-child(3) { animation-delay: 0.4s; }
+  }
+}
+@keyframes typingBounce {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+.chatMsgBubble strong {
+  font-weight: 700; color: rgba(255, 255, 255, 0.95);
+}
+
+/* ─── Markdown bullets ─── */
+.mdBullet {
+  display: flex; gap: 6px; padding-left: 2px;
+}
+.mdBulletDot {
+  color: rgba(168, 85, 247, 0.6); font-weight: 600;
+  min-width: 14px; flex-shrink: 0;
+}
+
+/* ─── Insight expand/collapse ─── */
+.insightChevron {
+  font-size: 12px; color: rgba(255, 255, 255, 0.25);
+  transition: transform 0.2s; flex-shrink: 0; margin-left: auto;
+}
+.insightChevronOpen { transform: rotate(180deg); }
+.insightMessagePreview {
+  font-size: 12px; color: rgba(255, 255, 255, 0.35);
+  line-height: 1.5; padding-top: 4px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.insightCardCritical {
+  animation: criticalPulse 2s ease-in-out infinite;
+  border-left-width: 4px;
+}
+@keyframes criticalPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+  50% { box-shadow: 0 0 12px 2px rgba(239, 68, 68, 0.15); }
+}
+
+/* ─── KPI Row ─── */
+.kpiRow {
+  display: flex; align-items: center; gap: 16px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $border; border-radius: 12px;
+  flex-wrap: wrap;
+}
+.kpiItem {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-width: 80px;
+}
+.kpiValue {
+  font-size: 16px; font-weight: 700; color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.kpiLabel {
+  font-size: 10px; color: $muted; text-transform: uppercase;
+  letter-spacing: 0.3px; text-align: center;
+}
+.kpiDivider {
+  width: 1px; height: 28px; background: $border; flex-shrink: 0;
+}
+.kpiDanger { color: #ef4444; }
+
+/* ─── AI Actions Bar ─── */
+.aiActionsBar {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.aiActionBtn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 10px;
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.12);
+  color: #c084fc; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  &:hover:not(:disabled) { background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.25); }
+  &:disabled { opacity: 0.5; cursor: default; }
+}
+.aiSpinnerSmall {
+  width: 14px; height: 14px; border: 2px solid rgba(168, 85, 247, 0.15);
+  border-top-color: #c084fc; border-radius: 50%;
+  animation: spin 0.8s linear infinite; display: inline-block;
+}
+
+/* ─── Monthly Summary Panel ─── */
+.summaryPanel {
+  background: rgba(168, 85, 247, 0.04);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 14px; overflow: hidden;
+}
+.summaryHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+}
+.summaryTitleRow {
+  display: flex; align-items: center; gap: 10px;
+}
+.summaryIcon { font-size: 18px; }
+.summaryTitle {
+  font-size: 15px; font-weight: 600; color: #c084fc;
+}
+.summaryBody { padding: 16px 20px; }
+.summaryStats {
+  display: flex; gap: 20px; flex-wrap: wrap;
+  padding-bottom: 16px; margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.summaryStat {
+  display: flex; flex-direction: column; gap: 2px; min-width: 70px;
+}
+.summaryStatValue {
+  font-size: 18px; font-weight: 700; color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.summaryStatLabel {
+  font-size: 10px; color: $muted; text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.summarySection { margin-bottom: 14px; }
+.summarySectionTitle {
+  font-size: 13px; font-weight: 600; color: $green;
+  margin: 0 0 8px; padding: 0;
+}
+.summarySectionWarn { color: #f59e0b; }
+.summarySectionReco { color: #c084fc; }
+.summaryItem {
+  font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.7);
+  padding: 4px 0 4px 16px; position: relative;
+  &::before {
+    content: '→'; position: absolute; left: 0; color: rgba(255, 255, 255, 0.25);
+  }
+}
+.summaryOutlook {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 12px 14px; border-radius: 10px;
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.1);
+  font-size: 13px; line-height: 1.6; color: rgba(255, 255, 255, 0.7);
+  margin-top: 8px;
+}
+.summaryOutlookIcon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+/* ─── Risk Badges ─── */
+.riskBadge {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 8px;
+  margin-bottom: 10px; font-size: 12px;
+}
+.riskScore {
+  font-weight: 800; font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  min-width: 28px; text-align: center;
+}
+.riskText { color: rgba(255, 255, 255, 0.6); }
+.riskBadge_high {
+  background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.15);
+  .riskScore { color: #f87171; }
+}
+.riskBadge_medium {
+  background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.15);
+  .riskScore { color: #fbbf24; }
+}
+.riskBadge_low {
+  background: rgba($green, 0.06); border: 1px solid rgba($green, 0.12);
+  .riskScore { color: $green; }
+}
+
+/* ─── AI Button ─── */
+.btnAi {
+  padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+  &:hover { background: rgba(168, 85, 247, 0.2); color: #e0b0ff; }
+}
+
+/* ─── Relance Modal ─── */
+.relanceInfo {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 13px; color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 14px;
+  strong { color: #fff; font-weight: 600; }
+}
+.relanceTones {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.relanceToneLabel {
+  font-size: 12px; color: $muted; font-weight: 500;
+}
+.relanceToneBtn {
+  padding: 5px 12px; border-radius: 20px; font-size: 11.5px; font-weight: 500;
+  background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5); cursor: pointer; transition: all 0.15s;
+  &:hover { color: rgba(255, 255, 255, 0.7); border-color: rgba(255, 255, 255, 0.15); }
+}
+.relanceToneBtnActive {
+  background: rgba(168, 85, 247, 0.12); border-color: rgba(168, 85, 247, 0.25);
+  color: #c084fc;
+}
+.relanceResult {
+  margin-top: 16px; padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $border; border-radius: 12px;
+}
+.relanceSubject {
+  font-size: 14px; font-weight: 600; color: #fff;
+  margin-bottom: 12px; padding-bottom: 10px;
+  border-bottom: 1px solid $border;
+}
+.relanceSubjectLabel {
+  font-size: 11px; color: $muted; font-weight: 500;
+  margin-right: 6px; text-transform: uppercase;
+}
+.relanceBody {
+  font-size: 13px; line-height: 1.8; color: rgba(255, 255, 255, 0.75);
+  white-space: pre-wrap; margin-bottom: 14px;
+}
+.relanceActions {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+
+/* ─── Smart Description ─── */
+.inputWithAi {
+  display: flex; gap: 6px; align-items: center;
+  .input { flex: 1; }
+}
+.aiSuggestBtn {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(168, 85, 247, 0.08); border: 1px solid rgba(168, 85, 247, 0.15);
+  color: #c084fc; font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; flex-shrink: 0;
+  &:hover:not(:disabled) { background: rgba(168, 85, 247, 0.15); }
+  &:disabled { opacity: 0.4; cursor: default; }
+}
+.descSuggestions {
+  display: flex; flex-direction: column; gap: 4px; margin-top: 6px;
+}
+.descSuggestionBtn {
+  text-align: left; padding: 6px 12px; border-radius: 8px;
+  background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.1);
+  color: rgba(255, 255, 255, 0.7); font-size: 12.5px;
+  cursor: pointer; transition: all 0.15s;
+  &:hover { background: rgba(168, 85, 247, 0.1); color: #c084fc; }
+}
+
+/* ═══════════════════════════════════════
+   TREND CHART
+   ═══════════════════════════════════════ */
+.trendRow {
+  display: flex; gap: 16px; margin-top: 12px;
+}
+.trendCard {
+  flex: 1;
+  background: $card-bg; border: 1px solid $border;
+  border-radius: 14px; padding: 16px 20px;
+}
+.trendTitle {
+  font-size: 12px; color: $muted; text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 12px;
+}
+.trendBars {
+  display: flex; align-items: flex-end; gap: 6px; height: 80px;
+}
+.trendBar {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.trendBarFill {
+  width: 100%; border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, $orange, rgba($orange, 0.3));
+  min-height: 4px; transition: height 0.3s;
+}
+.trendBarLabel {
+  font-size: 9px; color: rgba(255, 255, 255, 0.3);
+  white-space: nowrap; text-overflow: ellipsis;
+  overflow: hidden; max-width: 100%;
+}
+.topPatientsList {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.topPatient {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  &:hover { background: rgba(255, 255, 255, 0.04); }
+}
+.topPatientRank {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba($orange, 0.12); color: $orange;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.topPatientName {
+  flex: 1; font-size: 13px; color: rgba(255, 255, 255, 0.7);
+}
+.topPatientAmount {
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+.topPatientCount {
+  font-size: 11px; color: $muted;
+}
+
+/* ─── Prestation Breakdown ─── */
+.prestaList {
+  display: flex; flex-direction: column; gap: 12px;
+}
+.prestaItem {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.prestaHeader {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.prestaName {
+  font-size: 12.5px; color: rgba(255, 255, 255, 0.7); font-weight: 500;
+}
+.prestaAmount {
+  font-size: 12.5px; font-weight: 700; color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+.prestaBarBg {
+  height: 6px; border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+.prestaBarFill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, rgba($orange, 0.6), $orange);
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+.prestaCount {
+  font-size: 10.5px; color: $muted;
+}
+
+/* ═══════════════════════════════════════
+   SOURCE BADGES
+   ═══════════════════════════════════════ */
+.badgeStripe {
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  background: rgba(99, 102, 241, 0.12); color: #a5b4fc;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+.badgeManual {
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ═══════════════════════════════════════
+   FILTER BAR
+   ═══════════════════════════════════════ */
+.filterBar {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.filterSelect {
+  padding: 7px 12px; border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px; font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.03); color: rgba(255, 255, 255, 0.7);
+  cursor: pointer; outline: none;
+  &:focus { border-color: $orange; }
+  option { background: #131620; color: #fff; }
+}
+.filterSearch {
+  padding: 7px 12px; border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px; font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.03); color: rgba(255, 255, 255, 0.85);
+  outline: none; flex: 1; min-width: 180px;
+  &:focus { border-color: $orange; }
+  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+}
+.filterDate {
+  padding: 6px 10px; border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px; font-size: 11.5px;
+  background: rgba(255, 255, 255, 0.03); color: rgba(255, 255, 255, 0.6);
+  outline: none; width: 130px;
+  &:focus { border-color: $orange; }
+  &::-webkit-calendar-picker-indicator { filter: invert(0.5); }
+}
+.filterClear {
+  background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.15);
+  color: #f87171; width: 30px; height: 30px; border-radius: 8px;
+  font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  &:hover { background: rgba(239, 68, 68, 0.15); }
+}
+.exportBtn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: 8px;
+  background: rgba($orange, 0.08); border: 1px solid rgba($orange, 0.15);
+  color: $orange; font-size: 11.5px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  &:hover { background: rgba($orange, 0.15); border-color: rgba($orange, 0.3); }
+}
+
+/* ═══════════════════════════════════════
+   STATS ROW (4 cols)
+   ═══════════════════════════════════════ */
+.statsRow4 {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+}
+
+/* ═══════════════════════════════════════
+   PATIENT NAME IN CARD
+   ═══════════════════════════════════════ */
+.cardPatient {
+  font-size: 12.5px; color: rgba(255, 255, 255, 0.55); margin-bottom: 4px;
+  display: flex; align-items: center; gap: 6px;
+  svg { width: 14px; height: 14px; opacity: 0.4; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media (max-width: 768px) {
+  .statsRow { grid-template-columns: 1fr; }
+  .statsRow4 { grid-template-columns: repeat(2, 1fr); }
+  .header { flex-direction: column; align-items: flex-start; }
+  .formRow { grid-template-columns: 1fr; }
+  .detailRow { grid-template-columns: 1fr; }
+  .trendRow { flex-direction: column; }
+  .filterBar { flex-direction: column; align-items: stretch; }
+  .filterDate { width: 100%; }
+  .insightsGrid { grid-template-columns: 1fr; }
+  .aiTabs { margin-left: 0; }
+  .chatBubbleWrap { max-width: 90%; }
+  .chatCopy { opacity: 1; right: -24px; }
+  .healthRow { flex-direction: column; align-items: flex-start; }
+  .sparkline { display: none; }
+  .toast { left: 16px; right: 16px; top: auto; bottom: 20px; }
+  .kpiRow { gap: 10px; padding: 10px 14px; justify-content: center; }
+  .kpiDivider { display: none; }
+  .aiActionsBar { flex-direction: column; }
+  .aiActionBtn { justify-content: center; }
+  .summaryStats { gap: 12px; }
+  .relanceInfo { flex-direction: column; gap: 6px; }
+}

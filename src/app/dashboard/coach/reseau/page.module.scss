@@ -1,0 +1,616 @@
+$orange: #f47b20;
+$dark: #141414;
+$card: rgba(255,255,255,0.04);
+$border: rgba(255,255,255,0.07);
+$muted: rgba(255,255,255,0.4);
+$radius: 14px;
+
+.page { padding: 0; display: flex; flex-direction: column; gap: 24px; }
+
+/* ─── Header ─── */
+.header {
+  display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;
+  padding-bottom: 18px; border-bottom: 1px solid $border;
+}
+.headerLeft { flex: 1; min-width: 200px; }
+.title { font-size: 22px; font-weight: 700; color: #fff; margin: 0; }
+.subtitle { font-size: 12px; color: $muted; margin-top: 4px; }
+.headerControls { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.athleteSelect {
+  background: $card; border: 1px solid $border; color: #fff;
+  padding: 8px 14px; border-radius: 10px; font-size: 13px;
+  cursor: pointer; outline: none;
+  &:focus { border-color: $orange; }
+  option { background: #1a1a1a; color: #fff; }
+}
+.headerBtns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btnPrimary {
+  background: $orange; color: #fff; border: none; padding: 8px 18px;
+  border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all .15s;
+  &:hover { filter: brightness(1.1); transform: translateY(-1px); }
+}
+.btnSecondary {
+  background: $card; color: $muted; border: 1px solid $border;
+  padding: 8px 18px; border-radius: 10px; font-size: 13px; cursor: pointer;
+  transition: all .15s;
+  &:hover { border-color: rgba(255,255,255,0.15); color: #fff; }
+}
+
+/* ─── Empty states ─── */
+.emptyState {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 80px 20px; text-align: center;
+}
+.emptyIcon { width: 48px; height: 48px; color: rgba(255,255,255,0.15); margin-bottom: 16px; }
+.emptyTitle { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.emptyText { font-size: 13px; color: $muted; margin-bottom: 20px; }
+
+/* ─── Card generic ─── */
+.card {
+  background: $card; border: 1px solid $border; border-radius: $radius; padding: 24px;
+}
+.cardTitle {
+  font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cardTitleIcon { width: 18px; height: 18px; color: $orange; flex-shrink: 0; }
+.cardTitleRight { margin-left: auto; font-size: 11px; font-weight: 400; color: $muted; }
+
+/* ─── Pro cards grid ─── */
+.proGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px;
+}
+.proCard {
+  position: relative; overflow: hidden;
+  background: rgba(0,0,0,0.15); border: 1px solid $border; border-radius: 12px;
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+  transition: border-color .15s;
+  &:hover { border-color: rgba(255,255,255,0.12); }
+}
+.proCardHeader { display: flex; align-items: center; gap: 12px; }
+.proAvatar {
+  width: 44px; height: 44px; border-radius: 50%; background: rgba($orange, 0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; color: $orange; flex-shrink: 0;
+  overflow: hidden;
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+.proInfo { flex: 1; min-width: 0; }
+.proName { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.proSpecialite { font-size: 12px; color: $muted; }
+.proStatusChip {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+}
+.proStatus_connecte { background: rgba(#66bb6a, 0.15); color: #66bb6a; }
+.proStatus_en_attente { background: rgba(#ffa726, 0.15); color: #ffa726; }
+.proStatus_refuse { background: rgba(#ef5350, 0.15); color: #ef5350; }
+
+.proRoleChip {
+  display: inline-block; font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  background: rgba($orange, 0.12); color: $orange; margin-right: 6px;
+}
+.sharedAccess { margin-top: -4px; }
+.sharedLabel { font-size: 10px; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 0.3px; }
+.sharedBadges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.sharedBadge {
+  display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px;
+  border-radius: 7px; font-size: 11px; font-weight: 500; border: none; cursor: pointer;
+  background: rgba(34,197,94,0.08); color: rgba(34,197,94,0.7); transition: all .15s;
+  svg { flex-shrink: 0; stroke: rgba(34,197,94,0.6); }
+  &:hover { background: rgba(34,197,94,0.15); color: #22c55e; svg { stroke: #22c55e; } }
+}
+.sharedBadgeMuted { font-size: 11px; color: rgba(255,255,255,0.2); font-style: italic; }
+
+.proActions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.proActionBtn {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  color: $muted; padding: 5px 12px; border-radius: 8px;
+  font-size: 11px; cursor: pointer; transition: all .15s;
+  svg { flex-shrink: 0; }
+  &:hover { color: #fff; border-color: rgba(255,255,255,0.15); }
+}
+.shareWrapper { position: relative; }
+.shareMenu {
+  position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 10;
+  background: #1a1a1a; border: 1px solid $border; border-radius: 10px;
+  padding: 4px; min-width: 170px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: fadeIn .12s ease;
+}
+.shareMenuItem {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; background: none; border: none;
+  color: rgba(255,255,255,0.7); padding: 8px 12px; border-radius: 7px;
+  font-size: 12px; cursor: pointer; transition: all .1s; white-space: nowrap;
+  svg { flex-shrink: 0; }
+  &:hover { background: rgba(255,255,255,0.06); color: #fff; }
+}
+.proCardClose {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 22px; height: 22px; border-radius: 6px; border: none;
+  background: transparent; color: rgba(255,255,255,0.15); font-size: 16px; line-height: 1;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  &:hover { background: rgba(239,68,68,0.12); color: #f87171; }
+}
+.confirmDeleteOverlay {
+  position: absolute; inset: 0; z-index: 3; border-radius: inherit;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  font-size: 13px; color: #f87171; font-weight: 500;
+  animation: fadeIn .15s ease;
+}
+.confirmDeleteYes {
+  background: #ef4444; color: #fff; border: none; padding: 3px 10px;
+  border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer;
+  transition: all .15s;
+  &:hover { background: #dc2626; }
+}
+.confirmDeleteNo {
+  background: rgba(255,255,255,0.06); color: $muted; border: 1px solid $border;
+  padding: 3px 10px; border-radius: 6px; font-size: 11px; cursor: pointer;
+  transition: all .15s;
+  &:hover { color: #fff; }
+}
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+/* ─── Patient Overview ─── */
+.patientOverview { display: flex; flex-direction: column; gap: 16px; }
+.patientOverviewHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.patientOverviewTitle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 600; color: #fff;
+  svg { stroke: $orange; flex-shrink: 0; }
+}
+.patientCount {
+  font-size: 12px; font-weight: 400; color: $muted;
+  background: rgba(255,255,255,0.06); padding: 2px 10px; border-radius: 10px;
+}
+.patientSearchWrap {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid $border; border-radius: 10px;
+  padding: 7px 14px; min-width: 220px;
+  svg { stroke: $muted; flex-shrink: 0; }
+}
+.patientSearch {
+  background: none; border: none; outline: none; color: #fff; font-size: 13px; width: 100%;
+  &::placeholder { color: rgba(255,255,255,0.25); }
+}
+.patientGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 12px; }
+.patientCard {
+  background: $card; border: 1px solid $border; border-radius: 12px;
+  padding: 16px; display: flex; flex-direction: column; gap: 10px;
+  cursor: pointer; transition: all .2s;
+  &:hover { border-color: rgba($orange, 0.25); background: rgba(255,255,255,0.05); transform: translateY(-1px); }
+}
+.patientCardTop { display: flex; align-items: center; gap: 12px; }
+.patientAvatar {
+  width: 42px; height: 42px; border-radius: 50%; background: rgba($orange, 0.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: $orange; flex-shrink: 0;
+}
+.patientInfo { flex: 1; min-width: 0; }
+.patientName { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.patientMeta { font-size: 11px; color: $muted; display: flex; gap: 4px; }
+.patientIndicators { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.patientRisk {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 8px;
+  border: 1px solid; background: rgba(255,255,255,0.02);
+}
+.patientTrend { font-size: 16px; color: $muted; }
+.patientMotif { font-size: 11px; color: rgba(255,255,255,0.35); font-style: italic; }
+.patientPros { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.patientProsLabel { font-size: 10px; color: rgba(255,255,255,0.2); text-transform: uppercase; letter-spacing: 0.3px; flex-shrink: 0; }
+.patientProChip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px; padding: 3px 10px 3px 3px; font-size: 11px; color: rgba(255,255,255,0.6);
+}
+.patientProAvatar {
+  width: 22px; height: 22px; border-radius: 50%; background: rgba($orange, 0.1);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+  font-size: 9px; font-weight: 600; color: $orange; flex-shrink: 0;
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+.patientProSpec { color: rgba(255,255,255,0.25); font-size: 10px; }
+.patientNoPro { font-size: 11px; color: rgba(255,255,255,0.15); font-style: italic; }
+
+/* ─── Shared content viewer ─── */
+.viewSharedBtn {
+  display: flex; align-items: center; gap: 6px; width: 100%;
+  background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.08);
+  color: $muted; padding: 8px 14px; border-radius: 8px;
+  font-size: 11px; cursor: pointer; transition: all .15s;
+  svg { flex-shrink: 0; }
+  &:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); border-color: rgba(255,255,255,0.15); }
+}
+.sharedContent {
+  background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 14px;
+  animation: fadeIn .2s ease;
+}
+.sharedContentLoading { text-align: center; color: $muted; font-size: 12px; padding: 20px 0; }
+.sharedContentEmpty { text-align: center; color: rgba(255,255,255,0.2); font-size: 12px; font-style: italic; padding: 16px 0; }
+.sharedSection { display: flex; flex-direction: column; gap: 8px; }
+.sharedSectionTitle {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600; color: $orange; text-transform: uppercase; letter-spacing: 0.3px;
+  svg { stroke: $orange; flex-shrink: 0; }
+}
+.sharedPlanCard {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px;
+}
+.sharedPlanHeader {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  strong { font-size: 13px; color: rgba(255,255,255,0.85); }
+}
+.sharedPlanStatus {
+  font-size: 9px; padding: 2px 8px; border-radius: 10px; text-transform: uppercase;
+  background: rgba($orange, 0.12); color: $orange;
+}
+.sharedPlanMeta { font-size: 11px; color: $muted; }
+.sharedProgress {
+  display: flex; align-items: center; gap: 8px;
+  height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: visible;
+  position: relative;
+  span { position: absolute; right: -32px; font-size: 10px; color: $muted; white-space: nowrap; }
+}
+.sharedProgressBar {
+  height: 100%; border-radius: 3px; background: $orange; transition: width .3s;
+}
+.sharedExercises { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.sharedExItem {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,0.02);
+}
+.sharedExName { font-size: 11px; color: rgba(255,255,255,0.65); }
+.sharedExDetail { font-size: 10px; color: $muted; }
+.sharedLogs { display: flex; flex-direction: column; gap: 4px; }
+.sharedLogItem {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 4px 8px; border-radius: 6px; background: rgba(255,255,255,0.02);
+  font-size: 11px; color: rgba(255,255,255,0.6);
+}
+.sharedLogDate { font-size: 10px; color: $muted; flex-shrink: 0; }
+
+/* ─── Permissions table ─── */
+.permTable {
+  width: 100%; border-collapse: collapse; font-size: 12px;
+  th { text-align: left; color: $muted; font-weight: 500; padding: 8px 10px; border-bottom: 1px solid $border; }
+  td { padding: 8px 10px; color: rgba(255,255,255,0.7); border-bottom: 1px solid rgba(255,255,255,0.03); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+}
+.permCheck {
+  width: 16px; height: 16px; appearance: none; background: rgba(255,255,255,0.06);
+  border: 1px solid $border; border-radius: 4px; cursor: pointer; vertical-align: middle;
+  position: relative; transition: all .15s;
+  &:checked {
+    background: $orange; border-color: $orange;
+    &::after {
+      content: '✓'; position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 10px;
+    }
+  }
+}
+.permProName { font-weight: 600; color: #fff; }
+.permEditBtn {
+  background: none; border: none; color: $orange; font-size: 11px;
+  cursor: pointer; padding: 2px 6px;
+  &:hover { text-decoration: underline; }
+}
+
+/* ─── Invitations ─── */
+.inviteGrid { display: flex; flex-direction: column; gap: 8px; }
+.inviteSection { margin-bottom: 16px; }
+.inviteSectionTitle { font-size: 12px; font-weight: 600; color: $muted; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.inviteItem {
+  display: flex; align-items: center; gap: 12px; padding: 12px;
+  background: rgba(0,0,0,0.1); border-radius: 10px;
+}
+.inviteInfo { flex: 1; }
+.inviteEmail { font-size: 13px; color: #fff; font-weight: 500; }
+.inviteMeta { font-size: 11px; color: $muted; }
+.inviteStatus {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  background: rgba(#ffa726, 0.15); color: #ffa726;
+}
+.inviteStatus_acceptee { background: rgba(#66bb6a, 0.15); color: #66bb6a; }
+.inviteStatus_refusee { background: rgba(#ef5350, 0.15); color: #ef5350; }
+.inviteStatus_annulee { background: rgba(255,255,255,0.06); color: $muted; }
+.inviteActions { display: flex; gap: 6px; }
+.inviteActionBtn {
+  @extend .proActionBtn;
+}
+
+/* ─── Collab feed ─── */
+.feedList { display: flex; flex-direction: column; gap: 10px; }
+.feedItem {
+  background: rgba(0,0,0,0.12); border-radius: 10px; padding: 16px;
+  border-left: 3px solid rgba($orange, 0.3); position: relative;
+}
+.feedItemPinned { border-left-color: $orange; }
+.feedHeader { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.feedAvatar {
+  width: 30px; height: 30px; border-radius: 50%; background: rgba($orange, 0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: $orange; flex-shrink: 0;
+}
+.feedAuthor { font-size: 13px; font-weight: 600; color: #fff; }
+.feedRole { font-size: 11px; color: $muted; }
+.feedDate { font-size: 11px; color: rgba(255,255,255,0.2); margin-left: auto; }
+.feedContent { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
+.feedTags { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+.feedTag {
+  font-size: 10px; padding: 2px 8px; border-radius: 12px;
+  background: rgba(255,255,255,0.06); color: $muted;
+}
+.feedActions { display: flex; gap: 6px; margin-top: 10px; }
+.feedActionBtn {
+  background: none; border: none; color: $muted; font-size: 11px;
+  cursor: pointer; padding: 2px 8px;
+  &:hover { color: $orange; }
+}
+.feedReply {
+  margin-left: 30px; padding-left: 12px; border-left: 2px solid rgba(255,255,255,0.06);
+  margin-top: 8px;
+}
+.feedInput {
+  display: flex; gap: 8px; margin-top: 14px;
+  input, textarea {
+    flex: 1; background: rgba(0,0,0,0.2); border: 1px solid $border;
+    color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 13px;
+    resize: none; outline: none;
+    &:focus { border-color: $orange; }
+    &::placeholder { color: rgba(255,255,255,0.2); }
+  }
+}
+.feedSendBtn {
+  background: $orange; color: #fff; border: none; padding: 10px 18px;
+  border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+  white-space: nowrap;
+  &:hover { filter: brightness(1.1); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+.feedTagChips { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.feedTagChip {
+  font-size: 10px; padding: 3px 10px; border-radius: 20px;
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  color: $muted; cursor: pointer; transition: all .15s;
+  &:hover { border-color: rgba(255,255,255,0.15); }
+}
+.feedTagChipActive {
+  @extend .feedTagChip;
+  background: rgba($orange, 0.15); border-color: rgba($orange, 0.3); color: $orange;
+}
+
+/* ─── Modal ─── */
+.modalOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: #1a1a1a; border: 1px solid $border; border-radius: $radius;
+  width: 90%; max-width: 500px; padding: 28px;
+}
+.modalTitle { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 18px; }
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.field label { font-size: 12px; color: $muted; font-weight: 500; }
+.field input, .field select, .field textarea {
+  background: rgba(255,255,255,0.04); border: 1px solid $border;
+  color: #fff; padding: 10px 14px; border-radius: 10px; font-size: 13px;
+  outline: none; resize: none;
+  &:focus { border-color: $orange; }
+  &::placeholder { color: rgba(255,255,255,0.2); }
+  option { background: #1a1a1a; color: #fff; }
+}
+.modalActions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.cancelBtn {
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  color: $muted; padding: 9px 20px; border-radius: 10px; font-size: 13px;
+  cursor: pointer;
+  &:hover { color: #fff; }
+}
+.submitBtn {
+  background: $orange; color: #fff; border: none; padding: 9px 20px;
+  border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+  &:hover { filter: brightness(1.1); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.emptySection { text-align: center; padding: 20px; color: rgba(255,255,255,0.2); font-size: 13px; }
+.loading { padding: 60px; text-align: center; color: $muted; font-size: 14px; }
+
+/* ─── Chat Panel ─── */
+.chatBubbleToggle {
+  position: fixed; bottom: 20px; right: 20px; z-index: 1001;
+  display: flex; align-items: center; gap: 10px;
+  background: #1a1d23; border: 1px solid rgba(255,255,255,0.1); border-radius: 28px;
+  padding: 8px 16px 8px 8px; cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  transition: all .2s;
+  &:hover { border-color: rgba($orange, 0.3); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.6); }
+}
+.chatBubbleAvatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba($orange, 0.15); color: $orange;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.chatBubbleName {
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+.chatBubbleClose {
+  width: 22px; height: 22px; border-radius: 50%; border: none;
+  background: rgba(255,255,255,0.06); cursor: pointer; margin-left: 4px;
+  display: flex; align-items: center; justify-content: center;
+  svg { width: 10px; height: 10px; color: $muted; }
+  &:hover { background: rgba(239,68,68,0.15); svg { color: #ef4444; } }
+}
+.chatPanel {
+  position: fixed; bottom: 20px; right: 20px; z-index: 1001;
+  width: 380px; max-width: calc(100vw - 40px); height: 520px; max-height: calc(100vh - 100px);
+  background: #1a1d23; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+  display: flex; flex-direction: column; overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.chatHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: #161820;
+}
+.chatHeaderInfo { display: flex; align-items: center; gap: 12px; }
+.chatAvatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba($orange, 0.15); color: $orange;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; flex-shrink: 0;
+}
+.chatName { font-size: 14px; font-weight: 700; color: #fff; }
+.chatSpecialite { font-size: 11px; color: $muted; }
+.chatHeaderBtns { display: flex; gap: 4px; }
+.chatMinBtn, .chatCloseBtn {
+  width: 30px; height: 30px; border-radius: 8px; border: none;
+  background: rgba(255,255,255,0.04); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  svg { width: 14px; height: 14px; color: $muted; }
+  &:hover { background: rgba(255,255,255,0.08); svg { color: #fff; } }
+}
+.chatCloseBtn:hover { background: rgba(239,68,68,0.1); svg { color: #ef4444; } }
+.chatMessages {
+  flex: 1; overflow-y: auto; padding: 16px 20px;
+  display: flex; flex-direction: column; gap: 8px;
+  justify-content: flex-end;
+  scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.06) transparent;
+}
+.chatEmpty {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.2); font-size: 13px;
+}
+.chatBubble {
+  max-width: 80%; padding: 10px 14px; border-radius: 14px;
+  font-size: 13px; line-height: 1.5;
+}
+.chatBubbleMe {
+  align-self: flex-end; background: $orange; color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.chatBubbleThem {
+  align-self: flex-start; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85);
+  border-bottom-left-radius: 4px;
+}
+.chatBubbleContent { word-break: break-word; }
+.chatBubbleTime {
+  font-size: 10px; color: rgba(255,255,255,0.25); margin-top: 4px;
+}
+.chatBubbleMe .chatBubbleTime { text-align: right; }
+.chatInputBar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.08);
+  background: #161820;
+}
+.chatInput {
+  flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: #fff; padding: 10px 14px; border-radius: 10px;
+  font-size: 13px; outline: none; transition: border-color .15s;
+  &:focus { border-color: rgba($orange, 0.4); }
+  &::placeholder { color: rgba(255,255,255,0.2); }
+}
+.chatSendBtn {
+  width: 38px; height: 38px; border-radius: 10px; border: none;
+  background: $orange; cursor: pointer; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  svg { width: 16px; height: 16px; color: #fff; }
+  &:hover:not(:disabled) { filter: brightness(1.1); }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
+}
+
+/* ─── Legal Disclaimer ─── */
+.disclaimer {
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px 20px; min-height: 60vh;
+}
+.disclaimerCard {
+  background: $card; border: 1px solid $border; border-radius: 20px;
+  padding: 48px 40px; max-width: 620px; width: 100%; text-align: center;
+}
+.disclaimerIcon {
+  width: 56px; height: 56px; color: $orange; margin-bottom: 20px;
+}
+.disclaimerTitle {
+  font-size: 22px; font-weight: 700; color: #fff; margin: 0 0 6px;
+}
+.disclaimerSubtitle {
+  font-size: 14px; color: $orange; font-weight: 600; margin: 0 0 20px;
+}
+.disclaimerLegal {
+  text-align: left; background: rgba(0,0,0,0.2); border-radius: 12px;
+  padding: 20px 24px; margin-bottom: 24px;
+  max-height: 320px; overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.1) transparent;
+  p {
+    font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6;
+    margin: 0 0 14px;
+  }
+  ul {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  li {
+    font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6;
+    padding-left: 14px; position: relative;
+    &::before {
+      content: ''; position: absolute; left: 0; top: 8px;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: $orange; opacity: 0.6;
+    }
+    strong { color: rgba(255,255,255,0.85); font-weight: 600; }
+  }
+}
+.disclaimerCheckLabel {
+  display: flex; align-items: flex-start; gap: 10px;
+  text-align: left; font-size: 13px; color: rgba(255,255,255,0.6);
+  margin-bottom: 20px; cursor: pointer; line-height: 1.5;
+  user-select: none;
+}
+.disclaimerCheck {
+  width: 18px; height: 18px; appearance: none; flex-shrink: 0;
+  background: rgba(255,255,255,0.06); border: 1px solid $border;
+  border-radius: 4px; cursor: pointer; position: relative;
+  margin-top: 2px; transition: all .15s;
+  &:checked {
+    background: $orange; border-color: $orange;
+    &::after {
+      content: '✓'; position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 11px;
+    }
+  }
+}
+.disclaimerAcceptBtn {
+  width: 100%; max-width: 340px; margin: 0 auto; display: block;
+  background: $orange; color: #fff; border: none;
+  padding: 14px 24px; border-radius: 12px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: all .2s;
+  &:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+  &:disabled { opacity: 0.3; cursor: not-allowed; }
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .header { flex-direction: column; gap: 12px; align-items: stretch; }
+  .proGrid { grid-template-columns: 1fr; }
+  .tabBar { overflow-x: auto; flex-wrap: nowrap; gap: 0; }
+  .modal { max-width: calc(100vw - 32px); max-height: 85vh; }
+  .overlay { padding: 16px; }
+  .feedComposer { padding: 14px; }
+}
+@media (max-width: 480px) {
+  .title { font-size: 18px; }
+  .searchInput { width: 100%; }
+  .feedBtns { flex-direction: column; }
+}

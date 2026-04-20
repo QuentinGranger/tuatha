@@ -1,0 +1,1864 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Professionnel {
+  id                  String          @id @default(uuid())
+  nom                 String
+  prenom              String
+  email               String          @unique
+  telephone           String
+  specialite          String
+  statutExercice      String          @default("liberal") // liberal, salarie, mixte, remplacant, autre
+  numeroVerification  String
+  documentPath        String?
+  avatarPath          String?
+  password            String
+  emailVerified       Boolean         @default(false)
+  emailVerifyToken    String?
+  emailVerifyExpires  DateTime?
+  accountStatus       String          @default("draft") // draft, stripe_pending, profile_pending, compliance_review, active, suspended
+  verificationStatus  String          @default("unverified") // unverified, pending, verified, rejected
+  verifiedAt          DateTime?
+  verificationNote    String?
+  totpSecret          String?
+  twoFactorEnabled    Boolean         @default(false)
+  adresseCabinet      String?
+  searchable          Boolean         @default(true)
+  latitude            Float?
+  longitude           Float?
+  placeId             String?
+  // CGU acceptance tracking
+  acceptedCguVersion  String?         // e.g. "1.0"
+  acceptedCguAt       DateTime?
+  acceptedCguIp       String?
+  // Stripe Connect
+  stripeAccountId           String?       // acct_xxx
+  stripeOnboardingComplete  Boolean       @default(false)
+  stripeChargesEnabled      Boolean       @default(false)
+  stripePayoutsEnabled      Boolean       @default(false)
+  stripeDetailsSubmitted    Boolean       @default(false)
+  // Remboursement / informations conventionnement
+  professionAffichee        String?       // ex: "Médecin du sport", "Kinésithérapeute DE"
+  specialiteAffichee        String?       // ex: "Traumatologie sportive", "Rééducation fonctionnelle"
+  conventionne              String        @default("a_verifier") // oui, non, secteur_1, secteur_2, a_verifier
+  prestationRemboursableType String?      // ex: "Consultation médicale", "Actes de rééducation", "Bilan diététique"
+  ordonnanceRequise         String        @default("non") // oui, non, selon_acte
+  mutuelleAcceptee          String        @default("a_verifier") // oui, non, a_verifier
+  remboursementNote         String?       // note libre du pro sur ses conditions de remboursement
+  // CGU Pro acceptance tracking
+  acceptedCguProVersion String?       // e.g. "1.0"
+  acceptedCguProAt      DateTime?
+  acceptedCguProIp      String?
+
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  services            Service[]
+  tarifs              Tarif[]
+  disponibilites      Disponibilite[]
+  calendriers         CalendrierSync[]
+  athletes            Athlete[]
+  calendarEvents      CalendarEvent[]
+  kanbanTasks         KanbanTask[]
+  sessions            Session[]
+  exerciseTemplates   ExerciseTemplate[]
+  connectionsAsOwner  ProConnection[]  @relation("ConnectionOwner")
+  connectionsAsPro    ProConnection[]  @relation("ConnectionPro")
+  invitationsSent     ProInvitation[]  @relation("InviteSender")
+  collabNotes         CollabNote[]
+  payments            Payment[]
+  messagesSent        ProMessage[]     @relation("MessageSender")
+  messagesReceived    ProMessage[]     @relation("MessageReceiver")
+  invoices            Invoice[]
+  kinePlans           KinePlan[]
+  kineVideos          KineVideo[]
+  kineAlerts          KineAlert[]
+  kineAlertRules      KineAlertRule[]
+  nutriObjectives     NutriObjective[]
+  nutriRules          NutriRule[]
+  nutriConsultNotes   NutriConsultNote[] @relation("NutriNotesPro")
+  nutriPlans          NutriPlan[]
+  nutriMealTemplates  NutriMealTemplate[]
+  nutriDayTemplates   NutriDayTemplate[]
+  docsSent            SharedDocument[] @relation("DocSender")
+  docsReceived        SharedDocument[] @relation("DocReceiver")
+  athleteVideos       AthleteVideo[]
+  medOrdonnances      MedOrdonnance[]
+  medPrescriptions    MedPrescription[]
+  medProtocols        MedProtocol[]
+  medAlerts           MedAlert[]
+  medClinicalNotes    MedClinicalNote[]
+  medPlans            MedPlan[]
+  medVitalEntries     MedVitalEntry[]
+  verificationDocs    VerificationDocument[]
+  passwordResets      PasswordReset[]
+  securityAlerts      SecurityAlert[]
+  authSessions        AuthSession[]
+  passkeys            Passkey[]
+  cabinetsOwned       Cabinet[]
+  cabinetMemberships  CabinetMember[]
+  adminLogs           AdminLog[]
+  documentVersions    DocumentVersion[]
+  consentLogs         ConsentLog[]
+  subjectRequests     SubjectAccessRequest[]
+  groupsCreated       ProConversation[]
+  groupMemberships    ProConversationMember[]
+  pushSubscriptions   PushSubscription[]
+  connectionRequests  ConnectionRequest[]
+  blockedAthletes     BlockedAthlete[]
+  athleteProMessages  AthleteProMessage[]
+  athleteGroupMemberships AthleteGroupMember[]
+  bookingReminders    BookingReminder[]
+  waitlistEntries     WaitlistEntry[]
+  slotAlerts          SlotAlert[]
+  athletePrivacySettings AthletePrivacySettings[]
+  athleteDocsReceived AthleteDocument[] @relation("AthleteDocReceiver")
+  dataAccessRequests  DataAccessRequest[]
+}
+
+// ─── Compte Athlète (inscription autonome) ───
+
+model AthleteUser {
+  id                  String    @id @default(uuid())
+  nom                 String
+  prenom              String
+  email               String    @unique
+  telephone           String
+  password            String
+  sport               String?
+  dateNaissance       DateTime?
+  taille              Float?
+  poids               Float?
+  objectif            String?
+  antecedents         String[]  @default([])
+  traitements         String?
+  contreIndications   String?
+  avatarPath          String?
+  emailVerified       Boolean   @default(false)
+  emailVerifyToken    String?
+  emailVerifyExpires  DateTime?
+  acceptedCguVersion  String?
+  acceptedCguAt       DateTime?
+  acceptedCguIp       String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  authSessions        AuthSession[]
+  connectionRequests  ConnectionRequest[]
+  blockedByPros       BlockedAthlete[]
+  athleteProMessages  AthleteProMessage[]
+  athleteGroups       AthleteGroupConversation[]
+  bookingReminders    BookingReminder[]
+  consultationPreps   ConsultationPrep[]
+  waitlistEntries     WaitlistEntry[]
+  slotAlerts          SlotAlert[]
+  calendarEvents      CalendarEvent[]
+  privacySettings     AthletePrivacySettings[]
+  dataAccessRequests  DataAccessRequest[]
+  athleteDocsSent     AthleteDocument[]
+  healthAppConnections HealthAppConnection[]
+  payments            Payment[]
+  invoices            Invoice[]
+}
+
+// ─── Messages athlète ↔ professionnel ───
+
+model AthleteProMessage {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  senderType      String        // "athlete" | "pro"
+  content         String
+  read            Boolean       @default(false)
+  pinned          Boolean       @default(false)
+  important       Boolean       @default(false)
+  replyToId       String?
+  reactions       Json          @default("[]")
+  createdAt       DateTime      @default(now())
+  editedAt        DateTime?
+
+  attachments     AthleteProMessageAttachment[]
+
+  @@index([athleteUserId, professionnelId])
+  @@index([professionnelId])
+}
+
+model AthleteProMessageAttachment {
+  id           String            @id @default(uuid())
+  messageId    String
+  message      AthleteProMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  filePath     String
+  createdAt    DateTime          @default(now())
+
+  @@index([messageId])
+}
+
+// ─── Groupes athlète ↔ professionnels ───
+
+model AthleteGroupConversation {
+  id            String   @id @default(uuid())
+  name          String?
+  athleteUserId String
+  athleteUser   AthleteUser @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+
+  members       AthleteGroupMember[]
+  messages      AthleteGroupMessage[]
+}
+
+model AthleteGroupMember {
+  id             String   @id @default(uuid())
+  conversationId String
+  conversation   AthleteGroupConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  professionnelId String
+  professionnel  Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  joinedAt       DateTime @default(now())
+  role           String   @default("member")
+
+  @@unique([conversationId, professionnelId])
+}
+
+model AthleteGroupMessage {
+  id             String   @id @default(uuid())
+  conversationId String
+  conversation   AthleteGroupConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderType     String   // "athlete" | "pro"
+  senderProId    String?
+  content        String
+  read           Boolean  @default(false)
+  pinned         Boolean  @default(false)
+  important      Boolean  @default(false)
+  replyToId      String?
+  reactions      Json     @default("[]")
+  createdAt      DateTime @default(now())
+  editedAt       DateTime?
+
+  attachments    AthleteGroupMessageAttachment[]
+
+  @@index([conversationId])
+}
+
+model AthleteGroupMessageAttachment {
+  id           String              @id @default(uuid())
+  messageId    String
+  message      AthleteGroupMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  filePath     String
+  createdAt    DateTime            @default(now())
+
+  @@index([messageId])
+}
+
+// ─── Demande de connexion athlète → professionnel ───
+
+model ConnectionRequest {
+  id                String   @id @default(uuid())
+  athleteUserId     String
+  professionnelId   String
+  status            String   @default("pending") // pending | accepted | rejected
+  requestedBy       String   @default("athlete") // "athlete" | "pro"
+  createdAt         DateTime @default(now())
+  respondedAt       DateTime?
+
+  athleteUser       AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnel     Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  @@unique([athleteUserId, professionnelId])
+  @@index([professionnelId])
+}
+
+// ─── Blocage athlète par un pro ───
+
+model BlockedAthlete {
+  id              String   @id @default(uuid())
+  professionnelId String
+  athleteUserId   String
+  createdAt       DateTime @default(now())
+  reason          String?
+
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+
+  @@unique([professionnelId, athleteUserId])
+}
+
+// ─── Droits utilisateur RGPD (Art. 15, 16, 17) ───
+
+model SubjectAccessRequest {
+  id              String   @id @default(uuid())
+
+  // Type of right exercised
+  rightType       String   // "access" | "rectification" | "erasure" | "portability" | "opposition"
+
+  // Status tracking
+  status          String   @default("pending") // "pending" | "processing" | "completed" | "rejected" | "partial"
+  reason          String?  // Reason for rejection or additional context
+
+  // Who
+  athleteId       String
+  athlete         Athlete  @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  requestedByProId String  // The pro who submitted the request on behalf of the athlete
+  requestedByPro  Professionnel @relation(fields: [requestedByProId], references: [id], onDelete: Cascade)
+
+  // What was requested / delivered
+  details         String?  // JSON: fields to rectify, categories to export, etc.
+  result          String?  // JSON: what was done (fields changed, data exported, etc.)
+
+  // Context
+  ip              String?
+  userAgent       String?
+
+  // Timestamps
+  createdAt       DateTime @default(now())
+  processedAt     DateTime?
+  completedAt     DateTime?
+
+  @@index([athleteId])
+  @@index([requestedByProId])
+  @@index([status])
+}
+
+model VerificationDocument {
+  id               String        @id @default(uuid())
+  type             String        // rpps, adeli, carte_pro, diplome, structure, other
+  label            String        // Display name e.g. "Diplôme de kinésithérapie"
+  filePath         String
+  status           String        @default("pending") // pending, accepted, rejected
+  note             String?       // Admin note
+  aiVerified       Boolean?      // null = not analyzed, true = AI approved, false = AI flagged
+  aiConfidence     Float?        // 0-100 confidence score
+  aiSummary        String?       // AI analysis summary
+  aiRawResponse    String?       // Full AI response JSON
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model PasswordReset {
+  id               String        @id @default(uuid())
+  token            String        @unique
+  expiresAt        DateTime
+  used             Boolean       @default(false)
+  usedAt           DateTime?
+  ip               String?
+  userAgent        String?
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id])
+  createdAt        DateTime      @default(now())
+}
+
+model SecurityAlert {
+  id               String        @id @default(uuid())
+  type             String        // password_reset_requested, password_changed, login_blocked, etc.
+  message          String
+  ip               String?
+  userAgent        String?
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id])
+  createdAt        DateTime      @default(now())
+}
+
+model AuthSession {
+  id               String        @id @default(uuid())
+  token            String        @unique           // Short-lived access token (15min)
+  refreshToken     String?       @unique           // Long-lived refresh token (30d), rotated on each use
+  expiresAt        DateTime                        // Access token expiry
+  refreshExpiresAt DateTime?                       // Refresh token expiry
+  tokenFamily      String?                         // Rotation chain ID — detects token reuse/theft
+  rotationCount    Int           @default(0)       // How many times the refresh token was rotated
+  lastActiveAt     DateTime      @default(now())
+  revoked          Boolean       @default(false)
+  revokedAt        DateTime?
+  revokedReason    String?                         // "logout" | "rotation" | "theft_detected" | "expired" | "admin"
+  ip               String?
+  userAgent        String?
+  deviceName       String?       // e.g. "Chrome on macOS"
+  deviceHash       String?       // fingerprint to detect new devices
+  professionnelId  String?
+  professionnel    Professionnel? @relation(fields: [professionnelId], references: [id])
+  athleteUserId    String?
+  athleteUser      AthleteUser?   @relation(fields: [athleteUserId], references: [id])
+  createdAt        DateTime      @default(now())
+}
+
+model Passkey {
+  id               String        @id @default(uuid())
+  credentialId     String        @unique
+  publicKey        String        // base64-encoded public key
+  counter          Int           @default(0)
+  deviceType       String?       // singleDevice, multiDevice
+  backedUp         Boolean       @default(false)
+  transports       String[]      @default([]) // usb, ble, nfc, internal
+  name             String?       // user-given name, e.g. "MacBook TouchID"
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id])
+  lastUsedAt       DateTime?
+  createdAt        DateTime      @default(now())
+}
+
+model Service {
+  id               String        @id @default(uuid())
+  nom              String
+  personnalise     Boolean       @default(false)
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+}
+
+model Tarif {
+  id                  String        @id @default(uuid())
+  label               String        // e.g. "Consultation", "Bilan initial", "Suivi"
+  price               Int           // price in cents (e.g. 5000 = 50.00€)
+  duration            Int           @default(30) // minutes
+  description         String?
+  format              String?       // "presentiel" | "teleconsultation" | null = both
+  prestationType      String        @default("consultation_presentielle") // consultation_visio, consultation_presentielle, suivi_ponctuel, pack_non_remboursable
+  remboursementLabel  String        @default("a_verifier_patient") // potentiellement_remboursable, hors_assurance_maladie, complementaire_possible, a_verifier_patient
+  active              Boolean       @default(true)
+  professionnelId     String
+  professionnel       Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@index([professionnelId])
+}
+
+model Disponibilite {
+  id               String        @id @default(uuid())
+  jourDebut        String
+  jourFin          String
+  heureDebut       String
+  heureFin         String
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+}
+
+model CalendrierSync {
+  id               String        @id @default(uuid())
+  type             String
+  actif            Boolean       @default(false)
+  accessToken      String?
+  refreshToken     String?
+  tokenExpiry      DateTime?
+  email            String?
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  @@unique([professionnelId, type])
+}
+
+enum RiskLevel {
+  GOOD
+  AVERAGE
+  CRITICAL
+}
+
+enum Trend {
+  IMPROVING
+  STAGNATING
+  DECLINING
+}
+
+enum AthleteStatus {
+  active
+  paused
+  archived
+}
+
+model Athlete {
+  id               String        @id @default(uuid())
+  name             String
+  sport            String?
+  injuryNote       String?
+  latestNote       String?
+  lastContactAt    DateTime?
+  riskLevel        RiskLevel     @default(GOOD)
+  trend            Trend         @default(STAGNATING)
+  status           AthleteStatus @default(active)
+
+  // Page 1
+  objectif         String?
+  motif            String?
+  contactEmail     String?
+  contactPhone     String?
+  consentement     Boolean       @default(false)
+  consentementDate DateTime?
+  consentementPartage     Boolean   @default(false)
+  consentementPartageDate DateTime?
+
+  // Page 2
+  dateNaissance    DateTime?
+  taille           Float?
+  poids            Float?
+  bodyZone         String?
+  frequence        String?
+
+  // Page 3
+  antecedents      String[]      @default([])
+  traitements      String?
+  contreIndications String?
+  dataTracking     String[]      @default([])
+  canalCommunication String?
+
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  notes            AthleteNote[]
+  calendarEvents   CalendarEvent[]
+  kanbanTasks      KanbanTask[]    @relation("KanbanAthlete")
+  sessions         Session[]
+  proConnections   ProConnection[]
+  proInvitations   ProInvitation[]
+  collabNotes      CollabNote[]
+  proMessages      ProMessage[]
+  proConversations ProConversation[]
+  invoices         Invoice[]
+  kinePlans        KinePlan[]
+  kineAlerts       KineAlert[]
+  sharedDocs       SharedDocument[]
+  sharedDocsCtx    SharedDocument[] @relation("DocAthleteContext")
+  athleteDocsSent  AthleteDocument[] @relation("AthleteDocSender")
+  athleteVideos    AthleteVideo[]
+  nutriObjectives  NutriObjective[]
+  nutriJournals    NutriJournal[]
+  nutriMeasures    NutriMeasure[]
+  nutriAlerts      NutriAlert[]
+  nutriNotes       NutriConsultNote[]
+  nutriPlans       NutriPlan[]
+  medOrdonnances   MedOrdonnance[]
+  medPrescriptions MedPrescription[]
+  medProtocols     MedProtocol[]
+  medAlerts        MedAlert[]
+  medClinicalNotes MedClinicalNote[]
+  medPlans         MedPlan[]
+  medVitalEntries  MedVitalEntry[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  consentLogs      ConsentLog[]
+  subjectRequests  SubjectAccessRequest[]
+
+  // Soft-delete
+  deletedAt        DateTime?
+  deletedBy        String?
+}
+
+// ─── Traçabilité des consentements (RGPD santé) ───
+
+model ConsentLog {
+  id              String        @id @default(uuid())
+
+  // What consent was affected
+  consentType     String        // "general" | "partage" | "export" | "data_processing"
+  action          String        // "granted" | "revoked" | "renewed" | "updated"
+  previousValue   Boolean?      // State before the change (null = first time)
+  newValue        Boolean       // State after the change
+
+  // How consent was collected
+  method          String        @default("digital") // "verbal" | "written" | "digital" | "email"
+  purpose         String?       // Free text: why consent was requested
+
+  // Who
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  actorProId      String        // The professional who recorded the consent
+  actorPro        Professionnel @relation(fields: [actorProId], references: [id], onDelete: Cascade)
+
+  // Context
+  ip              String?
+  userAgent       String?
+
+  // Immutable timestamp
+  createdAt       DateTime      @default(now())
+
+  @@index([athleteId, consentType])
+  @@index([actorProId])
+}
+
+model AthleteNote {
+  id         String   @id @default(uuid())
+  note       String
+  athleteId  String
+  athlete    Athlete  @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model KanbanTask {
+  id               String        @id @default(uuid())
+  title            String
+  description      String?
+  column           String        @default("todo")
+  position         Int           @default(0)
+  priority         String        @default("medium")
+  dueDate          DateTime?
+  reminderMinutes  Int?
+  reminderSeen     Boolean       @default(false)
+  athleteId        String?
+  athlete          Athlete?      @relation("KanbanAthlete", fields: [athleteId], references: [id], onDelete: SetNull)
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Soft-delete
+  deletedAt        DateTime?
+  deletedBy        String?
+}
+
+model CalendarEvent {
+  id               String        @id @default(uuid())
+  title            String
+  date             DateTime
+  endDate          DateTime?
+  allDay           Boolean       @default(false)
+  type             String        @default("rdv")
+  color            String        @default("orange")
+  description      String?
+  reminderMinutes  Int?
+  reminderSeen     Boolean       @default(false)
+  athleteId        String?
+  athlete          Athlete?      @relation(fields: [athleteId], references: [id], onDelete: SetNull)
+  athleteUserId    String?
+  athleteUser      AthleteUser?  @relation(fields: [athleteUserId], references: [id], onDelete: SetNull)
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  visioRoomId      String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  bookingReminders BookingReminder[]
+  consultationPrep ConsultationPrep?
+  waitlistEntries  WaitlistEntry[]
+
+  payments         Payment[]
+
+  // Soft-delete
+  deletedAt        DateTime?
+  deletedBy        String?
+
+  @@index([athleteUserId])
+}
+
+// ─── Programme / Séance ───
+
+enum SessionStatus {
+  brouillon
+  planifiee
+  en_cours
+  realisee
+  annulee
+}
+
+model Session {
+  id               String        @id @default(uuid())
+  name             String
+  date             DateTime
+  time             String?
+  lieu             String?
+  status           SessionStatus @default(brouillon)
+  visibleAthlete   Boolean       @default(false)
+  visiblePros      Boolean       @default(false)
+
+  objectif         String?
+  tags             String[]      @default([])
+  notePro          String?
+
+  rpeCible         String?
+  zoneCardio       String?
+  contraintes      String[]      @default([])
+  criteresArret    String[]      @default([])
+  focusTechnique   String[]      @default([])
+
+  rpeRessenti      Int?
+  douleur          Int?
+  douleurZone      String?
+  feedbackAthlete  String?
+  analysePro       String?
+  recommandation   String?
+
+  athleteId        String?
+  athlete          Athlete?      @relation(fields: [athleteId], references: [id], onDelete: SetNull)
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  blocks           ExerciseBlock[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Soft-delete
+  deletedAt        DateTime?
+  deletedBy        String?
+}
+
+model ExerciseBlock {
+  id          String     @id @default(uuid())
+  name        String     @default("Main")
+  position    Int        @default(0)
+  sessionId   String
+  session     Session    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercises   Exercise[]
+}
+
+model Exercise {
+  id          String        @id @default(uuid())
+  name        String
+  sets        String?
+  reps        String?
+  duration    String?
+  distance    String?
+  intensity   String?
+  tempo       String?
+  repos       String?
+  consignes   String?
+  videoUrl    String?
+  position    Int           @default(0)
+  blockId     String
+  block       ExerciseBlock @relation(fields: [blockId], references: [id], onDelete: Cascade)
+}
+
+// ─── Réseau Professionnel ───
+
+enum ConnectionStatus {
+  connecte
+  en_attente
+  refuse
+}
+
+model ProConnection {
+  id              String           @id @default(uuid())
+  athleteId       String
+  athlete         Athlete          @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  ownerProId      String
+  ownerPro        Professionnel    @relation("ConnectionOwner", fields: [ownerProId], references: [id], onDelete: Cascade)
+  connectedProId  String
+  connectedPro    Professionnel    @relation("ConnectionPro", fields: [connectedProId], references: [id], onDelete: Cascade)
+  role            String           @default("Autre")
+  status          ConnectionStatus @default(en_attente)
+  readProgramme   Boolean          @default(false)
+  readIndicateurs Boolean          @default(false)
+  readBlessures   Boolean          @default(false)
+  readDocuments   Boolean          @default(false)
+  writeNote       Boolean          @default(false)
+  writeProgramme  Boolean          @default(false)
+  writeValidation Boolean          @default(false)
+  scope           String           @default("partage")
+  dataScopes      Json?            // Granular per-category access: { entrainement: "read", imagerie: "none", ... }
+  expiresAt       DateTime?        // null = no expiration (owner); set = time-limited shared access
+  renewedAt       DateTime?        // last renewal timestamp
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+enum InviteStatus {
+  envoyee
+  acceptee
+  refusee
+  annulee
+}
+
+model ProInvitation {
+  id              String       @id @default(uuid())
+  token           String       @unique @default(uuid())
+  athleteId       String
+  athlete         Athlete      @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  senderProId     String
+  senderPro       Professionnel @relation("InviteSender", fields: [senderProId], references: [id], onDelete: Cascade)
+  email           String
+  role            String       @default("Autre")
+  message         String?
+  status          InviteStatus @default(envoyee)
+  expiresAt       DateTime     @default(now())
+  usedAt          DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model CollabNote {
+  id              String        @id @default(uuid())
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  authorProId     String
+  authorPro       Professionnel @relation(fields: [authorProId], references: [id], onDelete: Cascade)
+  content         String
+  type            String        @default("note")
+  tags            String[]      @default([])
+  pinned          Boolean       @default(false)
+  parentId        String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+model ProMessage {
+  id              String        @id @default(uuid())
+  senderProId     String
+  senderPro       Professionnel @relation("MessageSender", fields: [senderProId], references: [id], onDelete: Cascade)
+  receiverProId   String
+  receiverPro     Professionnel @relation("MessageReceiver", fields: [receiverProId], references: [id], onDelete: Cascade)
+  athleteId       String?
+  athlete         Athlete?      @relation(fields: [athleteId], references: [id], onDelete: SetNull)
+  content         String
+  reactions       Json          @default("[]")
+  read            Boolean       @default(false)
+  pinned          Boolean       @default(false)
+  important       Boolean       @default(false)
+  replyToId       String?
+  conversationId  String?
+  conversation    ProConversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  editedAt        DateTime?
+
+  // Attachments
+  attachments     ProMessageAttachment[]
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+
+  @@index([conversationId])
+}
+
+model ProMessageAttachment {
+  id              String      @id @default(uuid())
+  messageId       String
+  message         ProMessage  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename        String
+  originalName    String
+  mimeType        String
+  size            Int
+  filePath        String
+  createdAt       DateTime    @default(now())
+
+  @@index([messageId])
+}
+
+// ─── Group conversations ───
+
+model ProConversation {
+  id          String   @id @default(uuid())
+  name        String?
+  isGroup     Boolean  @default(false)
+  athleteId   String?
+  athlete     Athlete? @relation(fields: [athleteId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  createdById String
+  createdBy   Professionnel @relation(fields: [createdById], references: [id])
+  members     ProConversationMember[]
+  messages    ProMessage[]
+}
+
+model ProConversationMember {
+  id             String          @id @default(uuid())
+  conversationId String
+  conversation   ProConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  proId          String
+  pro            Professionnel   @relation(fields: [proId], references: [id], onDelete: Cascade)
+  joinedAt       DateTime        @default(now())
+  role           String          @default("member")
+
+  @@unique([conversationId, proId])
+}
+
+// ─── Push Subscriptions (Web Push API) ───
+
+model PushSubscription {
+  id              String        @id @default(uuid())
+  proId           String
+  pro             Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  endpoint        String        @unique
+  p256dh          String
+  auth            String
+  userAgent       String?
+  createdAt       DateTime      @default(now())
+
+  @@index([proId])
+}
+
+// ─── Facturation ───
+
+enum InvoiceStatus {
+  unpaid
+  paid
+  overdue
+  cancelled
+}
+
+model Invoice {
+  id               String        @id @default(uuid())
+  number           String
+  description      String
+  amount           Float
+  status           InvoiceStatus @default(unpaid)
+  dueDate          DateTime
+  paidDate         DateTime?
+  paymentMethod    String?
+  notes            String?
+  // Source: "manual" (créée par le pro) ou "stripe" (auto-générée après paiement Stripe)
+  source           String        @default("manual")
+  // Lien vers le paiement Stripe (si source = "stripe")
+  paymentId        String?       @unique
+  payment          Payment?      @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  // Type de prestation
+  prestationType   String?
+  // Patient (legacy Athlete fiche pro-side)
+  athleteId        String?
+  athlete          Athlete?      @relation(fields: [athleteId], references: [id], onDelete: SetNull)
+  // Patient (AthleteUser app-side, pour les factures Stripe)
+  athleteUserId    String?
+  athleteUser      AthleteUser?  @relation(fields: [athleteUserId], references: [id], onDelete: SetNull)
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Soft-delete
+  deletedAt        DateTime?
+  deletedBy        String?
+
+  @@index([professionnelId])
+  @@index([athleteUserId])
+  @@index([status])
+}
+
+// ─── Kiné Programmes ───
+
+enum KinePlanStatus {
+  draft
+  active
+  paused
+  completed
+  archived
+}
+
+model KinePlan {
+  id               String         @id @default(uuid())
+  title            String
+  objective        String?
+  pathology        String?
+  phase            String?
+  globalProgress   Int?           @default(0)
+  notesPro         String?
+  notesPatient     String?
+  startDate        DateTime?
+  endDate          DateTime?
+  frequency        String?
+  nextRdvDate      DateTime?
+  nextRdvTime      String?
+  nextRdvLocation  String?
+  status           KinePlanStatus @default(draft)
+  isTemplate       Boolean        @default(false)
+  templateName     String?
+  conclusion       String?
+  outcomeScore     Int?
+  athleteId        String?
+  athlete          Athlete?       @relation(fields: [athleteId], references: [id], onDelete: SetNull)
+  professionnelId  String
+  professionnel    Professionnel  @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  exercises        KinePlanExercise[]
+  logs             ExerciseLog[]
+  alerts           KineAlert[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  // Soft-delete
+  deletedAt        DateTime?
+  deletedBy        String?
+}
+
+model KineVideo {
+  id               String        @id @default(uuid())
+  title            String
+  url              String
+  thumbnail        String?
+  category         String
+  duration         Int?
+  description      String?
+  professionnelId  String
+  professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  planExercises    KinePlanExercise[]
+  createdAt        DateTime      @default(now())
+}
+
+model KinePlanExercise {
+  id              String    @id @default(uuid())
+  position        Int       @default(0)
+  sets            Int?
+  reps            String?
+  duration        String?
+  tempo           String?
+  rest            String?
+  frequency       String?
+  painThreshold   Int?
+  consignes       String?
+  equipment       String?
+  alternative     String?
+  planId          String
+  plan            KinePlan  @relation(fields: [planId], references: [id], onDelete: Cascade)
+  videoId         String
+  video           KineVideo @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  logs            ExerciseLog[]
+  createdAt       DateTime  @default(now())
+}
+
+model ExerciseLog {
+  id              String           @id @default(uuid())
+  done            Boolean          @default(false)
+  pain            Int?
+  difficulty      Int?
+  comment         String?
+  date            DateTime         @default(now())
+  planId          String
+  plan            KinePlan         @relation(fields: [planId], references: [id], onDelete: Cascade)
+  exerciseId      String
+  exercise        KinePlanExercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  createdAt       DateTime         @default(now())
+}
+
+model KineAlert {
+  id              String        @id @default(uuid())
+  type            String        @default("alert")
+  status          String        @default("unread")
+  origin          String        @default("kine")
+  title           String
+  description     String?
+  detail          String?
+  intensity       Int?
+  clinicalNote    String?
+  closedAt        DateTime?
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  planId          String?
+  plan            KinePlan?     @relation(fields: [planId], references: [id], onDelete: SetNull)
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model KineAlertRule {
+  id              String        @id @default(uuid())
+  ruleType        String
+  threshold       Int           @default(5)
+  thresholdDays   Int?          @default(3)
+  active          Boolean       @default(true)
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model ExerciseTemplate {
+  id              String        @id @default(uuid())
+  name            String
+  category        String?
+  defaultSets     String?
+  defaultReps     String?
+  defaultDuration String?
+  defaultIntensity String?
+  defaultRepos    String?
+  consignes       String?
+  videoUrl        String?
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Vidéos athlètes (coach) ───
+
+model AthleteVideo {
+  id              String        @id @default(uuid())
+  filename        String
+  originalName    String
+  mimeType        String
+  size            Int
+  filePath        String
+  note            String?
+  uploadToken     String        @unique
+  viewed          Boolean       @default(false)
+
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime      @default(now())
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+// ─── Documents partagés ───
+
+model SharedDocument {
+  id              String        @id @default(uuid())
+  filename        String
+  originalName    String
+  mimeType        String
+  size            Int
+  filePath        String
+  category        String        @default("autre")
+  note            String?
+
+  // Sender (always a pro)
+  senderProId     String
+  senderPro       Professionnel @relation("DocSender", fields: [senderProId], references: [id], onDelete: Cascade)
+
+  // Receiver: either a pro or an athlete (one must be set)
+  receiverProId   String?
+  receiverPro     Professionnel? @relation("DocReceiver", fields: [receiverProId], references: [id], onDelete: Cascade)
+  receiverAthleteId String?
+  receiverAthlete Athlete?      @relation(fields: [receiverAthleteId], references: [id], onDelete: Cascade)
+
+  // Optional athlete context for pro-to-pro docs
+  athleteId       String?
+  athlete         Athlete?      @relation("DocAthleteContext", fields: [athleteId], references: [id], onDelete: SetNull)
+
+  readAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now()) @updatedAt
+
+  // Versioning
+  currentVersion  Int           @default(1)
+  versions        DocumentVersion[]
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+// ─── Document Versioning ───
+
+model DocumentVersion {
+  id              String         @id @default(uuid())
+  version         Int
+  filename        String
+  originalName    String
+  mimeType        String
+  size            Int
+  filePath        String
+  note            String?
+
+  // Who uploaded this version
+  uploadedById    String
+  uploadedBy      Professionnel  @relation(fields: [uploadedById], references: [id], onDelete: Cascade)
+
+  // Parent document
+  documentId      String
+  document        SharedDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime       @default(now())
+
+  @@index([documentId, version])
+}
+
+// ─── Documents partagés par l'athlète ───
+
+model AthleteDocument {
+  id              String        @id @default(uuid())
+  filename        String
+  originalName    String
+  mimeType        String
+  size            Int
+  filePath        String
+  category        String        @default("autre")
+  note            String?
+
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+
+  // Athlete record linked to this pro (for pro-side queries)
+  athleteId       String?
+  athlete         Athlete?      @relation("AthleteDocSender", fields: [athleteId], references: [id], onDelete: SetNull)
+
+  professionnelId String
+  professionnel   Professionnel @relation("AthleteDocReceiver", fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  readAt          DateTime?
+  createdAt       DateTime      @default(now())
+  deletedAt       DateTime?
+
+  @@index([athleteUserId, professionnelId])
+}
+
+// ─── Nutrition ───
+
+model NutriObjective {
+  id              String        @id @default(uuid())
+  goal            String        @default("sante")
+  kcal            Int           @default(2000)
+  protein         Int           @default(120)
+  carbs           Int           @default(250)
+  fat             Int           @default(65)
+  water           Float         @default(2.0)
+  weeklyRate      Float         @default(0)
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([athleteId, proId])
+}
+
+model NutriJournal {
+  id              String        @id @default(uuid())
+  date            DateTime      @db.Date
+  kcal            Int           @default(0)
+  protein         Int           @default(0)
+  carbs           Int           @default(0)
+  fat             Int           @default(0)
+  water           Float         @default(0)
+  completed       Boolean       @default(false)
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+
+  @@unique([athleteId, date])
+}
+
+model NutriMeasure {
+  id              String        @id @default(uuid())
+  date            DateTime      @db.Date
+  weight          Float?
+  bmi             Float?
+  bodyFat         Float?
+  waist           Float?
+  hydration       Float?
+  source          String        @default("manual")
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+model NutriAlert {
+  id              String        @id @default(uuid())
+  type            String        @default("alert")
+  severity        String        @default("modere")
+  status          String        @default("unread")
+  origin          String        @default("manual")
+  title           String
+  description     String?
+  action          String?
+  closedNote      String?
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+model NutriRule {
+  id              String        @id @default(uuid())
+  label           String
+  condition       String
+  active          Boolean       @default(true)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+model NutriConsultNote {
+  id              String        @id @default(uuid())
+  date            DateTime      @db.Date
+  notePro         String
+  notePatient     String        @default("")
+  focus           String        @default("")
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation("NutriNotesPro", fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Plan Alimentaire ───
+
+enum NutriPlanStatus {
+  brouillon
+  publie
+  en_cours
+  archive
+}
+
+model NutriPlan {
+  id              String          @id @default(uuid())
+  name            String          @default("Plan alimentaire")
+  status          NutriPlanStatus @default(brouillon)
+  kcalTarget      Int             @default(2000)
+  proteinTarget   Int             @default(120)
+  carbsTarget     Int             @default(250)
+  fatTarget       Int             @default(65)
+  fiberTarget     Int?            
+  saltTarget      Float?          
+  waterTarget     Float?          
+  proteinPct      Int             @default(30)
+  carbsPct        Int             @default(40)
+  fatPct          Int             @default(30)
+  notePatient     String          @default("")
+  notePro         String          @default("")
+  startDate       DateTime?       @db.Date
+  version         Int             @default(1)
+  athleteId       String
+  athlete         Athlete         @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel   @relation(fields: [proId], references: [id], onDelete: Cascade)
+  meals           NutriMeal[]
+  versions        NutriPlanVersion[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+model NutriMeal {
+  id              String          @id @default(uuid())
+  name            String          @default("Repas")
+  time            String?         
+  position        Int             @default(0)
+  rule            String?         
+  planId          String
+  plan            NutriPlan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+  items           NutriFoodItem[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model NutriFoodItem {
+  id              String          @id @default(uuid())
+  name            String
+  quantity        Float           @default(0)
+  unit            String          @default("g")
+  kcal            Int             @default(0)
+  protein         Float           @default(0)
+  carbs           Float           @default(0)
+  fat             Float           @default(0)
+  category        String          @default("autre")
+  mandatory       Boolean         @default(true)
+  position        Int             @default(0)
+  mealId          String
+  meal            NutriMeal       @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  alternatives    NutriAlternative[]
+  createdAt       DateTime        @default(now())
+}
+
+model NutriAlternative {
+  id              String          @id @default(uuid())
+  name            String
+  quantity        Float           @default(0)
+  unit            String          @default("g")
+  kcal            Int             @default(0)
+  protein         Float           @default(0)
+  carbs           Float           @default(0)
+  fat             Float           @default(0)
+  constraint      String?         
+  foodItemId      String
+  foodItem        NutriFoodItem   @relation(fields: [foodItemId], references: [id], onDelete: Cascade)
+}
+
+model NutriPlanVersion {
+  id              String          @id @default(uuid())
+  version         Int
+  snapshot        String          
+  publishedAt     DateTime        @default(now())
+  planId          String
+  plan            NutriPlan       @relation(fields: [planId], references: [id], onDelete: Cascade)
+}
+
+model NutriMealTemplate {
+  id              String          @id @default(uuid())
+  name            String
+  items           String          
+  proId           String
+  professionnel   Professionnel   @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime        @default(now())
+}
+
+model NutriDayTemplate {
+  id              String          @id @default(uuid())
+  name            String
+  meals           String          
+  proId           String
+  professionnel   Professionnel   @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime        @default(now())
+}
+
+// ─── Médecin: Ordonnances ───
+
+model MedOrdonnance {
+  id              String        @id @default(uuid())
+  type            String        // kine, imagerie, biologie, medicament, arret, certificat, orientation, dispositif
+  status          String        @default("brouillon") // brouillon, signee, transmise, expiree, annulee
+  diagnosis       String
+  contentJson     String        // JSON structured content per type
+  episode         String?
+  validUntil      DateTime?
+  signedAt        DateTime?
+  version         Int           @default(1)
+  pdfUrl          String?
+  signatureData   String?
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+// ─── Médecin: Prescriptions (non-ordonnance) ───
+
+model MedPrescription {
+  id              String        @id @default(uuid())
+  type            String        // activite, douleur, suivi, education, sport, symptomes
+  title           String
+  contentJson     String        // JSON array of structured lines
+  dateStart       DateTime
+  dateEnd         DateTime?
+  redFlags        String[]      @default([])
+  visiblePatient  Boolean       @default(true)
+  linkedProtocolId String?
+  status          String        @default("active") // active, completed, cancelled
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// ─── Médecin: Protocoles (parcours par phases) ───
+
+model MedProtocol {
+  id              String        @id @default(uuid())
+  name            String
+  description     String?
+  objectives      String[]      @default([])
+  phasesJson      String        // JSON array of phases
+  linkedTemplates String[]      @default([])
+  status          String        @default("draft") // draft, active, completed
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+// ─── Médecin: Alertes médicales ───
+
+model MedAlert {
+  id              String        @id @default(uuid())
+  severity        String        @default("info") // info, warning, critical
+  status          String        @default("open") // open, treated, closed
+  source          String        @default("pro")  // patient, capteur, auto, pro
+  title           String
+  description     String
+  context         String?
+  commentMedecin  String?
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// ─── Médecin: Notes cliniques ───
+
+model MedClinicalNote {
+  id              String        @id @default(uuid())
+  focus           String        // Consultation, Sommeil, Douleurs, etc.
+  notePro         String        // Note professionnelle (privée)
+  notePatient     String?       // Note visible par le patient
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Médecin: Plan de soins ───
+
+model MedPlan {
+  id              String        @id @default(uuid())
+  episode         String        @default("Suivi général")
+  patientStatus   String        @default("stable") // stable, surveiller, alerte
+  conduiteJson    String        @default("[]")  // JSON array of strings
+  restrictionsJson String       @default("[]")  // JSON array of strings
+  nextStepsJson   String        @default("[]")  // JSON array of {label, status}
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+// ─── Médecin: Signaux vitaux / relevés ───
+
+model MedVitalEntry {
+  id              String        @id @default(uuid())
+  vitalKey        String        // douleur, fatigue, sommeil, poids, fc, ta_sys, ta_dia, spo2, temperature
+  value           Float
+  unit            String
+  note            String?
+  athleteId       String
+  athlete         Athlete       @relation(fields: [athleteId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  recordedAt      DateTime      @default(now())
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Cabinet / Box (équipe professionnelle) ───
+
+enum CabinetRole {
+  admin
+  member
+}
+
+model Cabinet {
+  id              String          @id @default(uuid())
+  name            String
+  address         String?
+  ownerId         String
+  owner           Professionnel   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  members         CabinetMember[]
+  adminLogs       AdminLog[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Soft-delete
+  deletedAt       DateTime?
+  deletedBy       String?
+}
+
+model CabinetMember {
+  id              String        @id @default(uuid())
+  cabinetId       String
+  cabinet         Cabinet       @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  proId           String
+  professionnel   Professionnel @relation(fields: [proId], references: [id], onDelete: Cascade)
+  role            CabinetRole   @default(member)
+  joinedAt        DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([cabinetId, proId])
+}
+
+model AdminLog {
+  id              String        @id @default(uuid())
+  cabinetId       String
+  cabinet         Cabinet       @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  actorProId      String
+  actorPro        Professionnel @relation(fields: [actorProId], references: [id], onDelete: Cascade)
+  action          String        // member_added, member_removed, role_changed, cabinet_updated, cabinet_created, offboarding, rights_changed
+  targetProId     String?       // the pro affected by the action (if applicable)
+  details         Json?         // structured details: { oldRole, newRole, email, sessionsRevoked, ... }
+  ip              String?
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Consultation Prep (mini checklist) ───
+
+model ConsultationPrep {
+  id              String        @id @default(uuid())
+  calendarEventId String        @unique
+  calendarEvent   CalendarEvent @relation(fields: [calendarEventId], references: [id], onDelete: Cascade)
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+
+  motifDetail     String?       // complément du motif
+  symptoms        String?       // symptômes décrits
+  painLevel       Int?          // 0-10
+  fatigueLevel    Int?          // 0-10
+  documents       String[]      // file names or paths uploaded
+  evolution       String?       // évolution depuis dernière séance
+  questionnaire   Json?         // mini questionnaire answers { q: string, a: string }[]
+
+  completedAt     DateTime?     // null = not completed
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([athleteUserId])
+}
+
+// ─── Booking Reminders ───
+
+model BookingReminder {
+  id              String        @id @default(uuid())
+  calendarEventId String
+  calendarEvent   CalendarEvent @relation(fields: [calendarEventId], references: [id], onDelete: Cascade)
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  type            String        // confirmation, j2, j1, h2, h1_visio, now_visio
+  recipientType   String        @default("athlete") // "athlete" or "pro"
+  scheduledAt     DateTime      // when the reminder should be sent
+  sentAt          DateTime?     // null = not sent yet
+  channel         String        @default("email") // email, inapp, sms
+  dismissed       Boolean       @default(false)
+
+  // Snapshot of event data for the reminder content
+  eventTitle      String
+  eventDate       DateTime
+  eventEndDate    DateTime?
+  eventFormat     String        @default("presentiel") // presentiel, teleconsultation
+  eventMotif      String
+  eventAddress    String?
+  eventDocuments  String?       // comma-separated docs to bring
+  eventVisioRoomId String?      // visio room ID for teleconsultation reminders
+
+  createdAt       DateTime      @default(now())
+
+  @@index([athleteUserId, sentAt])
+  @@index([professionnelId, sentAt])
+  @@index([scheduledAt, sentAt])
+}
+
+// ─── Waitlist (earlier slot alerts) ───
+
+model WaitlistEntry {
+  id              String        @id @default(uuid())
+  calendarEventId String
+  calendarEvent   CalendarEvent @relation(fields: [calendarEventId], references: [id], onDelete: Cascade)
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnelId String
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  beforeDate      DateTime      // alert if slot opens before this date
+  notifiedAt      DateTime?     // null = not yet notified
+  active          Boolean       @default(true)
+
+  createdAt       DateTime      @default(now())
+
+  @@unique([calendarEventId, athleteUserId])
+  @@index([professionnelId, active])
+}
+
+// ─── Slot Alerts (planning gap optimization) ───
+
+model SlotAlert {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnelId String?
+  professionnel   Professionnel? @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  preferredDays   Int[]         // 0=dim,1=lun…6=sam
+  timeStart       String?       // "08:00"
+  timeEnd         String?       // "18:00"
+  format          String?       // "presentiel" | "teleconsultation" | null = any
+  motif           String?       // motif de consultation original
+  priority        Boolean       @default(false) // SMS if priority
+
+  active          Boolean       @default(true)
+  notifiedAt      DateTime?     // last notification sent
+  matchedSlotDate DateTime?     // slot date that was found
+  bookedEventId   String?       // if athlete booked from this alert
+
+  createdAt       DateTime      @default(now())
+
+  @@index([athleteUserId, active])
+  @@index([professionnelId, active])
+}
+
+// ─── Réglages de confidentialité athlète → par professionnel ───
+
+model AthletePrivacySettings {
+  id                  String        @id @default(uuid())
+  athleteUserId       String
+  athleteUser         AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnelId     String
+  professionnel       Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  shareSport          Boolean       @default(true)
+  sharePhysical       Boolean       @default(true)
+  shareAntecedents    Boolean       @default(false)
+  shareTraitements    Boolean       @default(false)
+  shareContraindic    Boolean       @default(false)
+  shareVitals         Boolean       @default(false)
+  shareConsultPrep    Boolean       @default(true)
+  sharePhoto          Boolean       @default(true)
+  shareMessaging      Boolean       @default(true)
+
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  @@unique([athleteUserId, professionnelId])
+  @@index([athleteUserId])
+}
+
+// ─── Demande d'accès pro → données athlète ───
+
+model DataAccessRequest {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  professionnelId String
+  dataKey         String        // "shareAntecedents" | "shareTraitements" | "shareContraindic" | "shareVitals" | "shareMessaging" etc.
+  reason          String?       // optional justification from pro
+  status          String        @default("pending") // "pending" | "accepted" | "rejected"
+  respondedAt     DateTime?
+  createdAt       DateTime      @default(now())
+
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  @@index([athleteUserId, status])
+  @@index([professionnelId, athleteUserId])
+}
+
+// ─── Journal d'accès pro → données athlète ───
+
+model ProAccessLog {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  professionnelId String
+  action          String        // "view_profile" | "view_list" | "view_vitals" | "view_messages" | "view_plan_kine" | "view_plan_nutri" | "view_ordonnance" | "view_programme" | "search"
+  resource        String?       // optional detail: e.g. "kine_plan:abc123"
+  blocked         Boolean       @default(false) // true if access was denied by privacy settings
+  createdAt       DateTime      @default(now())
+
+  @@index([athleteUserId, professionnelId, createdAt])
+  @@index([athleteUserId, createdAt])
+}
+
+// ─── Health App Connections (Direct OAuth: Garmin, Polar, WHOOP, Oura) ───
+
+model HealthAppConnection {
+  id              String    @id @default(uuid())
+  athleteUserId   String
+  athleteUser     AthleteUser @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  provider        String    // "GARMIN" | "POLAR" | "WHOOP" | "OURA"
+  status          String    @default("pending") // "pending" | "connected" | "disconnected" | "error"
+  // OAuth tokens (encrypted at rest via app layer)
+  accessToken     String?
+  accessTokenSecret String? // Garmin OAuth 1.0a only
+  refreshToken    String?   // Polar/WHOOP/Oura OAuth 2.0
+  tokenExpiresAt  DateTime? // OAuth 2.0 token expiry
+  providerUserId  String?   // Provider's user ID if available
+  scopes          String[]  @default([])
+  lastSyncAt      DateTime?
+  lastSyncError   String?
+  metadata        Json?     // Extra provider-specific data
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  dataPoints      HealthDataPoint[]
+
+  @@unique([athleteUserId, provider])
+  @@index([athleteUserId])
+}
+
+model HealthDataPoint {
+  id              String    @id @default(uuid())
+  connectionId    String
+  connection      HealthAppConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  athleteUserId   String
+  category        String    // "steps" | "heart_rate" | "sleep" | "calories" | "distance" | "active_minutes" | "spo2" | "hrv" | "body_weight" | "body_fat"
+  value           Float
+  unit            String    // "count" | "bpm" | "hours" | "kcal" | "km" | "min" | "%" | "ms" | "kg"
+  date            DateTime  // The date this data point refers to
+  startTime       DateTime? // For time-range data (e.g. sleep start)
+  endTime         DateTime? // For time-range data (e.g. sleep end)
+  source          String?   // Original source app name
+  metadata        Json?     // Extra data (e.g. sleep stages, HR zones)
+  createdAt       DateTime  @default(now())
+
+  @@unique([connectionId, category, date])
+  @@index([athleteUserId, category, date])
+  @@index([connectionId, date])
+}
+
+// ─── Visio Signaling (DB-backed, cross-instance) ───
+
+model VisioSignal {
+  id        String   @id @default(uuid())
+  roomId    String
+  senderId  String
+  targetId  String?
+  type      String   // join, offer, answer, ice-candidate, leave
+  payload   String?  @db.Text // JSON-stringified SDP / ICE candidate
+  createdAt DateTime @default(now())
+
+  @@index([roomId, createdAt])
+}
+
+// ─── Payments (Stripe Connect + Checkout) ───
+// PCI DSS / CNIL : AUCUNE donnée de carte n'est stockée ici.
+// Pas de PAN, pas de CVV, pas d'empreinte carte, pas de PaymentMethod ID.
+// Seuls les identifiants Stripe nécessaires à la traçabilité comptable sont conservés.
+// Voir src/lib/pci.ts pour la politique complète.
+
+model Payment {
+  id                    String        @id @default(uuid())
+  // Stripe references
+  stripeCheckoutSessionId String     @unique
+  stripePaymentIntentId   String?    @unique
+  // Actors
+  athleteUserId         String
+  athleteUser           AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnelId       String
+  professionnel         Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+  calendarEventId       String?
+  calendarEvent         CalendarEvent? @relation(fields: [calendarEventId], references: [id], onDelete: SetNull)
+  // Amounts (all in cents)
+  amount                Int           // total charged to athlete (gross)
+  platformFee           Int           @default(0) // Tuatha commission (application_fee_amount)
+  stripeFee             Int?          // Stripe processing fee (from balance_transaction)
+  netAmount             Int?          // net amount transferred to pro (amount - platformFee)
+  refundAmount          Int?          // amount refunded (partial or full), in cents
+  currency              String        @default("eur")
+  // Status — See src/lib/paymentStatus.ts for full list
+  status                String        @default("appointment_created")
+  paidAt                DateTime?
+  refundedAt            DateTime?
+  payoutAt              DateTime?     // when funds arrived at pro's bank account
+  // Metadata
+  description           String?
+  prestationType        String?       // consultation_visio, consultation_presentielle, suivi_ponctuel, pack_non_remboursable
+  metadata              String?       @db.Text // JSON for extra info
+  // Receipt
+  receiptNumber         String?       @unique // e.g. "TUA-2026-000042"
+  receiptGeneratedAt    DateTime?
+  receiptEmailSentAt    DateTime?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  invoice               Invoice?
+
+  @@index([athleteUserId])
+  @@index([professionnelId])
+  @@index([calendarEventId])
+  @@index([status])
+}

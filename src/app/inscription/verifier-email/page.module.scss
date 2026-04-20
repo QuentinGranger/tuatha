@@ -1,0 +1,220 @@
+$orange: #f47b20;
+$orange-light: #f5a623;
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$glass-border: rgba(255, 255, 255, 0.08);
+$success: #22c55e;
+$danger: #ef4444;
+
+.page {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 50%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba($orange, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.card {
+  width: 100%;
+  max-width: 440px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 20px;
+  padding: 40px 36px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(12px);
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: $orange;
+  margin-bottom: 32px;
+  letter-spacing: -0.5px;
+}
+
+.icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: rgba($orange, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg { width: 28px; height: 28px; color: $orange; }
+}
+
+.iconSuccess {
+  background: rgba($success, 0.1);
+  svg { color: $success; }
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: $text-light;
+}
+
+.desc {
+  font-size: 14px;
+  color: $text-muted;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.email {
+  color: $orange;
+  font-weight: 600;
+}
+
+.codeInputs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.codeDigit {
+  width: 48px;
+  height: 56px;
+  border-radius: 12px;
+  border: 2px solid $glass-border;
+  background: rgba(255, 255, 255, 0.03);
+  color: $text-light;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  caret-color: $orange;
+
+  &:focus {
+    border-color: $orange;
+    box-shadow: 0 0 0 3px rgba($orange, 0.15);
+  }
+}
+
+.btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+}
+
+.btnPrimary {
+  @extend .btn;
+  background: linear-gradient(135deg, $orange, $orange-light);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba($orange, 0.25);
+
+  &:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px rgba($orange, 0.35); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.btnSecondary {
+  @extend .btn;
+  background: transparent;
+  color: $text-muted;
+  border: 1px solid $glass-border;
+
+  &:hover:not(:disabled) { color: $text-light; border-color: rgba(255, 255, 255, 0.15); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.resendRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: $text-muted;
+  margin-top: 8px;
+}
+
+.resendBtn {
+  background: none;
+  border: none;
+  color: $orange;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  &:hover { opacity: 0.8; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; text-decoration: none; }
+}
+
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 9999;
+  animation: slideUp 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  svg { width: 16px; height: 16px; }
+}
+
+.success {
+  background: rgba($success, 0.12);
+  border: 1px solid rgba($success, 0.25);
+  color: $success;
+}
+
+.error {
+  background: rgba($danger, 0.12);
+  border: 1px solid rgba($danger, 0.25);
+  color: $danger;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: $text-muted;
+  font-size: 13px;
+  text-decoration: none;
+  margin-top: 16px;
+  transition: color 0.2s;
+  svg { width: 14px; height: 14px; }
+  &:hover { color: $text-light; }
+}

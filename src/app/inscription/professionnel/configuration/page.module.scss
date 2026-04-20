@@ -1,0 +1,454 @@
+$orange: #f47b20;
+$orange-light: #f5a623;
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$glass-border: rgba(255, 255, 255, 0.08);
+
+.page {
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  display: flex;
+  justify-content: center;
+  padding: 50px 40px;
+  position: relative;
+  overflow-y: auto;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 50%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba($orange, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, $text-light 0%, rgba(255, 255, 255, 0.7) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  color: $text-muted;
+  font-weight: 300;
+}
+
+// ── Section ──
+
+.section {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.sectionTitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: $text-light;
+}
+
+.sectionSubtitle {
+  font-size: 14px;
+  color: $text-muted;
+  font-weight: 300;
+  margin-top: -8px;
+}
+
+// ── Services ──
+
+.servicesGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.serviceChip {
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 400;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($orange, 0.3);
+    color: $text-light;
+  }
+}
+
+.serviceChipActive {
+  background: rgba($orange, 0.15);
+  border-color: rgba($orange, 0.5);
+  color: $orange-light;
+  font-weight: 500;
+}
+
+.serviceChipCustom {
+  background: rgba($orange, 0.1);
+  border-color: rgba($orange, 0.35);
+  color: $orange-light;
+
+  &:hover {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(220, 38, 38, 0.4);
+    color: #fca5a5;
+  }
+}
+
+.customServiceRow {
+  display: flex;
+  gap: 10px;
+}
+
+.addBtn {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: $orange;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    border-color: rgba($orange, 0.4);
+    background: rgba($orange, 0.1);
+  }
+}
+
+// ── Input ──
+
+.input {
+  flex: 1;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 14px;
+  font-weight: 300;
+  outline: none;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: $text-muted;
+    font-weight: 300;
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.4);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 20px rgba($orange, 0.06);
+  }
+}
+
+// ── Disponibilités ──
+
+.dispoRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.dispoLabel {
+  font-size: 13px;
+  color: $text-muted;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.selectSmall {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  color: $text-light;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23ffffff40' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  transition: border-color 0.3s ease;
+
+  option {
+    background: #0c1a30;
+    color: $text-light;
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+.timeInput {
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  color: $text-light;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(0.6);
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.4);
+  }
+}
+
+.removeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  margin-left: auto;
+
+  &:hover {
+    background: rgba(220, 38, 38, 0.12);
+    border-color: rgba(220, 38, 38, 0.3);
+    color: #fca5a5;
+  }
+}
+
+.addDateBtn {
+  align-self: flex-start;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba($orange, 0.35);
+    color: $orange-light;
+  }
+}
+
+// ── Calendriers ──
+
+.calendriersGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.calendarCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.calendarCardActive {
+  border-color: rgba($orange, 0.45);
+  background: rgba($orange, 0.08);
+
+  .calendarLabel {
+    color: $text-light;
+  }
+}
+
+.calendarCard:hover {
+  border-color: rgba($orange, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.calendarIcon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    border-radius: 4px;
+    object-fit: contain;
+  }
+}
+
+.calendarLabel {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+  transition: color 0.25s ease;
+}
+
+.calendarStatus {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 500;
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.addressConfirm {
+  font-size: 13px;
+  font-weight: 500;
+  color: #86efac;
+  margin-top: 8px;
+}
+
+// ── Messages ──
+
+.message {
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.messageError {
+  background: rgba(220, 38, 38, 0.12);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #fca5a5;
+}
+
+.messageSuccess {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+
+// ── Actions ──
+
+.actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.backBtn {
+  padding: 14px 28px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.25s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: $text-light;
+  }
+}
+
+.submitButton {
+  flex: 1;
+  padding: 15px;
+  background: linear-gradient(135deg, $orange 0%, $orange-light 100%);
+  border: none;
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px rgba($orange, 0.25), 0 0 60px rgba($orange, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    box-shadow: 0 6px 32px rgba($orange, 0.35), 0 0 80px rgba($orange, 0.12);
+    transform: translateY(-1px);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}

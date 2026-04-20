@@ -1,0 +1,187 @@
+$orange: #f47b20;
+$orange-light: #f5a623;
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+
+.page {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 40px 30px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: 20%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(ellipse at center, rgba($orange, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 38px;
+  font-weight: 700;
+  color: $orange;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: $text-muted;
+  font-weight: 300;
+}
+
+.cards {
+  display: flex;
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+  max-width: 960px;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+
+.card {
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(6, 14, 30, 0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  position: relative;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba($orange, 0.06);
+    border-color: rgba($orange, 0.2);
+  }
+}
+
+.cardImage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 20%,
+    rgba(0, 0, 0, 0.3) 55%,
+    rgba(2, 4, 6, 0.92) 85%,
+    rgba(2, 4, 6, 0.98) 100%
+  );
+  z-index: 1;
+}
+
+.cardContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 28px;
+  z-index: 2;
+}
+
+.cardTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: $orange;
+  margin-bottom: 12px;
+}
+
+.cardDescription {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+
+.cardButton {
+  display: inline-block;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, $orange 0%, $orange-light 100%);
+  border: none;
+  border-radius: 8px;
+  color: $text-light;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba($orange, 0.2);
+
+  &:hover {
+    box-shadow: 0 6px 28px rgba($orange, 0.35);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
+}
+
+.loginLink {
+  margin-top: 24px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 14px;
+  color: $text-muted;
+  position: relative;
+  z-index: 1;
+
+  a {
+    color: $orange;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $orange-light;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 16px 20px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .cards {
+    flex-direction: column;
+    gap: 20px;
+  }
+}

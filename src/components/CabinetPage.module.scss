@@ -1,0 +1,229 @@
+$orange: #f47b20;
+$dark: #141414;
+$card: rgba(255,255,255,0.04);
+$border: rgba(255,255,255,0.07);
+$muted: rgba(255,255,255,0.4);
+$radius: 14px;
+
+.page { padding: 0; display: flex; flex-direction: column; gap: 24px; }
+
+/* ─── Header ─── */
+.header {
+  display: flex; align-items: flex-start; gap: 20px; flex-wrap: wrap;
+  padding-bottom: 18px; border-bottom: 1px solid $border;
+}
+.headerLeft { flex: 1; min-width: 200px; }
+.title { font-size: 22px; font-weight: 700; color: #fff; margin: 0; }
+.subtitle { font-size: 12px; color: $muted; margin-top: 4px; }
+.headerBtns { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btnPrimary {
+  background: $orange; color: #fff; border: none; padding: 8px 18px;
+  border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all .15s; display: flex; align-items: center; gap: 6px;
+  &:hover { filter: brightness(1.1); transform: translateY(-1px); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+}
+.btnSecondary {
+  background: $card; color: $muted; border: 1px solid $border;
+  padding: 8px 18px; border-radius: 10px; font-size: 13px; cursor: pointer;
+  transition: all .15s; display: flex; align-items: center; gap: 6px;
+  &:hover { border-color: rgba(255,255,255,0.15); color: #fff; }
+}
+.btnDanger {
+  background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2);
+  padding: 6px 14px; border-radius: 8px; font-size: 12px; cursor: pointer;
+  transition: all .15s;
+  &:hover { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.4); }
+}
+.btnSmall {
+  padding: 5px 12px; font-size: 11px; border-radius: 8px;
+}
+
+/* ─── Empty state ─── */
+.emptyState {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 80px 20px; text-align: center;
+}
+.emptyIcon { width: 56px; height: 56px; color: rgba(255,255,255,0.1); margin-bottom: 16px; }
+.emptyTitle { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.emptyText { font-size: 13px; color: $muted; margin-bottom: 24px; max-width: 400px; }
+
+/* ─── Card generic ─── */
+.card {
+  background: $card; border: 1px solid $border; border-radius: $radius; padding: 24px;
+}
+.cardTitle {
+  font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 8px;
+}
+.cardTitleIcon { width: 18px; height: 18px; color: $orange; flex-shrink: 0; }
+.cardTitleRight { margin-left: auto; font-size: 11px; font-weight: 400; color: $muted; }
+
+/* ─── Cabinet selector / tabs ─── */
+.cabinetTabs {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.cabinetTab {
+  background: $card; border: 1px solid $border; color: $muted;
+  padding: 10px 20px; border-radius: 10px; font-size: 13px; cursor: pointer;
+  transition: all .15s; display: flex; align-items: center; gap: 8px;
+  &:hover { border-color: rgba(255,255,255,0.15); color: #fff; }
+}
+.cabinetTabActive {
+  background: rgba($orange, 0.1); border-color: rgba($orange, 0.3); color: $orange;
+}
+.cabinetTabRole {
+  font-size: 10px; padding: 2px 6px; border-radius: 4px;
+  background: rgba(255,255,255,0.06); color: $muted;
+}
+.cabinetTabRoleAdmin {
+  background: rgba($orange, 0.15); color: $orange;
+}
+
+/* ─── Members grid ─── */
+.membersGrid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px;
+}
+.memberCard {
+  position: relative; overflow: hidden;
+  background: rgba(0,0,0,0.15); border: 1px solid $border; border-radius: 12px;
+  padding: 18px; display: flex; flex-direction: column; gap: 12px;
+  transition: border-color .15s;
+  &:hover { border-color: rgba(255,255,255,0.12); }
+}
+.memberHeader { display: flex; align-items: center; gap: 12px; }
+.memberAvatar {
+  width: 44px; height: 44px; border-radius: 50%; background: rgba($orange, 0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700; color: $orange; flex-shrink: 0;
+}
+.memberInfo { flex: 1; min-width: 0; }
+.memberName { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.memberEmail { font-size: 11px; color: $muted; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.memberSpec { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.memberRole {
+  font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 600;
+  background: rgba(255,255,255,0.06); color: $muted; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.memberRoleAdmin {
+  background: rgba($orange, 0.15); color: $orange;
+}
+.memberActions {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; padding-top: 10px;
+  border-top: 1px solid $border;
+}
+
+/* ─── Modals ─── */
+.overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  z-index: 100; display: flex; align-items: center; justify-content: center;
+}
+.modal {
+  background: #1a1a1a; border: 1px solid $border; border-radius: 16px;
+  padding: 32px; width: 90%; max-width: 480px; position: relative;
+}
+.modalTitle {
+  font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 20px;
+}
+.modalClose {
+  position: absolute; top: 16px; right: 16px; background: none; border: none;
+  color: $muted; cursor: pointer; padding: 4px;
+  &:hover { color: #fff; }
+  svg { width: 18px; height: 18px; }
+}
+.formGroup {
+  margin-bottom: 16px;
+}
+.formLabel {
+  display: block; font-size: 12px; font-weight: 500; color: $muted; margin-bottom: 6px;
+}
+.formInput {
+  width: 100%; background: $card; border: 1px solid $border; color: #fff;
+  padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none;
+  transition: border-color .15s; box-sizing: border-box;
+  &:focus { border-color: $orange; }
+  &::placeholder { color: rgba(255,255,255,0.2); }
+}
+.formSelect {
+  width: 100%; background: $card; border: 1px solid $border; color: #fff;
+  padding: 10px 14px; border-radius: 10px; font-size: 13px; outline: none; cursor: pointer;
+  &:focus { border-color: $orange; }
+  option { background: #1a1a1a; color: #fff; }
+}
+.formError {
+  font-size: 12px; color: #ef4444; margin-top: 6px;
+}
+.formActions {
+  display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px;
+}
+
+/* ─── Logs section ─── */
+.logsSection {
+  margin-top: 8px;
+}
+.logsList {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.logItem {
+  display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px;
+  border-radius: 8px; transition: background .1s;
+  &:hover { background: rgba(255,255,255,0.02); }
+}
+.logDot {
+  width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
+}
+.logDotCreate { background: #22c55e; }
+.logDotUpdate { background: $orange; }
+.logDotDelete { background: #ef4444; }
+.logContent { flex: 1; min-width: 0; }
+.logText { font-size: 13px; color: rgba(255,255,255,0.7); }
+.logActor { font-weight: 600; color: #fff; }
+.logTarget { font-weight: 500; color: $orange; }
+.logTime { font-size: 11px; color: $muted; margin-top: 2px; }
+.logDetail { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.logsEmpty {
+  text-align: center; padding: 30px; color: $muted; font-size: 13px;
+}
+.logsPagination {
+  display: flex; justify-content: center; gap: 8px; margin-top: 12px;
+}
+
+/* ─── Offboard confirmation ─── */
+.offboardWarning {
+  background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 10px; padding: 14px; margin-bottom: 16px;
+}
+.offboardWarningTitle {
+  font-size: 13px; font-weight: 600; color: #ef4444; margin-bottom: 6px;
+}
+.offboardWarningText {
+  font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.5;
+}
+
+/* ─── Loading & spinner ─── */
+.loading {
+  display: flex; align-items: center; justify-content: center; padding: 60px;
+  color: $muted; font-size: 14px; gap: 10px;
+}
+.spinner {
+  width: 18px; height: 18px; border: 2px solid $border;
+  border-top-color: $orange; border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Info banner ─── */
+.infoBanner {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+  background: rgba($orange, 0.06); border: 1px solid rgba($orange, 0.15);
+  border-radius: 10px; font-size: 12px; color: rgba(255,255,255,0.6);
+}
+.infoBannerIcon { width: 16px; height: 16px; color: $orange; flex-shrink: 0; }
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .membersGrid { grid-template-columns: 1fr; }
+  .header { flex-direction: column; }
+  .modal { padding: 24px; }
+}

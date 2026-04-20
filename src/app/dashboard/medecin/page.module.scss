@@ -1,0 +1,2384 @@
+$orange: #f47b20;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$glass-border: rgba(255, 255, 255, 0.08);
+$glass-bg: rgba(12, 36, 66, 0.6);
+
+.page {
+  max-width: 1280px;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* ───── Header ───── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.title {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $text-muted;
+  margin: 4px 0 0;
+}
+
+.addBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: $orange;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover {
+    background: #d06919;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba($orange, 0.3);
+  }
+}
+
+/* ───── Quick Access ───── */
+.quickAccess {
+  display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.quickCard {
+  display: flex; align-items: center; gap: 10px; padding: 12px 18px;
+  background: rgba(255,255,255,0.03); border: 1px solid $glass-border;
+  border-radius: 12px; color: $text-muted; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; flex: 1; min-width: 160px;
+  svg { flex-shrink: 0; }
+  span { white-space: nowrap; }
+  &:hover { background: rgba($orange, 0.06); border-color: rgba($orange, 0.2); color: $orange; }
+}
+
+/* ───── Filters ───── */
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+
+  svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: $text-muted;
+    pointer-events: none;
+  }
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 14px 10px 40px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &::placeholder { color: $text-muted; }
+  &:focus {
+    border-color: rgba($orange, 0.35);
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.statusTabs {
+  display: flex;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.statusTab {
+  padding: 7px 14px;
+  border: none;
+  background: none;
+  color: $text-muted;
+  font-size: 13px;
+  font-weight: 450;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+
+  &:hover { color: rgba(255, 255, 255, 0.7); }
+}
+
+.statusTabActive {
+  background: rgba(255, 255, 255, 0.08);
+  color: $text-light;
+}
+
+/* ───── Table ───── */
+.tableWrapper {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $glass-border;
+  border-radius: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border-bottom: 1px solid $glass-border;
+    background: rgba(255, 255, 255, 0.02);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    vertical-align: middle;
+  }
+
+  tbody tr:last-child td { border-bottom: none; }
+}
+
+.row {
+  transition: background 0.12s ease;
+  &:hover { background: rgba(255, 255, 255, 0.03); }
+}
+
+/* ───── Cells ───── */
+.athleteCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.athleteAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba($orange, 0.1);
+  border: 1px solid rgba($orange, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: $orange;
+  flex-shrink: 0;
+}
+
+.athleteName {
+  font-weight: 500;
+  color: $text-light;
+}
+
+.statusBadge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.status_paused {
+  background: rgba(234, 179, 8, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(234, 179, 8, 0.15);
+}
+
+.status_archived {
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sportCell { color: rgba(255, 255, 255, 0.65); }
+
+.injuryCell { max-width: 180px; }
+
+.injuryText {
+  color: rgba(255, 255, 255, 0.55);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.dateCell {
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+/* ───── Badges ───── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.badgeGood {
+  background: rgba(34, 197, 94, 0.1);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.15);
+}
+
+.badgeAverage {
+  background: rgba(234, 179, 8, 0.1);
+  color: #fbbf24;
+  border: 1px solid rgba(234, 179, 8, 0.15);
+}
+
+.badgeCritical {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.trendBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.trendUp { background: rgba(34, 197, 94, 0.06); color: #4ade80; }
+.trendFlat { background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, 0.5); }
+.trendDown { background: rgba(239, 68, 68, 0.06); color: #f87171; }
+
+/* ───── Actions ───── */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.noteBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  cursor: pointer;
+  color: $text-muted;
+  padding: 0;
+  transition: all 0.12s ease;
+
+  svg { width: 15px; height: 15px; }
+
+  &:hover {
+    color: $orange;
+    background: rgba($orange, 0.08);
+    border-color: rgba($orange, 0.15);
+  }
+}
+
+.menuWrapper { position: relative; }
+
+.menuBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  cursor: pointer;
+  color: $text-muted;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 0 0 4px;
+  transition: all 0.12s ease;
+
+  &:hover {
+    color: $text-light;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.menuDropdown {
+  width: 200px;
+  background: rgba(12, 24, 48, 0.96);
+  backdrop-filter: blur(24px);
+  border: 1px solid $glass-border;
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  z-index: 9999;
+  padding: 4px 0;
+  animation: dropIn 0.12s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.menuLabel {
+  margin: 0;
+  padding: 6px 14px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: left;
+  transition: all 0.1s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: $text-light;
+  }
+}
+
+.menuItemActive {
+  color: $orange;
+  &::after { content: "✓"; margin-left: auto; font-size: 11px; }
+}
+
+.menuDivider {
+  height: 1px;
+  background: $glass-border;
+  margin: 4px 0;
+}
+
+/* ───── Empty State ───── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px dashed rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($orange, 0.08);
+  border-radius: 16px;
+  margin-bottom: 20px;
+
+  svg { width: 28px; height: 28px; color: $orange; }
+}
+
+.emptyTitle {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.emptyDesc {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: $text-muted;
+  max-width: 400px;
+}
+
+.emptyChecklist {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.checkItem {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ───── Modal ───── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  width: 480px;
+  max-width: 90vw;
+  background: #0e1d38;
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid $glass-border;
+
+  h2 { margin: 0; font-size: 17px; font-weight: 600; color: $text-light; }
+}
+
+.modalClose {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $text-muted;
+  font-size: 20px;
+  border-radius: 6px;
+
+  &:hover { color: $text-light; background: rgba(255, 255, 255, 0.06); }
+}
+
+.modalForm {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label { font-size: 13px; font-weight: 500; color: rgba(255, 255, 255, 0.6); }
+
+  input, textarea {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $glass-border;
+    border-radius: 10px;
+    color: $text-light;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+
+    &::placeholder { color: $text-muted; }
+    &:focus { border-color: rgba($orange, 0.35); }
+  }
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+
+  input[type="checkbox"] { width: 16px; height: 16px; accent-color: $orange; cursor: pointer; }
+  span { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+}
+
+.formError {
+  margin: 0;
+  padding: 10px 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 13px;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cancelBtn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  color: $text-muted;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { color: $text-light; background: rgba(255, 255, 255, 0.08); }
+}
+
+.submitBtn {
+  padding: 10px 20px;
+  background: $orange;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover { background: #db6e1b; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+/* ───── Wizard Modal ───── */
+.modalWizard {
+  width: 580px;
+  max-width: 92vw;
+  max-height: 90vh;
+  background: #0e1d38;
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modalIn 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  .modalForm {
+    overflow-y: auto;
+    max-height: 55vh;
+  }
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.35;
+  transition: all 0.2s ease;
+
+  &:not(:last-child)::after {
+    content: "";
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    margin-left: 4px;
+  }
+}
+
+.stepActive {
+  opacity: 1;
+
+  .stepCircle {
+    background: rgba($orange, 0.15);
+    border-color: rgba($orange, 0.4);
+    color: $orange;
+  }
+}
+
+.stepDone {
+  opacity: 0.7;
+
+  .stepCircle {
+    background: rgba(34, 197, 94, 0.12);
+    border-color: rgba(34, 197, 94, 0.25);
+    color: #4ade80;
+  }
+}
+
+.stepCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  color: $text-muted;
+  flex-shrink: 0;
+}
+
+.stepLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.fieldRow {
+  display: flex;
+  gap: 12px;
+
+  > .field { flex: 1; min-width: 0; }
+}
+
+.field {
+  select {
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $glass-border;
+    border-radius: 10px;
+    color: $text-light;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+
+    &:focus { border-color: rgba($orange, 0.35); }
+
+    option {
+      background: #0e1d38;
+      color: $text-light;
+    }
+  }
+}
+
+/* ─── Chips ─── */
+.chipGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid $glass-border;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  font-weight: 450;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.chipActive {
+  background: rgba($orange, 0.12);
+  border-color: rgba($orange, 0.3);
+  color: $orange;
+}
+
+/* ─── Toggles ─── */
+.toggleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toggleItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+
+  span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.toggle {
+  width: 38px;
+  height: 22px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid $glass-border;
+  position: relative;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.toggleOn {
+  background: rgba($orange, 0.2);
+  border-color: rgba($orange, 0.35);
+
+  .toggleThumb {
+    transform: translateX(16px);
+    background: $orange;
+  }
+}
+
+.toggleThumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.35);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: all 0.15s ease;
+}
+
+/* ─── Wizard Nav ─── */
+.wizardNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid $glass-border;
+}
+
+.stepIndicator {
+  font-size: 12px;
+  color: $text-muted;
+  font-weight: 500;
+}
+
+/* ───── Athlete Name Link ───── */
+.athleteNameLink {
+  font-weight: 500;
+  color: $text-light;
+  cursor: pointer;
+  transition: color 0.12s ease;
+
+  &:hover {
+    color: $orange;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+/* ───── Slide Panel (Sidebar) — Glassmorphism ───── */
+.panelOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.15s ease;
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 480px;
+  max-width: 95vw;
+  height: 100vh;
+  background: rgba(8, 18, 40, 0.82);
+  backdrop-filter: blur(28px) saturate(1.4);
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: -16px 0 60px rgba(0, 0, 0, 0.5);
+  z-index: 160;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-bottom: 1px solid $glass-border;
+  flex-shrink: 0;
+}
+
+.panelClose {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  cursor: pointer;
+  color: $text-muted;
+  padding: 0;
+  transition: all 0.12s ease;
+
+  svg { width: 16px; height: 16px; }
+
+  &:hover { color: $text-light; background: rgba(255, 255, 255, 0.08); }
+}
+
+.panelTitle {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-light;
+}
+
+.panelLoading {
+  padding: 60px 20px;
+  text-align: center;
+  color: $text-muted;
+  font-size: 14px;
+}
+
+.panelIdentity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.panelAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba($orange, 0.1);
+  border: 1px solid rgba($orange, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: $orange;
+  flex-shrink: 0;
+}
+
+.panelName {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: $text-light;
+}
+
+.panelMeta {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: $text-muted;
+}
+
+.panelTabs {
+  display: flex;
+  border-bottom: 1px solid $glass-border;
+  flex-shrink: 0;
+}
+
+.panelTab {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: $text-muted;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-align: center;
+
+  &:hover { color: rgba(255, 255, 255, 0.7); }
+}
+
+.panelTabActive {
+  color: $orange;
+  border-bottom-color: $orange;
+}
+
+.panelBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.panelSection {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.panelSectionTitle {
+  margin: 0 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.panelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+
+  span:last-child {
+    text-align: right;
+    max-width: 60%;
+    word-break: break-word;
+  }
+}
+
+.panelLabel {
+  color: $text-muted;
+  flex-shrink: 0;
+  font-weight: 450;
+}
+
+.panelChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.panelChip {
+  padding: 4px 10px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid $glass-border;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.panelChipActive {
+  padding: 4px 10px;
+  border-radius: 14px;
+  background: rgba($orange, 0.08);
+  border: 1px solid rgba($orange, 0.15);
+  font-size: 12px;
+  color: $orange;
+  text-transform: capitalize;
+}
+
+/* ─── Panel: Saving indicator ─── */
+.panelSaving {
+  margin-left: auto;
+  font-size: 11px;
+  color: $orange;
+  font-weight: 500;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.panelIdentityInfo { flex: 1; min-width: 0; }
+
+/* ─── Privacy Banner ─── */
+.privacyBanner {
+  margin: 0 20px;
+  padding: 12px 14px;
+  background: rgba(168, 85, 247, 0.06);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  border-radius: 10px;
+}
+
+.privacyBannerHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #a855f7;
+  margin-bottom: 10px;
+
+  > svg { flex-shrink: 0; color: #a855f7; }
+}
+
+.privacyList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.privacyItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.privacyItemLabel {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.privacyRequestBtn {
+  padding: 3px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) { background: rgba(168, 85, 247, 0.25); }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.privacyRequested {
+  font-size: 11px;
+  font-weight: 600;
+  color: #10b981;
+  white-space: nowrap;
+}
+
+/* ─── Status Bar ─── */
+.statusBar {
+  display: flex;
+  gap: 6px;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.statusBtn {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid $glass-border;
+  background: rgba(255, 255, 255, 0.02);
+  color: $text-muted;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.12s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.7); }
+}
+
+.statusBtn_active {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+  font-weight: 600;
+}
+
+.statusBtn_paused {
+  background: rgba(234, 179, 8, 0.1);
+  border-color: rgba(234, 179, 8, 0.25);
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+.statusBtn_archived {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 600;
+}
+
+/* ─── Quick Edits (risk + trend) ─── */
+.quickEdits {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.quickEditGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quickEditLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: $text-muted;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.quickEditBtns {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+}
+
+.qBadge, .qTrend {
+  flex: 1;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: center;
+  opacity: 0.4;
+  transition: all 0.12s ease;
+
+  &:hover { opacity: 0.7; }
+}
+
+.qBadgeActive {
+  opacity: 1 !important;
+  border-color: currentColor;
+  font-weight: 600;
+}
+
+/* ─── Inline Editing ─── */
+.editableValue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+  transition: color 0.12s ease;
+
+  &:hover {
+    color: $text-light;
+    .editIcon { opacity: 1; }
+  }
+}
+
+.editIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.emptyValue {
+  color: rgba(255, 255, 255, 0.2);
+  font-style: italic;
+}
+
+.editInline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  max-width: 65%;
+
+  input {
+    flex: 1;
+    padding: 4px 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba($orange, 0.3);
+    border-radius: 6px;
+    color: $text-light;
+    font-size: 13px;
+    outline: none;
+    font-family: inherit;
+    min-width: 0;
+  }
+}
+
+.editSave, .editCancel {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.editSave {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  &:hover { background: rgba(34, 197, 94, 0.25); }
+}
+
+.editCancel {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  &:hover { background: rgba(239, 68, 68, 0.2); }
+}
+
+/* ─── Mini Chips (inline selectors) ─── */
+.miniChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.miniChip {
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid $glass-border;
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.7); }
+}
+
+.miniChipActive {
+  background: rgba($orange, 0.1);
+  border-color: rgba($orange, 0.25);
+  color: $orange;
+}
+
+.miniCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+
+  input[type="checkbox"] { width: 14px; height: 14px; accent-color: $orange; cursor: pointer; }
+  span { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+}
+
+.contactTodayBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  cursor: pointer;
+  text-align: right;
+  transition: color 0.12s ease;
+
+  &:hover { color: $orange; }
+}
+
+/* ─── Notes tab ─── */
+.panelNotes {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.addNoteBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  margin-bottom: 4px;
+
+  textarea {
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $glass-border;
+    border-radius: 10px;
+    color: $text-light;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    resize: vertical;
+
+    &::placeholder { color: $text-muted; }
+    &:focus { border-color: rgba($orange, 0.3); }
+  }
+}
+
+.addNoteBtn {
+  align-self: flex-end;
+  padding: 7px 16px;
+  background: $orange;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: #db6e1b; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.panelEmpty {
+  text-align: center;
+  color: $text-muted;
+  font-size: 13px;
+  padding: 32px 0;
+  margin: 0;
+}
+
+.noteCard {
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  backdrop-filter: blur(8px);
+}
+
+.noteText {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+.noteDate {
+  font-size: 11px;
+  color: $text-muted;
+}
+
+/* ═══════ Calendar Widget (iCal-inspired) ═══════ */
+.calendar {
+  margin-top: 24px;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.calHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.calTitle h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: $text-light;
+  text-transform: capitalize;
+}
+
+.calActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calTodayBtn {
+  padding: 5px 12px;
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: $text-muted;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.06); color: $text-light; }
+}
+
+.calViewToggle {
+  display: flex;
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.calViewBtn {
+  padding: 5px 12px;
+  border: none;
+  background: transparent;
+  color: $text-muted;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { color: rgba(255, 255, 255, 0.7); }
+}
+
+.calViewActive {
+  background: rgba($orange, 0.12);
+  color: $orange;
+}
+
+.calNav {
+  display: flex;
+  gap: 2px;
+}
+
+.calNavBtn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $glass-border;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  color: $text-muted;
+  padding: 0;
+  transition: all 0.12s ease;
+
+  svg { width: 16px; height: 16px; }
+  &:hover { background: rgba(255, 255, 255, 0.06); color: $text-light; }
+}
+
+/* Day headers */
+.calDayHeaders {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.calDayHeader {
+  padding: 8px 0;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+/* Month grid */
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calAddBtn {
+  padding: 5px 14px;
+  border: none;
+  border-radius: 8px;
+  background: $orange;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: #db6e1b; }
+}
+
+.calCell {
+  min-height: 80px;
+  padding: 4px;
+  border-right: 1px solid rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: background 0.1s ease;
+  position: relative;
+
+  &:nth-child(7n) { border-right: none; }
+  &:hover { background: rgba(255, 255, 255, 0.03); }
+}
+
+.calCellOut {
+  opacity: 0.2;
+  cursor: default;
+  &:hover { background: none; }
+}
+
+.calCellToday {
+  .calCellDay, .calWeekNum {
+    background: $orange;
+    color: #fff;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.calCellSelected {
+  background: rgba($orange, 0.06);
+  &:hover { background: rgba($orange, 0.08); }
+
+  .calCellDay {
+    color: $orange;
+    font-weight: 600;
+  }
+}
+
+.calCellDay {
+  font-size: 13px;
+  font-weight: 450;
+  color: rgba(255, 255, 255, 0.6);
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Event pills in month cells */
+.calCellEvents {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 2px;
+}
+
+.calPill {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 2px solid $orange;
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
+.calMore {
+  font-size: 9px;
+  color: $text-muted;
+  padding-left: 4px;
+}
+
+/* Week view */
+.calWeek {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calWeekDay {
+  min-height: 140px;
+  padding: 8px;
+  border-right: 1px solid rgba(255, 255, 255, 0.02);
+  cursor: pointer;
+  transition: background 0.1s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  &:last-child { border-right: none; }
+  &:hover { background: rgba(255, 255, 255, 0.03); }
+}
+
+.calWeekLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.calWeekNum {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calWeekEvents {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.calEventPill {
+  padding: 3px 6px;
+  border-radius: 4px;
+  border-left: 2px solid;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+.calEventTime {
+  font-size: 9px;
+  opacity: 0.7;
+  margin-right: 3px;
+}
+
+/* Day details */
+.calDetails {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.calDetailsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.calDetailsTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-light;
+  text-transform: capitalize;
+}
+
+.calDetailsAdd {
+  padding: 4px 12px;
+  border: 1px solid $glass-border;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  color: $text-muted;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: rgba($orange, 0.08); color: $orange; border-color: rgba($orange, 0.2); }
+}
+
+.calDetailsEmpty {
+  font-size: 12px;
+  color: $text-muted;
+  margin: 0;
+  padding: 8px 0;
+}
+
+.calDetailItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin: 3px 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.1s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.06); }
+}
+
+.calDetailDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.calDetailContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.calDetailTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-light;
+}
+
+.calDetailMeta {
+  font-size: 11px;
+  color: $text-muted;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calDetailSep {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $text-muted;
+  padding: 10px 0 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  margin-top: 4px;
+}
+
+.calDetailDelete {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: $text-muted;
+  font-size: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: all 0.12s ease;
+
+  .calDetailItem:hover & { opacity: 1; }
+  &:hover { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+}
+
+/* Event modal extras */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+
+  input[type="checkbox"] { width: 15px; height: 15px; accent-color: $orange; cursor: pointer; }
+  span { font-size: 13px; color: rgba(255, 255, 255, 0.6); }
+}
+
+/* ───── Kanban ───── */
+.kanban {
+  background: $glass-bg;
+  backdrop-filter: blur(16px);
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.kanbanHeader {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: $text-light;
+    margin: 0;
+  }
+}
+
+.kanbanBoard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  min-height: 300px;
+}
+
+.kanbanCol {
+  padding: 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: background 0.15s ease;
+
+  &:last-child { border-right: none; }
+  &[dragging] { background: rgba(255, 255, 255, 0.02); }
+}
+
+.kanbanColHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.kanbanColDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.kanbanColTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-light;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kanbanColCount {
+  font-size: 11px;
+  color: $text-muted;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1px 7px;
+  border-radius: 10px;
+}
+
+.kanbanColAdd {
+  margin-left: auto;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid $glass-border;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  color: $text-muted;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: rgba($orange, 0.08); color: $orange; border-color: rgba($orange, 0.2); }
+}
+
+.kanbanCards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 40px;
+}
+
+.kanbanCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: grab;
+  transition: all 0.12s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active { cursor: grabbing; opacity: 0.7; }
+}
+
+.kanbanCardTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kanbanPriority {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.kanbanCardTitle {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-light;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kanbanCardDel {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: $text-muted;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.1s ease;
+  flex-shrink: 0;
+
+  .kanbanCard:hover & { opacity: 1; }
+  &:hover { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+}
+
+.kanbanCardDesc {
+  font-size: 11px;
+  color: $text-muted;
+  margin: 4px 0 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.kanbanCardAthlete {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.kanbanCardMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+
+.kanbanCardDue {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.kanbanCardRdv {
+  border-color: rgba($orange, 0.2);
+  background: rgba($orange, 0.04);
+  cursor: default;
+  &:hover { border-color: rgba($orange, 0.3); background: rgba($orange, 0.06); transform: none; }
+  &:active { cursor: default; opacity: 1; }
+}
+
+.kanbanRdvBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $orange;
+  background: rgba($orange, 0.1);
+  border: 1px solid rgba($orange, 0.2);
+  padding: 2px 7px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  svg { width: 10px; height: 10px; }
+}
+
+.kanbanRdvTime {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 4px;
+}
+
+.kanbanRdvFormat {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.kanbanVisioJoin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.08));
+  color: #10b981;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(52, 211, 153, 0.15));
+    transform: translateY(-1px);
+  }
+}
+
+// ─── Visio full-screen modal (pro) ───
+
+.visioModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: visioFadeIn 0.3s ease-out;
+}
+
+@keyframes visioFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes visioPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  50% { box-shadow: 0 0 0 16px rgba(16, 185, 129, 0); }
+}
+
+.visioModalCard {
+  width: 92%;
+  max-width: 420px;
+  background: linear-gradient(165deg, rgba(16, 185, 129, 0.08), rgba(10, 10, 10, 0.98));
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 24px;
+  padding: 40px 28px 32px;
+  text-align: center;
+  animation: visioSlideUp 0.35s ease-out;
+}
+
+@keyframes visioSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.visioModalIcon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: visioPulse 2s infinite;
+}
+
+.visioModalTitle {
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+
+.visioModalSub {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 24px;
+}
+
+.visioModalCountdown {
+  font-size: 28px;
+  font-weight: 900;
+  color: #10b981;
+  margin-bottom: 24px;
+  font-variant-numeric: tabular-nums;
+}
+
+.visioModalJoinBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #10b981, #34d399);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 12px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 28px rgba(16, 185, 129, 0.4);
+  }
+
+  &:active { transform: translateY(0); }
+}
+
+.visioModalDismiss {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.15s;
+
+  &:hover { color: rgba(255, 255, 255, 0.6); }
+}
+
+// ─── Pro reminder banners ───
+
+.proReminderBanners {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.proReminderCard {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 36px 12px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left-width: 3px;
+  border-radius: 10px;
+  animation: visioSlideUp 0.25s ease-out;
+}
+
+.proReminderCardNow {
+  background: rgba(16, 185, 129, 0.06);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.proReminderDismiss {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+
+  &:hover { color: rgba(255, 255, 255, 0.6); }
+}
+
+.proReminderBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.proReminderTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.proReminderMeta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+  flex-basis: 100%;
+}
+
+.kanbanAddForm {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+
+  input, select {
+    width: 100%;
+    padding: 7px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $glass-border;
+    border-radius: 6px;
+    color: $text-light;
+    font-size: 12px;
+
+    &:focus { outline: none; border-color: rgba($orange, 0.3); }
+    &::placeholder { color: $text-muted; }
+  }
+}
+
+.kanbanAddRow {
+  display: flex;
+  gap: 6px;
+
+  select { flex: 1; }
+}
+
+.kanbanAddActions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.kanbanAddSave {
+  padding: 5px 14px;
+  background: $orange;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s ease;
+
+  &:hover { background: #db6e1b; }
+}
+
+.kanbanAddCancel {
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid $glass-border;
+  border-radius: 6px;
+  color: $text-muted;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover { background: rgba(255, 255, 255, 0.04); color: $text-light; }
+}
+
+/* ───── Responsive ───── */
+@media (max-width: 1024px) {
+  .header { flex-direction: column; }
+  .filters { flex-direction: column; align-items: stretch; }
+  .tableWrapper { overflow-x: auto; }
+  .table { min-width: 800px; }
+
+  .fieldRow { flex-direction: column; }
+
+  .stepper {
+    gap: 4px;
+    .stepLabel { display: none; }
+  }
+
+  .panel { width: 100vw; max-width: 100vw; }
+
+  .quickEdits { gap: 8px; }
+  .quickEditGroup { flex-direction: column; align-items: stretch; }
+  .quickEditLabel { width: auto; }
+  .editInline { max-width: 100%; }
+  .editableValue { max-width: 100%; }
+
+  .calHeader { flex-direction: column; gap: 10px; align-items: stretch; }
+  .calActions { flex-wrap: wrap; justify-content: space-between; }
+  .calCell { min-height: 56px; }
+  .calCellEvents { display: none; }
+  .calWeekDay { min-height: 80px; }
+  .calWeekEvents { display: none; }
+
+  .kanbanBoard { grid-template-columns: 1fr; }
+  .kanbanCol { border-right: none; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+}
+
+@media (max-width: 768px) {
+  .header { flex-direction: column; align-items: stretch; gap: 12px; }
+  .title { font-size: 20px; }
+  .addBtn { width: 100%; justify-content: center; }
+  .quickAccess { flex-direction: column; }
+  .quickCard { min-width: 0; }
+  .filters { flex-direction: column; align-items: stretch; gap: 10px; }
+  .searchWrapper { min-width: 0; width: 100%; }
+  .statusTabs { overflow-x: auto; flex-wrap: nowrap; }
+  .statusTab { padding: 6px 10px; font-size: 12px; }
+  .table th, .table td { padding: 10px 10px; font-size: 12px; }
+  .overlay { padding: 16px; }
+  .panel { width: 100vw; max-width: 100vw; }
+  .modal { max-width: calc(100vw - 32px); max-height: 85vh; }
+  .calGrid { grid-template-columns: repeat(7, 1fr); }
+  .calCell { min-height: 44px; padding: 4px; }
+}
+
+@media (max-width: 480px) {
+  .title { font-size: 18px; }
+  .subtitle { font-size: 12px; }
+  .quickCard { font-size: 12px; padding: 10px 14px; }
+  .statusTabs { gap: 0; }
+  .table th { font-size: 10px; }
+  .table td { padding: 8px 8px; font-size: 11px; }
+  .calCell { font-size: 10px; }
+  .calHeader { flex-direction: column; gap: 8px; }
+}

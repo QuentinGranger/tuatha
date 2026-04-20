@@ -1,0 +1,535 @@
+$orange: #f47b20;
+$orange-light: #f5a623;
+$orange-glow: rgba(244, 123, 32, 0.35);
+$dark-bg: #0c2442;
+$dark-deep: #020406;
+$text-light: #ffffff;
+$text-muted: rgba(255, 255, 255, 0.45);
+$glass-bg: rgba(255, 255, 255, 0.04);
+$glass-border: rgba(255, 255, 255, 0.08);
+
+// Cinematic background with ambient glow
+.page {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(160deg, $dark-bg 0%, #061222 35%, $dark-deep 100%);
+  color: $text-light;
+  overflow: hidden;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -10%;
+    width: 70%;
+    height: 130%;
+    background: radial-gradient(ellipse at center, rgba($orange, 0.08) 0%, rgba($orange, 0.03) 35%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: 10%;
+    width: 60%;
+    height: 80%;
+    background: radial-gradient(ellipse at center, rgba(20, 80, 180, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+}
+
+// Left panel - glassmorphism
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 420px;
+  min-width: 380px;
+  padding: 60px 44px;
+  position: relative;
+  z-index: 10;
+  background: rgba(6, 14, 30, 0.78);
+  backdrop-filter: blur(100px) saturate(1.5) brightness(0.9);
+  -webkit-backdrop-filter: blur(100px) saturate(1.5) brightness(0.9);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    40px 0 100px -20px rgba(0, 0, 0, 0.6),
+    inset 0 0 100px rgba(255, 255, 255, 0.008);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        195deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        transparent 35%,
+        transparent 55%,
+        rgba(244, 123, 32, 0.02) 100%
+      );
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0.5;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+}
+
+// Alpha notice box
+.alphaNotice {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid $glass-border;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 36px;
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  backdrop-filter: blur(10px);
+
+  a {
+    color: $orange;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $orange-light;
+    }
+  }
+}
+
+// Form
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 15px 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 14.5px;
+  outline: none;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: $text-muted;
+    font-weight: 300;
+  }
+
+  &:focus {
+    border-color: rgba($orange, 0.45);
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 20px rgba($orange, 0.06), inset 0 0 20px rgba($orange, 0.02);
+  }
+}
+
+.submitButton {
+  margin-top: 8px;
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, $orange 0%, $orange-light 100%);
+  border: none;
+  border-radius: 10px;
+  color: $text-light;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.4px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px rgba($orange, 0.25), 0 0 60px rgba($orange, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover {
+    box-shadow: 0 6px 32px rgba($orange, 0.35), 0 0 80px rgba($orange, 0.12);
+    transform: translateY(-1px);
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.99);
+  }
+}
+
+.error {
+  margin: 0;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  color: #fca5a5;
+  font-size: 13px;
+  text-align: center;
+}
+
+// Input icon (left)
+.inputIcon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: $text-muted;
+  pointer-events: none;
+  z-index: 2;
+}
+
+// Password toggle button (right)
+.togglePassword {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: $text-muted;
+  transition: color 0.2s ease;
+  z-index: 2;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+// Remember me checkbox
+.rememberMe {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.7);
+  user-select: none;
+
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+
+    &:checked {
+      background: $orange;
+      border-color: $orange;
+    }
+
+    &:checked::after {
+      content: '';
+      position: absolute;
+      left: 5px;
+      top: 1px;
+      width: 5px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+}
+
+// Forgot password link
+.forgotLink {
+  text-align: right;
+  margin-top: -4px;
+
+  a {
+    font-size: 13px;
+    color: $text-muted;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+}
+
+// Sign up link
+.signupLink {
+  margin-top: 28px;
+  text-align: center;
+  font-size: 13.5px;
+  color: $text-muted;
+
+  a {
+    color: $orange;
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $orange-light;
+    }
+  }
+}
+
+// Footer links (visible on mobile)
+.footerLinks {
+  display: none; // hidden on desktop
+}
+
+// Mobile logo area (hidden on desktop)
+.mobileLogoArea {
+  display: none;
+}
+
+// Right panel - logo area
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  z-index: 1;
+}
+
+// Top navigation
+.topNav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  padding: 22px 40px;
+  z-index: 20;
+}
+
+.navLink {
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.4);
+  transition: color 0.25s ease;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+// Logo - massive, cinematic, bleeds under left panel
+.logoContainer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 110%;
+  left: -15%;
+  z-index: 0;
+
+  img {
+    width: 100%;
+    height: auto;
+    filter:
+      drop-shadow(0 0 80px $orange-glow)
+      drop-shadow(0 0 160px rgba($orange, 0.15))
+      drop-shadow(0 0 300px rgba($orange, 0.08));
+    animation: logoBreath 6s ease-in-out infinite;
+  }
+}
+
+@keyframes logoBreath {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 80px $orange-glow)
+      drop-shadow(0 0 160px rgba($orange, 0.15))
+      drop-shadow(0 0 300px rgba($orange, 0.08));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 100px rgba($orange, 0.45))
+      drop-shadow(0 0 200px rgba($orange, 0.2))
+      drop-shadow(0 0 400px rgba($orange, 0.1));
+  }
+}
+
+// Ambient particles / grain overlay
+.page::before {
+  animation: ambientDrift 20s ease-in-out infinite;
+}
+
+@keyframes ambientDrift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(2%, -3%) scale(1.02);
+  }
+  50% {
+    transform: translate(-1%, 2%) scale(0.98);
+  }
+  75% {
+    transform: translate(1%, -1%) scale(1.01);
+  }
+}
+
+// Responsive — mobile
+@media (max-width: 900px) {
+  .page {
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  // Mobile logo: centered in the space above the fixed form
+  .mobileLogoArea {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 0;
+    padding: 40px 40px 20px;
+    position: relative;
+    z-index: 2;
+
+    img {
+      width: min(60vw, 260px);
+      height: auto;
+      filter: drop-shadow(0 0 40px $orange-glow) drop-shadow(0 0 80px rgba($orange, 0.12));
+      animation: logoBreath 6s ease-in-out infinite;
+    }
+  }
+
+  // Bottom sheet form panel — fixed at bottom, no scroll
+  .leftPanel {
+    width: 100%;
+    min-width: unset;
+    flex-shrink: 0;
+    padding: 28px 24px calc(env(safe-area-inset-bottom, 0px) + 20px);
+    border-radius: 28px 28px 0 0;
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(6, 14, 30, 0.88);
+    backdrop-filter: blur(60px) saturate(1.4);
+    -webkit-backdrop-filter: blur(60px) saturate(1.4);
+    box-shadow: 0 -20px 80px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 10;
+  }
+
+  .alphaNotice {
+    display: none;
+  }
+
+  // Inputs with icon padding
+  .input {
+    padding-left: 46px;
+    padding-right: 16px;
+    font-size: 15px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  // Password field needs extra right padding for toggle
+  .inputWrapper:nth-child(2) .input {
+    padding-right: 46px;
+  }
+
+  .submitButton {
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  .signupLink {
+    margin-top: 16px;
+    margin-bottom: 4px;
+  }
+
+  // Footer links: visible on mobile
+  .footerLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    padding-top: 16px;
+    margin-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+
+    a {
+      font-size: 12.5px;
+      color: rgba(255, 255, 255, 0.4);
+      text-decoration: none;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+
+  // Hide desktop right panel
+  .rightPanel {
+    display: none;
+  }
+
+  .topNav {
+    display: none;
+  }
+}
+
+// Desktop: inputs with icon padding too
+@media (min-width: 901px) {
+  .input {
+    padding-left: 46px;
+  }
+
+  // Password field
+  .inputWrapper:nth-child(2) .input {
+    padding-right: 46px;
+  }
+}

@@ -1,0 +1,412 @@
+$orange: #f47b20;
+$bg-dark: #0a0a0f;
+$card-bg: rgba(255, 255, 255, 0.03);
+$border: rgba(255, 255, 255, 0.06);
+$text: #e2e8f0;
+$text-muted: rgba(255, 255, 255, 0.4);
+$glass-bg: rgba(255, 255, 255, 0.04);
+$radius: 16px;
+
+.page { padding: 0; min-height: 100%; }
+
+/* ─── Header ─── */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.backBtn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: transparent;
+  color: $text-muted;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  &:hover { background: $glass-bg; color: #fff; }
+  svg { width: 18px; height: 18px; }
+}
+
+.headerInfo { flex: 1; min-width: 0; }
+
+.headerTitle {
+  font-size: 22px; font-weight: 700; color: #fff; margin: 0;
+  display: flex; align-items: center; gap: 12px;
+}
+
+.headerSub {
+  font-size: 13px; color: $text-muted; margin-top: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+
+.headerActions {
+  display: flex; gap: 8px; flex-shrink: 0;
+}
+
+.actionBtn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid $border;
+  background: transparent;
+  color: $text-muted;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex; align-items: center; gap: 6px;
+  &:hover { background: $glass-bg; color: #fff; }
+}
+
+.actionBtnPrimary {
+  @extend .actionBtn;
+  background: $orange; border-color: $orange; color: #fff;
+  &:hover { background: darken($orange, 6%); }
+}
+
+.actionBtnDanger {
+  @extend .actionBtn;
+  &:hover { background: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.3); }
+}
+
+/* ─── Status chip ─── */
+.statusChip {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px; padding: 3px 10px; border-radius: 20px; flex-shrink: 0;
+}
+.status_brouillon { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
+.status_planifiee { background: rgba(59, 130, 246, 0.12); color: #60a5fa; }
+.status_en_cours { background: rgba(249, 115, 22, 0.12); color: #fb923c; }
+.status_realisee { background: rgba(34, 197, 94, 0.12); color: #4ade80; }
+.status_annulee { background: rgba(239, 68, 68, 0.12); color: #f87171; }
+
+/* ─── Athlete chip ─── */
+.athleteChip {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: $glass-bg; border: 1px solid $border;
+  border-radius: 20px; padding: 6px 14px 6px 6px;
+  margin-bottom: 20px;
+}
+
+.athleteAv {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba($orange, 0.15); color: $orange;
+  font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.athleteName { font-size: 13px; color: #fff; font-weight: 500; }
+.athleteMeta { font-size: 11px; color: $text-muted; margin-left: 4px; }
+
+/* ─── Cards / Sections ─── */
+.sections {
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+.card {
+  background: $card-bg; border: 1px solid $border;
+  border-radius: $radius; padding: 24px;
+}
+
+.cardTitle {
+  font-size: 14px; font-weight: 700; color: #fff;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+}
+
+.cardTitleIcon {
+  width: 20px; height: 20px; opacity: 0.4;
+}
+
+/* ─── Inline editable fields ─── */
+.field {
+  margin-bottom: 14px;
+
+  label {
+    display: block; font-size: 11px; font-weight: 600;
+    color: $text-muted; margin-bottom: 5px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+
+  input, select, textarea {
+    width: 100%; padding: 9px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid $border; border-radius: 10px;
+    color: #fff; font-size: 13px; outline: none;
+    transition: border-color 0.15s;
+    &:focus { border-color: rgba($orange, 0.4); }
+    &::placeholder { color: $text-muted; }
+  }
+  textarea { resize: vertical; min-height: 50px; }
+}
+
+.fieldRow {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+
+.fieldRow3 {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+}
+
+/* ─── Tags / chips ─── */
+.chipGroup {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+}
+
+.chip {
+  font-size: 11px; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid $border; background: transparent;
+  color: $text-muted; cursor: pointer; transition: all 0.12s;
+  &:hover { background: $glass-bg; color: #fff; }
+}
+
+.chipActive {
+  @extend .chip;
+  background: rgba($orange, 0.1); border-color: rgba($orange, 0.3); color: $orange;
+}
+
+/* ─── Toggle row ─── */
+.toggleRow {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.toggleLabel { font-size: 13px; color: $text; }
+
+.toggle {
+  width: 40px; height: 22px; border-radius: 11px;
+  border: none; cursor: pointer; position: relative;
+  background: rgba(255, 255, 255, 0.08); transition: all 0.2s;
+
+  &::after {
+    content: ""; position: absolute;
+    top: 3px; left: 3px; width: 16px; height: 16px;
+    border-radius: 50%; background: #fff;
+    transition: transform 0.2s;
+  }
+
+  &.toggleOn {
+    background: $orange;
+    &::after { transform: translateX(18px); }
+  }
+}
+
+/* ─── Prescription constraints ─── */
+.constraintList {
+  display: flex; flex-direction: column; gap: 6px; margin-top: 6px;
+}
+
+.constraintItem {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; color: $text-muted;
+  padding: 6px 10px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.constraintDot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #ef4444; flex-shrink: 0;
+}
+
+.addConstraint {
+  font-size: 12px; color: $text-muted; background: none;
+  border: 1px dashed $border; border-radius: 8px;
+  padding: 8px 12px; cursor: pointer; transition: all 0.12s;
+  width: 100%; text-align: left; margin-top: 6px;
+  &:hover { border-color: rgba($orange, 0.3); color: $orange; }
+}
+
+/* ─── Exercise blocks ─── */
+.blockSection {
+  margin-bottom: 16px;
+}
+
+.blockHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.blockName {
+  font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.blockBadge {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  background: rgba($orange, 0.08); color: rgba($orange, 0.7);
+}
+
+.blockActions {
+  display: flex; gap: 4px;
+}
+
+.blockActionBtn {
+  width: 26px; height: 26px; border: none; border-radius: 6px;
+  background: transparent; color: $text-muted; font-size: 14px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s;
+  &:hover { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+}
+
+.exerciseCard {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px; margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 12px; cursor: grab;
+  transition: all 0.15s;
+
+  &:hover { border-color: rgba($orange, 0.15); background: rgba(255, 255, 255, 0.03); }
+}
+
+.exerciseDrag {
+  color: $text-muted; font-size: 14px; padding-top: 2px;
+  cursor: grab; opacity: 0.3;
+}
+
+.exerciseInfo { flex: 1; min-width: 0; }
+
+.exerciseName {
+  font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px;
+}
+
+.exerciseDetails {
+  display: flex; flex-wrap: wrap; gap: 8px;
+}
+
+.exerciseDetail {
+  font-size: 11px; color: $text-muted;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 2px 8px; border-radius: 8px;
+}
+
+.exerciseActions {
+  display: flex; gap: 4px; flex-shrink: 0;
+}
+
+.exActionBtn {
+  @extend .blockActionBtn;
+  opacity: 0;
+  .exerciseCard:hover & { opacity: 1; }
+}
+
+.addExerciseBtn {
+  width: 100%; padding: 10px;
+  border: 1px dashed $border; border-radius: 10px;
+  background: transparent; color: $text-muted;
+  font-size: 12px; cursor: pointer; transition: all 0.12s;
+  margin-top: 4px;
+  &:hover { border-color: rgba($orange, 0.3); color: $orange; }
+}
+
+.addBlockBtn {
+  @extend .addExerciseBtn;
+  margin-top: 12px;
+  border-style: dashed;
+}
+
+/* ─── Feedback section ─── */
+.feedbackGrid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+}
+
+.feedbackBox {
+  padding: 16px; border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.feedbackLabel {
+  font-size: 11px; font-weight: 600; color: $text-muted;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.rpeBar {
+  display: flex; gap: 4px; margin-top: 6px;
+}
+
+.rpeDot {
+  width: 28px; height: 28px; border-radius: 8px;
+  border: 1px solid $border; background: transparent;
+  color: $text-muted; font-size: 11px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.12s;
+
+  &:hover { background: $glass-bg; }
+  &.rpeDotActive { background: $orange; border-color: $orange; color: #fff; }
+  &.rpeDotPain { background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #f87171; }
+}
+
+/* ─── Actions bar ─── */
+.actionsBar {
+  display: flex; align-items: center; gap: 10px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  background: $card-bg; border: 1px solid $border;
+  border-radius: $radius;
+}
+
+.actionsBarSep {
+  width: 1px; height: 28px;
+  background: $border; margin: 0 4px;
+}
+
+/* ─── Modal for exercise ─── */
+.modalOverlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.modal {
+  background: #14141c; border: 1px solid $border;
+  border-radius: $radius; width: 480px;
+  max-width: 95vw; max-height: 85vh; overflow-y: auto;
+  padding: 24px;
+}
+
+.modalTitle {
+  font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;
+}
+
+.modalActions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  margin-top: 20px; padding-top: 14px; border-top: 1px solid $border;
+}
+
+.cancelBtn {
+  padding: 8px 18px; border-radius: 10px;
+  border: 1px solid $border; background: transparent;
+  color: $text-muted; font-size: 13px; cursor: pointer;
+  transition: all 0.15s;
+  &:hover { color: #fff; background: $glass-bg; }
+}
+
+.submitBtn {
+  padding: 8px 20px; border-radius: 10px; border: none;
+  background: $orange; color: #fff;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all 0.15s;
+  &:hover { background: darken($orange, 6%); }
+}
+
+/* ─── Loading ─── */
+.loading {
+  text-align: center; padding: 80px 0; color: $text-muted; font-size: 14px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .fieldRow, .fieldRow3, .feedbackGrid { grid-template-columns: 1fr; }
+  .header { flex-direction: column; align-items: flex-start; }
+  .headerActions { width: 100%; flex-wrap: wrap; }
+  .actionsBar { flex-direction: column; align-items: stretch; }
+  .actionsBarSep { display: none; }
+}

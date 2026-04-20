@@ -1,0 +1,567 @@
+$orange: #e67e22;
+$orange-light: #f0a500;
+$bg: #0a0a0f;
+$bg-gradient: linear-gradient(135deg, #0c2442 0%, #000000 100%);
+$card-bg: rgba(255, 255, 255, 0.03);
+$border: rgba(255, 255, 255, 0.06);
+
+.page {
+  min-height: 100dvh;
+  background: $bg-gradient;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid $border;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.backBtn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  padding: 0;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.headerTitle {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.main {
+  flex: 1;
+  padding: 24px;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+// ─── Loading ───
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 100dvh;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+  background: $bg-gradient;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: $orange;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ─── Pro header ───
+
+.proHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.proAvatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  span {
+    font-size: 17px;
+    font-weight: 700;
+    color: $orange;
+  }
+}
+
+.proHeaderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.proName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.proSpec {
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.proDate {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 2px;
+}
+
+// ─── Summary bar ───
+
+.summaryBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+
+.summaryLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.summaryLabel {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 500;
+}
+
+.toggleAllBtn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.toggleAllOn {
+  background: rgba($orange, 0.15);
+  color: $orange;
+
+  &:hover:not(:disabled) {
+    background: rgba($orange, 0.25);
+  }
+}
+
+.toggleAllOff {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+// ─── Toggle groups ───
+
+.toggleGroup {
+  margin-bottom: 24px;
+}
+
+.groupTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding: 0 4px;
+}
+
+.toggleList {
+  display: flex;
+  flex-direction: column;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  transition: background 0.15s;
+
+  & + & {
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+
+.toggleSensitive {
+  .toggleIcon {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+  }
+}
+
+.toggleIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toggleInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggleLabel {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sensitiveBadge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.toggleDesc {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.3);
+  line-height: 1.4;
+}
+
+// ─── Toggle switch ───
+
+.toggleSwitch {
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, 0.12);
+  position: relative;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  flex-shrink: 0;
+  border: none;
+  padding: 0;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.toggleOn {
+  background: $orange;
+}
+
+.toggleKnob {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.25s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+
+  .toggleOn & {
+    transform: translateX(20px);
+  }
+}
+
+// ─── Warning card ───
+
+.warningCard {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: 12px;
+  margin-top: 8px;
+
+  > svg {
+    flex-shrink: 0;
+    color: #f59e0b;
+    margin-top: 1px;
+  }
+
+  p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+// ─── Access History ───
+
+.accessSection {
+  margin-top: 24px;
+}
+
+.accessToggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  font-weight: 600;
+
+  > svg:first-child {
+    color: $orange;
+    flex-shrink: 0;
+  }
+
+  > span {
+    flex: 1;
+    text-align: left;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.accessChevron {
+  color: rgba(255, 255, 255, 0.3);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.accessChevronOpen {
+  transform: rotate(180deg);
+}
+
+.accessLogList {
+  margin-top: 8px;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.accessLogEmpty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+}
+
+.spinnerSm {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: $orange;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.accessLogRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  transition: background 0.15s;
+
+  & + & {
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+  }
+}
+
+.accessLogBlocked {
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.accessLogDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.dotAllowed {
+  background: #10b981;
+}
+
+.dotBlocked {
+  background: #ef4444;
+}
+
+.accessLogInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.accessLogAction {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blockedBadge {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.accessLogTime {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.loadMoreBtn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  color: $orange;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover:not(:disabled) {
+    background: rgba($orange, 0.06);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// ─── Mobile ───
+
+@media (max-width: 640px) {
+  .main {
+    padding: 16px;
+  }
+
+  .header {
+    padding: 12px 16px;
+  }
+
+  .proHeader {
+    padding: 16px;
+  }
+
+  .proAvatar {
+    width: 44px;
+    height: 44px;
+
+    span { font-size: 15px; }
+  }
+
+  .proName {
+    font-size: 15px;
+  }
+
+  .toggleRow {
+    padding: 12px 14px;
+  }
+}

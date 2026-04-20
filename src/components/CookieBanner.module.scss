@@ -1,0 +1,378 @@
+@use "sass:color";
+
+$orange: #f47b20;
+$dark-bg: #0c2442;
+$dark-surface: #0a1a32;
+$glass-border: rgba(255, 255, 255, 0.06);
+$text-light: #f1f5f9;
+$text-muted: rgba(255, 255, 255, 0.45);
+
+// ─── Overlay ───
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+// ─── Banner ───
+
+.banner {
+  width: 100%;
+  max-width: 640px;
+  background: linear-gradient(135deg, rgba(12, 36, 66, 0.98), rgba(10, 26, 50, 0.98));
+  border: 1px solid $glass-border;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.35s ease;
+}
+
+// ─── Content (banner mode) ───
+
+.content {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  color: $orange;
+  margin-top: 2px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.text {
+  flex: 1;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: $text-light;
+  margin-bottom: 6px;
+}
+
+.description {
+  font-size: 13px;
+  line-height: 1.6;
+  color: $text-muted;
+}
+
+.link {
+  color: $orange;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: color.adjust($orange, $lightness: 10%);
+  }
+}
+
+// ─── Action buttons ───
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btnRefuse {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: $text-muted;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: $text-light;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+}
+
+.btnPrefs {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid rgba($orange, 0.2);
+  background: rgba($orange, 0.06);
+  color: $orange;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: rgba($orange, 0.12);
+    border-color: rgba($orange, 0.3);
+  }
+}
+
+.btnAccept,
+.btnAcceptAll {
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: $orange;
+  color: #fff;
+  transition: all 0.15s ease;
+
+  &:hover {
+    background: color.adjust($orange, $lightness: 5%);
+    box-shadow: 0 4px 12px rgba($orange, 0.3);
+  }
+}
+
+// ─── Preferences mode ───
+
+.prefsHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.prefsBack {
+  background: none;
+  border: none;
+  color: $text-muted;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s;
+
+  &:hover {
+    color: $text-light;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.prefsIntro {
+  font-size: 13px;
+  line-height: 1.6;
+  color: $text-muted;
+  margin-bottom: 20px;
+}
+
+// ─── Categories ───
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.category {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $glass-border;
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.catHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.catInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.catName {
+  font-size: 14px;
+  font-weight: 550;
+  color: $text-light;
+}
+
+.catBadge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #4ade80;
+}
+
+.catStatus {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: $text-muted;
+}
+
+.catDesc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: $text-muted;
+}
+
+.catCookies {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.cookieChip {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+// ─── Toggle switch ───
+
+.toggle {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.toggleTrack {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.2s ease;
+  }
+
+  input:checked + & {
+    background: $orange;
+
+    &::after {
+      transform: translateX(18px);
+      background: #fff;
+    }
+  }
+}
+
+.toggleLocked {
+  flex-shrink: 0;
+}
+
+.toggleTrackOn {
+  width: 40px;
+  height: 22px;
+  border-radius: 11px;
+  background: rgba(34, 197, 94, 0.3);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #4ade80;
+  }
+}
+
+// ─── Prefs actions ───
+
+.prefsActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+// ─── Responsive ───
+
+@media (max-width: 500px) {
+  .overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .banner {
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .content {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .actions,
+  .prefsActions {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
