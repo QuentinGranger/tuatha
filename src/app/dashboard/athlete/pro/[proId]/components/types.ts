@@ -1,5 +1,24 @@
 // ── Shared types, interfaces, constants for athlete/pro/[proId] ──
 
+export interface ProTarif {
+  id: string;
+  label: string;
+  price: number;
+  duration: number;
+  description: string | null;
+  format: string | null;
+  prestationType: string;
+  remboursementLabel: string;
+}
+
+export interface ProDisponibilite {
+  id: string;
+  jourDebut: string;
+  jourFin: string;
+  heureDebut: string;
+  heureFin: string;
+}
+
 export interface ProInfo {
   id: string;
   nom: string;
@@ -7,6 +26,24 @@ export interface ProInfo {
   specialite: string;
   avatarUrl: string | null;
   adresseCabinet: string | null;
+}
+
+export interface ProFullProfile extends ProInfo {
+  email: string;
+  telephone: string;
+  statutExercice: string;
+  latitude: number | null;
+  longitude: number | null;
+  professionAffichee: string | null;
+  specialiteAffichee: string | null;
+  conventionne: string;
+  prestationRemboursableType: string | null;
+  ordonnanceRequise: string;
+  mutuelleAcceptee: string;
+  remboursementNote: string | null;
+  tarifs: ProTarif[];
+  disponibilites: ProDisponibilite[];
+  connectedSince: string;
 }
 
 export interface Rdv {

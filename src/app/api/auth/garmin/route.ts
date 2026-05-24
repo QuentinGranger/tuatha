@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionAthlete } from "@/lib/session";
 import { getRequestToken } from "@/lib/garmin";
+import { encrypt } from "@/lib/encryption";
 
 /**
  * GET /api/auth/garmin
@@ -32,15 +33,15 @@ export async function GET() {
         athleteUserId: session.id,
         provider: "GARMIN",
         status: "pending",
-        accessToken: oauthToken, // Temporary: store request token
-        accessTokenSecret: oauthTokenSecret, // Store request token secret
+        accessToken: encrypt(oauthToken), // Temporary: store request token (encrypted)
+        accessTokenSecret: encrypt(oauthTokenSecret), // Store request token secret (encrypted)
         scopes: ["dailies", "activities", "sleeps"],
         metadata: { step: "request_token" },
       },
       update: {
         status: "pending",
-        accessToken: oauthToken,
-        accessTokenSecret: oauthTokenSecret,
+        accessToken: encrypt(oauthToken),
+        accessTokenSecret: encrypt(oauthTokenSecret),
         lastSyncError: null,
         metadata: { step: "request_token" },
       },

@@ -21,6 +21,7 @@ import {
   getDailyReadiness as ouraReadiness,
   refreshAccessToken as ouraRefresh,
 } from "@/lib/oura";
+import { encrypt, decryptHealthTokens } from "@/lib/encryption";
 
 /**
  * POST /api/athlete/health/sync
@@ -51,7 +52,8 @@ export async function POST() {
 
     let totalPoints = 0;
 
-    for (const conn of connections) {
+    for (const connRaw of connections) {
+      const conn = decryptHealthTokens(connRaw as Record<string, unknown>) as typeof connRaw;
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const points: any[] = [];
@@ -109,8 +111,8 @@ export async function POST() {
               await prisma.healthAppConnection.update({
                 where: { id: conn.id },
                 data: {
-                  accessToken: refreshed.accessToken,
-                  refreshToken: refreshed.refreshToken,
+                  accessToken: encrypt(refreshed.accessToken),
+                  refreshToken: encrypt(refreshed.refreshToken),
                   tokenExpiresAt: new Date(Date.now() + refreshed.expiresIn * 1000),
                 },
               });
@@ -169,8 +171,8 @@ export async function POST() {
               await prisma.healthAppConnection.update({
                 where: { id: conn.id },
                 data: {
-                  accessToken: refreshed.accessToken,
-                  refreshToken: refreshed.refreshToken,
+                  accessToken: encrypt(refreshed.accessToken),
+                  refreshToken: encrypt(refreshed.refreshToken),
                   tokenExpiresAt: new Date(Date.now() + refreshed.expiresIn * 1000),
                 },
               });

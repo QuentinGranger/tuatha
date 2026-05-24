@@ -28,6 +28,9 @@ export async function POST(request: NextRequest) {
     const passwordConfirm = formData.get("passwordConfirm") as string;
     const avatar = formData.get("avatar") as File | null;
     const cguVersion = formData.get("cguVersion") as string | null;
+    const privacyVersion = formData.get("privacyVersion") as string | null;
+    const healthCharterVersion = formData.get("healthCharterVersion") as string | null;
+    const consentMarketing = formData.get("consentMarketing") === "true";
 
     // Validation
     if (!nom || !prenom || !email || !telephone || !password) {
@@ -69,26 +72,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // CGU acceptance required
+    // CGU + privacy + health charter acceptance required
     if (!cguVersion) {
       return NextResponse.json(
         { error: "L'acceptation des Conditions Générales d'Utilisation est obligatoire." },
         { status: 400 }
       );
     }
+    if (!privacyVersion) {
+      return NextResponse.json(
+        { error: "L'acceptation de la Politique de Confidentialité est obligatoire." },
+        { status: 400 }
+      );
+    }
+    if (!healthCharterVersion) {
+      return NextResponse.json(
+        { error: "L'acceptation de la Charte de traitement des données de santé est obligatoire." },
+        { status: 400 }
+      );
+    }
 
     // Check if email already exists (in both AthleteUser and Professionnel)
     const existingAthlete = await prisma.athleteUser.findUnique({ where: { email } });
-    if (existingAthlete) {
+    const existingPro = existingAthlete ? null : await prisma.professionnel.findUnique({ where: { email } });
+    if (existingAthlete || existingPro) {
       return NextResponse.json(
-        { error: "Un compte athlète avec cet email existe déjà." },
-        { status: 409 }
-      );
-    }
-    const existingPro = await prisma.professionnel.findUnique({ where: { email } });
-    if (existingPro) {
-      return NextResponse.json(
-        { error: "Un compte professionnel avec cet email existe déjà." },
+        { error: "Un compte avec cet email existe déjà." },
         { status: 409 }
       );
     }
@@ -145,7 +154,37 @@ export async function POST(request: NextRequest) {
         acceptedCguVersion: cguVersion,
         acceptedCguAt: new Date(),
         acceptedCguIp: request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null,
+        acceptedPrivacyVersion: privacyVersion,
+        acceptedPrivacyAt: new Date(),
+        acceptedHealthCharterVersion: healthCharterVersion,
+        acceptedHealthCharterAt: new Date(),
+        consentMarketing,
+        consentMarketingAt: consentMarketing ? new Date() : null,
       },
+    });
+
+    // Write immutable consent log entries
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
+    const userAgent = request.headers.get("user-agent") || null;
+    const consentEntries = [
+      { consentType: "cgu",         granted: true, documentVersion: cguVersion },
+      { consentType: "privacy",     granted: true, documentVersion: privacyVersion },
+      { consentType: "health_data", granted: true, documentVersion: healthCharterVersion },
+    ];
+    if (consentMarketing) {
+      consentEntries.push({ consentType: "marketing", granted: true, documentVersion: null as any });
+    }
+    await (prisma as any).athleteConsent.createMany({
+      data: consentEntries.map((c) => ({
+        athleteUserId: athleteUser.id,
+        consentType: c.consentType,
+        action: "granted",
+        granted: c.granted,
+        documentVersion: c.documentVersion,
+        ip,
+        userAgent,
+        method: "checkbox",
+      })),
     });
 
     // Send verification email (non-blocking)

@@ -1,0 +1,346 @@
+/* ─── Admin Responsive Overrides ─── */
+
+/* Sidebar collapse on small screens */
+@media (max-width: 1024px) {
+  .admin-sidebar {
+    width: 60px !important;
+  }
+  .admin-sidebar .nav-label,
+  .admin-sidebar .sidebar-footer-text,
+  .admin-sidebar .sidebar-logo-text {
+    display: none !important;
+  }
+  .admin-main {
+    margin-left: 60px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar {
+    display: none !important;
+  }
+  .admin-main {
+    margin-left: 0 !important;
+  }
+}
+
+/* Dashboard grids */
+.admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.admin-cols-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.admin-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 1400px) {
+  .admin-kpi-grid,
+  .admin-bottom-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-cols-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-kpi-grid,
+  .admin-bottom-grid,
+  .admin-cols-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Dashboard header pills */
+.admin-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.admin-header-pills {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .admin-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Banner metrics */
+.admin-banner-metrics {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .admin-banner-metrics {
+    gap: 1rem;
+  }
+}
+
+/* ─── Pros / Athletes pages ─── */
+.admin-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 1200px) {
+  .admin-detail-layout {
+    grid-template-columns: minmax(240px, 300px) 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-detail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Stats row for pros/athletes */
+.admin-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+/* Tabs overflow */
+.admin-tabs-row {
+  display: flex;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.admin-tabs-row::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Tickets page ─── */
+.admin-tickets-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.admin-tickets-content.has-detail {
+  grid-template-columns: 1fr 1.3fr;
+}
+
+@media (max-width: 1100px) {
+  .admin-tickets-content.has-detail {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .admin-tickets-content.has-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tickets header buttons */
+.admin-tickets-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.admin-tickets-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Stats badges row */
+.admin-stats-badges {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Search + filter row */
+.admin-search-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+.admin-search-row input {
+  flex: 1;
+  min-width: 150px;
+}
+
+/* Detail grid inside panels */
+.admin-detail-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .admin-detail-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Top bar header */
+@media (max-width: 768px) {
+  .admin-main > header {
+    padding: 0 0.75rem !important;
+    gap: 0.5rem !important;
+  }
+  .admin-main > header h2 {
+    font-size: 0.8rem !important;
+  }
+  .admin-main > header .search-bar {
+    display: none !important;
+  }
+}
+
+/* Tables overflow on small screens */
+.admin-detail-layout table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* General responsive utilities */
+.admin-flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+/* Main content padding on mobile */
+@media (max-width: 768px) {
+  .admin-main > main {
+    padding: 0.75rem !important;
+  }
+}
+
+/* Modal responsive */
+.admin-modal-content {
+  width: 480px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 600px) {
+  .admin-modal-content {
+    width: 95vw;
+    padding: 1rem !important;
+  }
+}
+
+/* ─── Consents page ─── */
+.admin-consents-kpis {
+  display: flex;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-consents-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.admin-consents-content.has-detail {
+  grid-template-columns: 1fr 1.2fr;
+}
+
+.admin-consents-table-header {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1.5fr 0.8fr 0.9fr 0.7fr 0.8fr;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.admin-consents-table-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1.5fr 0.8fr 0.9fr 0.7fr 0.8fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  font-size: 0.72rem;
+  transition: background 0.1s;
+}
+.admin-consents-table-row:hover {
+  background: #f8fafc;
+}
+
+.admin-consents-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 1200px) {
+  .admin-consents-content.has-detail {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .admin-consents-content.has-detail {
+    grid-template-columns: 1fr;
+  }
+  .admin-consents-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-consents-kpis {
+    gap: 0.4rem;
+  }
+  .admin-consents-table-header,
+  .admin-consents-table-row {
+    grid-template-columns: 1fr 1fr 0.7fr;
+    font-size: 0.68rem;
+  }
+  .admin-consents-table-header span:nth-child(n+4),
+  .admin-consents-table-row span:nth-child(n+4) {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .admin-consents-table-header,
+  .admin-consents-table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+  .admin-consents-table-header span:nth-child(n+3),
+  .admin-consents-table-row span:nth-child(n+3) {
+    display: none;
+  }
+}

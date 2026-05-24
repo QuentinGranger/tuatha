@@ -9,6 +9,7 @@ import { checkRateLimit, checkLoginProtection, recordLoginFailure, recordLoginSu
 import { assessLoginRisk } from "@/lib/riskDetection";
 import { securityMonitor } from "@/lib/securityMonitor";
 import { getDashboardPath } from "@/lib/specialites";
+import { verifyTOTP, verifyRecoveryCode } from "@/lib/mfa";
 
 function getIP(req: NextRequest): string {
   return req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "unknown";
@@ -58,7 +59,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Identifiants incorrects." }, { status: 401 });
     }
 
-    // ── Athlete login path (simpler: no 2FA, no risk assessment) ──
+    // ── Athlete login path ──
     if (athlete) {
       const athletePwdValid = await bcrypt.compare(password, athlete.password);
       if (!athletePwdValid) {
@@ -73,6 +74,38 @@ export async function POST(request: NextRequest) {
           { error: "Veuillez vérifier votre adresse email avant de vous connecter.", requiresEmailVerification: true, email: athlete.email },
           { status: 403 }
         );
+      }
+
+      // ── Athlete 2FA check ──
+      if ((athlete as any).twoFactorEnabled && (athlete as any).totpSecret) {
+        if (!totpCode) {
+          return NextResponse.json({ requires2FA: true, message: "Code 2FA requis." }, { status: 200 });
+        }
+
+        const otpLimit = checkRateLimit(`otp:${emailLower}`, RATE_LIMITS.otpVerify);
+        if (!otpLimit.allowed) {
+          const res = NextResponse.json(
+            { error: "Trop de tentatives 2FA. Réessayez plus tard.", requires2FA: true, retryAfter: Math.ceil(otpLimit.retryAfterMs / 1000) },
+            { status: 429 }
+          );
+          res.headers.set("Retry-After", retryAfterSeconds(otpLimit.retryAfterMs));
+          return res;
+        }
+
+        // Try TOTP code first, then recovery code
+        const totpValid = verifyTOTP((athlete as any).totpSecret, totpCode);
+        if (!totpValid) {
+          // Try as recovery code
+          const recoveryIdx = await verifyRecoveryCode(totpCode, (athlete as any).recoveryCodes || []);
+          if (recoveryIdx < 0) {
+            recordLoginFailure(emailLower);
+            return NextResponse.json({ error: "Code 2FA invalide.", requires2FA: true }, { status: 403 });
+          }
+          // Consume recovery code
+          const updatedCodes = [...((athlete as any).recoveryCodes || [])];
+          updatedCodes.splice(recoveryIdx, 1);
+          await (prisma as any).athleteUser.update({ where: { id: athlete.id }, data: { recoveryCodes: updatedCodes } });
+        }
       }
 
       recordLoginSuccess(emailLower);
@@ -143,19 +176,19 @@ export async function POST(request: NextRequest) {
         return res;
       }
 
-      const totp = new OTPAuth.TOTP({
-        issuer: "Tuatha",
-        label: proUser.email,
-        algorithm: "SHA1",
-        digits: 6,
-        period: 30,
-        secret: OTPAuth.Secret.fromBase32(proUser.totpSecret),
-      });
-
-      const delta = totp.validate({ token: totpCode, window: 1 });
-      if (delta === null) {
-        recordLoginFailure(emailLower);
-        return NextResponse.json({ error: "Code 2FA invalide.", requires2FA: true }, { status: 403 });
+      // Try TOTP code first, then recovery code
+      const totpValid = verifyTOTP(proUser.totpSecret, totpCode);
+      if (!totpValid) {
+        // Try as recovery code
+        const recoveryIdx = await verifyRecoveryCode(totpCode, proUser.recoveryCodes || []);
+        if (recoveryIdx < 0) {
+          recordLoginFailure(emailLower);
+          return NextResponse.json({ error: "Code 2FA invalide.", requires2FA: true }, { status: 403 });
+        }
+        // Consume recovery code (single-use)
+        const updatedCodes = [...(proUser.recoveryCodes || [])];
+        updatedCodes.splice(recoveryIdx, 1);
+        await prisma.professionnel.update({ where: { id: proUser.id }, data: { recoveryCodes: updatedCodes } });
       }
     }
 

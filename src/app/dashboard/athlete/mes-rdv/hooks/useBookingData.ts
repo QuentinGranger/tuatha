@@ -10,6 +10,18 @@ type ShowToast = (message: string, type?: "success" | "error" | "info") => void;
 
 export type FetchStatus = "idle" | "loading" | "success" | "error";
 
+/** Fetch with silent token refresh on 401 */
+async function fetchWithRefresh(url: string, init?: RequestInit): Promise<Response> {
+  let res = await fetch(url, init);
+  if (res.status === 401) {
+    const refresh = await fetch("/api/auth/refresh", { method: "POST" });
+    if (refresh.ok) {
+      res = await fetch(url, init);
+    }
+  }
+  return res;
+}
+
 export function useBookingData(showToast: ShowToast) {
   // ─── Connections ───
   const [connections, setConnections] = useState<MyConnection[]>([]);
@@ -18,7 +30,7 @@ export function useBookingData(showToast: ShowToast) {
   const fetchConnections = useCallback(async () => {
     setConnsStatus("loading");
     try {
-      const res = await fetch("/api/athlete/my-connections");
+      const res = await fetchWithRefresh("/api/athlete/my-connections");
       if (!res.ok) throw new Error("fetch failed");
       const data = await res.json();
       if (data?.connections) {
@@ -38,7 +50,7 @@ export function useBookingData(showToast: ShowToast) {
   const fetchAppointments = useCallback(async () => {
     setRdvStatus("loading");
     try {
-      const res = await fetch("/api/athlete/next-rdv");
+      const res = await fetchWithRefresh("/api/athlete/next-rdv");
       if (!res.ok) throw new Error("fetch failed");
       const data = await res.json();
       if (data?.appointments) setAppointments(data.appointments);
@@ -56,7 +68,7 @@ export function useBookingData(showToast: ShowToast) {
   const fetchPastAppointments = useCallback(async () => {
     setPastStatus("loading");
     try {
-      const res = await fetch("/api/athlete/past-rdv");
+      const res = await fetchWithRefresh("/api/athlete/past-rdv");
       if (!res.ok) throw new Error("fetch failed");
       const data = await res.json();
       if (data?.pastAppointments) setPastAppointments(data.pastAppointments);
@@ -74,7 +86,7 @@ export function useBookingData(showToast: ShowToast) {
   const fetchPreferences = useCallback(async () => {
     setPrefsStatus("loading");
     try {
-      const res = await fetch("/api/athlete/preferences");
+      const res = await fetchWithRefresh("/api/athlete/preferences");
       if (!res.ok) throw new Error("fetch failed");
       const data = await res.json();
       if (data?.preferences) setLearnedPrefs(data.preferences);
@@ -92,7 +104,7 @@ export function useBookingData(showToast: ShowToast) {
   const fetchProfile = useCallback(async () => {
     setProfileStatus("loading");
     try {
-      const res = await fetch("/api/athlete/profile");
+      const res = await fetchWithRefresh("/api/athlete/profile");
       if (!res.ok) throw new Error("fetch failed");
       const data = await res.json();
       if (data) setAthleteProfile(data);
@@ -108,7 +120,7 @@ export function useBookingData(showToast: ShowToast) {
 
   const fetchReminders = useCallback(async () => {
     try {
-      const res = await fetch("/api/athlete/booking-reminders");
+      const res = await fetchWithRefresh("/api/athlete/booking-reminders");
       if (res.ok) {
         const data = await res.json();
         if (data?.reminders) setActiveReminders(data.reminders);
@@ -124,7 +136,7 @@ export function useBookingData(showToast: ShowToast) {
     const key = `${pastRdv.id}-${days}`;
     setFollowUpLoading(key);
     try {
-      const res = await fetch("/api/athlete/schedule-followup", {
+      const res = await fetchWithRefresh("/api/athlete/schedule-followup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ pastEventId: pastRdv.id, days, proId: pastRdv.pro.id }),
@@ -144,7 +156,7 @@ export function useBookingData(showToast: ShowToast) {
 
   const dismissReminder = (id: string) => {
     setActiveReminders((prev) => prev.filter((r) => r.id !== id));
-    fetch("/api/athlete/booking-reminders", {
+    fetchWithRefresh("/api/athlete/booking-reminders", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reminderId: id }),

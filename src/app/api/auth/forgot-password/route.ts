@@ -29,44 +29,48 @@ export async function POST(request: NextRequest) {
     const userAgent = request.headers.get("user-agent") || null;
 
     const pro = await prisma.professionnel.findUnique({ where: { email } });
+    const athlete = pro ? null : await prisma.athleteUser.findUnique({ where: { email } });
 
     // Always return success to prevent email enumeration
-    if (!pro) {
-      return NextResponse.json({ message: "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé." });
+    const successMsg = "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé.";
+    if (!pro && !athlete) {
+      return NextResponse.json({ message: successMsg });
     }
+
+    const userId = pro ? pro.id : athlete!.id;
+    const userPrenom = pro ? pro.prenom : athlete!.prenom;
+    const userEmail = pro ? pro.email : athlete!.email;
+    const isPro = !!pro;
 
     // Anti-bruteforce: max N resets per hour per email
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
-    const recentResets = await prisma.passwordReset.count({
-      where: {
-        professionnelId: pro.id,
-        createdAt: { gte: oneHourAgo },
-      },
-    });
+    const resetWhere: Record<string, unknown> = { createdAt: { gte: oneHourAgo } };
+    if (isPro) resetWhere.professionnelId = userId;
+    else resetWhere.athleteUserId = userId;
+
+    const recentResets = await prisma.passwordReset.count({ where: resetWhere });
 
     if (recentResets >= MAX_RESETS_PER_HOUR) {
-      // Log security alert
-      await prisma.securityAlert.create({
-        data: {
-          type: "reset_rate_limited",
-          message: `Tentative de reset bloquée : ${recentResets + 1} demandes en 1h (max ${MAX_RESETS_PER_HOUR}).`,
-          ip,
-          userAgent,
-          professionnelId: pro.id,
-        },
-      });
-
-      // Still return success to prevent enumeration
-      return NextResponse.json({ message: "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé." });
+      if (isPro) {
+        await prisma.securityAlert.create({
+          data: {
+            type: "reset_rate_limited",
+            message: `Tentative de reset bloquée : ${recentResets + 1} demandes en 1h (max ${MAX_RESETS_PER_HOUR}).`,
+            ip,
+            userAgent,
+            professionnelId: userId,
+          },
+        });
+      }
+      return NextResponse.json({ message: successMsg });
     }
 
     // Invalidate any existing unused tokens
+    const invalidateWhere: Record<string, unknown> = { used: false, expiresAt: { gte: new Date() } };
+    if (isPro) invalidateWhere.professionnelId = userId;
+    else invalidateWhere.athleteUserId = userId;
     await prisma.passwordReset.updateMany({
-      where: {
-        professionnelId: pro.id,
-        used: false,
-        expiresAt: { gte: new Date() },
-      },
+      where: invalidateWhere,
       data: { used: true, usedAt: new Date() },
     });
 
@@ -75,34 +79,31 @@ export async function POST(request: NextRequest) {
     const expiresAt = new Date(Date.now() + RESET_EXPIRY_MINUTES * 60 * 1000);
 
     // Save reset request
-    await prisma.passwordReset.create({
-      data: {
-        token,
-        expiresAt,
-        ip,
-        userAgent,
-        professionnelId: pro.id,
-      },
-    });
+    const createData: Record<string, unknown> = { token, expiresAt, ip, userAgent };
+    if (isPro) createData.professionnelId = userId;
+    else createData.athleteUserId = userId;
+    await prisma.passwordReset.create({ data: createData as any });
 
-    // Log security alert
-    await prisma.securityAlert.create({
-      data: {
-        type: "password_reset_requested",
-        message: `Demande de réinitialisation de mot de passe.`,
-        ip,
-        userAgent,
-        professionnelId: pro.id,
-      },
-    });
+    // Log security alert (pro only — athletes don't have SecurityAlert FK)
+    if (isPro) {
+      await prisma.securityAlert.create({
+        data: {
+          type: "password_reset_requested",
+          message: `Demande de réinitialisation de mot de passe.`,
+          ip,
+          userAgent,
+          professionnelId: userId,
+        },
+      });
+    }
 
     // Send email
     const baseUrl = secrets.appUrl();
     const resetUrl = `${baseUrl}/reinitialiser-mot-de-passe?token=${token}`;
 
     await sendPasswordResetEmail({
-      to: pro.email,
-      prenom: pro.prenom,
+      to: userEmail,
+      prenom: userPrenom,
       resetUrl,
       expiresInMinutes: RESET_EXPIRY_MINUTES,
     });

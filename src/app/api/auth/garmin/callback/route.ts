@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionAthlete } from "@/lib/session";
 import { getAccessToken } from "@/lib/garmin";
+import { encrypt, ensureDecrypted } from "@/lib/encryption";
 
 /**
  * GET /api/auth/garmin/callback?oauth_token=...&oauth_verifier=...
@@ -38,22 +39,22 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${baseUrl}/dashboard/athlete/sante?error=garmin_no_pending`);
     }
 
-    const requestTokenSecret = connection.accessTokenSecret;
+    const requestTokenSecret = ensureDecrypted(connection.accessTokenSecret);
 
     // Step 3: Exchange for access token
     const { accessToken, accessTokenSecret } = await getAccessToken(
       oauthToken,
-      requestTokenSecret,
+      requestTokenSecret!,
       oauthVerifier
     );
 
-    // Store the real access tokens
+    // Store the real access tokens (encrypted at rest)
     await prisma.healthAppConnection.update({
       where: { id: connection.id },
       data: {
         status: "connected",
-        accessToken,
-        accessTokenSecret,
+        accessToken: encrypt(accessToken),
+        accessTokenSecret: encrypt(accessTokenSecret),
         lastSyncError: null,
         metadata: { step: "connected", connectedAt: new Date().toISOString() },
       },

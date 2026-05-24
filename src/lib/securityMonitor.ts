@@ -27,7 +27,8 @@ export type AlertType =
   | "export_spike"
   | "bulk_access"
   | "off_hours_activity"
-  | "rapid_actions";
+  | "rapid_actions"
+  | "auth_failure_spike";
 
 export interface SecurityAlert {
   id: string;
@@ -93,6 +94,9 @@ const exportEvents = new Map<string, TimestampedEntry[]>();
 // proId → write action timestamps
 const writeActions = new Map<string, TimestampedEntry[]>();
 
+// IP → auth failure timestamps (401/403)
+const authFailures = new Map<string, TimestampedEntry[]>();
+
 // Alert ring buffer
 const alerts: SecurityAlert[] = [];
 const MAX_ALERTS = 5000;
@@ -121,6 +125,11 @@ setInterval(() => {
     const filtered = entries.filter((e) => e.ts > cutoff);
     if (filtered.length === 0) writeActions.delete(key);
     else writeActions.set(key, filtered);
+  }
+  for (const [key, entries] of authFailures) {
+    const filtered = entries.filter((e) => e.ts > cutoff);
+    if (filtered.length === 0) authFailures.delete(key);
+    else authFailures.set(key, filtered);
   }
 }, 10 * 60 * 1000);
 
@@ -371,6 +380,44 @@ export const securityMonitor = {
             windowSec: CONFIG.rapidActions.windowMs / 1000,
             lastPath: path,
           },
+        );
+      }
+    }
+  },
+
+  // ── 5. Auth Failure Tracking (401/403 monitoring) ──
+
+  /**
+   * Track a 401/403 auth failure. Call from withAuth and athlete routes.
+   * Detects repeated unauthorized access attempts from the same IP.
+   */
+  trackAuthFailure(ip: string, path: string, status: 401 | 403): void {
+    if (!ip || ip === "unknown") return;
+
+    const entries = pushEntry(authFailures, `ip:${ip}`, `${status}:${path}`);
+    const recentCount = countInWindow(entries, 5 * 60 * 1000); // 5 min window
+
+    if (recentCount >= 20) {
+      emitAlert(
+        "auth_failure_spike",
+        "critical",
+        ip,
+        `IP ${ip}: ${recentCount} erreurs ${status} en 5 min (dernier: ${path})`,
+        { ip, count: recentCount, lastPath: path, status },
+      );
+    } else if (recentCount >= 10) {
+      // Only warn once when crossing threshold
+      const prevCount = countInWindow(
+        entries.filter((e) => e.ts < Date.now() - 1000),
+        5 * 60 * 1000,
+      );
+      if (prevCount < 10) {
+        emitAlert(
+          "auth_failure_spike",
+          "warning",
+          ip,
+          `IP ${ip}: ${recentCount} erreurs d'autorisation en 5 min`,
+          { ip, count: recentCount, lastPath: path, status },
         );
       }
     }

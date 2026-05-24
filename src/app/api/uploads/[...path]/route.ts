@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
-import { readFile, stat } from "fs/promises";
+import { stat } from "fs/promises";
 import { applyRateLimit, getIP, RATE_LIMITS } from "@/lib/rateLimit";
+import { readFileAuto, resolveFilePath } from "@/lib/fileEncryption";
 import { verifyFileToken } from "@/lib/signedUrl";
 import { getSessionPro } from "@/lib/auth";
 import { checkFileAccess } from "@/lib/fileAccess";
@@ -87,13 +88,18 @@ export async function GET(
       }
     }
 
-    const filePath = path.join(process.cwd(), "uploads", filename);
-    const ext = path.extname(filePath).toLowerCase();
+    const rawPath = path.join(process.cwd(), "uploads", filename);
+    // Strip .enc for extension detection (encrypted files keep their original extension in path)
+    const cleanFilename = filename.replace(/\.enc$/, "");
+    const ext = path.extname(cleanFilename).toLowerCase();
     const contentType = MIME_TYPES[ext];
 
     if (!contentType) {
       return NextResponse.json({ error: "Type non support\u00e9" }, { status: 400 });
     }
+
+    // Resolve actual path (may be .enc on disk)
+    const filePath = await resolveFilePath(rawPath);
 
     // Get file size for quota tracking
     const fileStat = await stat(filePath);
@@ -143,7 +149,7 @@ export async function GET(
       });
     }
 
-    const file = await readFile(filePath);
+    const file = await readFileAuto(rawPath);
 
     // Record download for quota tracking + audit
     recordDownload(quotaUserId, fileSize, internalPath);
@@ -152,7 +158,7 @@ export async function GET(
       logDownload(quotaUserId, internalPath, fileSize, ip, ua);
     }
 
-    return new NextResponse(file, {
+    return new NextResponse(file as unknown as BodyInit, {
       headers: {
         "Content-Type": contentType,
         "Cache-Control": "private, no-store, max-age=0",

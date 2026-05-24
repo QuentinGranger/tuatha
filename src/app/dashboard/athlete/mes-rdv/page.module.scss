@@ -3,6 +3,7 @@ $orange-light: #f0a500;
 $bg-gradient: linear-gradient(135deg, #0c2442 0%, #000000 100%);
 $border: rgba(255, 255, 255, 0.06);
 $card-bg: rgba(255, 255, 255, 0.03);
+$apple-red: #FF3B30;
 
 .page {
   min-height: 100dvh;
@@ -19,6 +20,7 @@ $card-bg: rgba(255, 255, 255, 0.03);
   align-items: center;
   gap: 12px;
   padding: 14px 24px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
   border-bottom: 1px solid $border;
 }
 
@@ -58,6 +60,16 @@ $card-bg: rgba(255, 255, 255, 0.03);
     background: $orange-light;
     box-shadow: 0 4px 16px rgba($orange, 0.3);
   }
+}
+
+// ─── Sub-header (view toggle + book) ───
+
+.subHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  border-bottom: 1px solid $border;
 }
 
 // ─── Main ───
@@ -4673,6 +4685,7 @@ $card-bg: rgba(255, 255, 255, 0.03);
 @media (max-width: 480px) {
   .header {
     padding: 10px 16px;
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
   }
 
   .headerTitle {
@@ -5798,38 +5811,44 @@ $card-bg: rgba(255, 255, 255, 0.03);
 .calToolbarLeft { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .calToolbarRight { display: flex; align-items: center; gap: 8px; }
 .calTodayBtn {
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  color: #fff; font-size: 12px; font-weight: 600; padding: 5px 14px;
-  border-radius: 6px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
-  &:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  color: #fff; font-size: 12px; font-weight: 600; padding: 5px 16px;
+  border-radius: 20px; cursor: pointer; transition: all 0.2s; white-space: nowrap;
+  &:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); }
+  &:active { transform: scale(0.96); }
 }
 .calNavBtns { display: flex; }
 .calNavBtn {
-  background: none; border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.55); width: 30px; height: 30px;
+  background: none; border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5); width: 30px; height: 30px;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: all 0.15s;
-  &:hover { color: #fff; background: rgba(255,255,255,0.06); }
-  &:first-child { border-radius: 6px 0 0 6px; border-right: none; }
-  &:last-child { border-radius: 0 6px 6px 0; }
+  &:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  &:active { transform: scale(0.94); }
+  &:first-child { border-radius: 8px 0 0 8px; border-right: none; }
+  &:last-child { border-radius: 0 8px 8px 0; }
 }
 .calTitle {
   font-size: 17px; font-weight: 700; margin: 0;
   white-space: nowrap; text-transform: capitalize; letter-spacing: -0.2px;
+  min-width: 0;
 }
+.calTitleLong { display: inline; }
+.calTitleShort { display: none; }
 .calViewTabs {
-  display: flex; gap: 2px; background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 2px;
+  display: flex; gap: 1px; background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 9px; padding: 2px;
 }
 .calViewTab {
-  padding: 5px 14px; border: none; background: none;
-  color: rgba(255,255,255,0.4); font-size: 12px; font-weight: 500;
-  cursor: pointer; border-radius: 6px; transition: all 0.2s; white-space: nowrap;
+  padding: 5px 16px; border: none; background: none;
+  color: rgba(255,255,255,0.45); font-size: 12px; font-weight: 500;
+  cursor: pointer; border-radius: 7px; transition: all 0.2s; white-space: nowrap;
   &:hover { color: rgba(255,255,255,0.7); }
+  &:active { transform: scale(0.97); }
 }
 .calViewTabActive {
-  background: rgba(255,255,255,0.1); color: #fff; font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.12); color: #fff; font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.25), 0 0 0 0.5px rgba(255,255,255,0.06);
 }
 
 /* Search */
@@ -5908,21 +5927,22 @@ $card-bg: rgba(255, 255, 255, 0.03);
 }
 .calWeekRow {
   display: grid; grid-template-columns: repeat(7, 1fr);
-  border-bottom: 1px solid rgba(255,255,255,0.03); flex: 1;
+  border-bottom: 1px solid rgba(255,255,255,0.025); flex: 1;
   &:last-child { border-bottom: none; }
 }
 .calDayCell {
-  min-height: 84px; padding: 3px;
-  border-right: 1px solid rgba(255,255,255,0.03); cursor: pointer;
-  transition: background 0.12s; display: flex; flex-direction: column; gap: 2px;
+  min-height: 90px; padding: 4px;
+  border-right: 1px solid rgba(255,255,255,0.025); cursor: pointer;
+  transition: background 0.15s; display: flex; flex-direction: column; gap: 2px;
   &:last-child { border-right: none; }
-  &:hover { background: rgba(255,255,255,0.025); }
+  &:hover { background: rgba(255,255,255,0.02); }
 }
 .calDayCellOther { opacity: 0.25; }
-.calDayCellToday { background: rgba($orange, 0.035); }
+.calDayCellToday { background: rgba($apple-red, 0.035); }
 .calDayCellSelected {
-  background: rgba($orange, 0.07);
-  box-shadow: inset 0 0 0 1px rgba($orange, 0.15);
+  background: rgba($apple-red, 0.06);
+  box-shadow: inset 0 0 0 1.5px rgba($apple-red, 0.18);
+  border-radius: 4px;
 }
 .calDayCellHead {
   display: flex; align-items: center; justify-content: space-between;
@@ -5937,8 +5957,8 @@ $card-bg: rgba(255, 255, 255, 0.03);
   width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
   border-radius: 50%; transition: all 0.15s;
   .calDayCellToday & {
-    background: $orange; color: #fff; font-weight: 700;
-    box-shadow: 0 1px 4px rgba($orange, 0.4);
+    background: $apple-red; color: #fff; font-weight: 700;
+    box-shadow: 0 1px 4px rgba($apple-red, 0.4);
   }
 }
 .calDayEvents {
@@ -5949,10 +5969,10 @@ $card-bg: rgba(255, 255, 255, 0.03);
 /* Event chips (month cells) */
 .calEventChip {
   display: flex; align-items: center; gap: 3px;
-  padding: 1px 4px; border-radius: 3px; border: 1px solid;
-  font-size: 10px; line-height: 1.3; cursor: pointer; overflow: hidden;
-  transition: all 0.12s;
-  &:hover { filter: brightness(1.3); }
+  padding: 2px 5px; border-radius: 4px; border: none;
+  font-size: 10px; line-height: 1.4; cursor: pointer; overflow: hidden;
+  transition: all 0.15s;
+  &:hover { filter: brightness(1.15); transform: translateX(1px); }
 }
 .calEventChipPast { opacity: 0.5; }
 .calEventChipTime { font-weight: 700; flex-shrink: 0; font-size: 9px; }
@@ -6004,16 +6024,16 @@ $card-bg: rgba(255, 255, 255, 0.03);
 }
 .calMiniDayOther { color: rgba(255,255,255,0.15); }
 .calMiniDayToday {
-  background: $orange; color: #fff; font-weight: 700;
-  &:hover { background: $orange; }
+  background: $apple-red; color: #fff; font-weight: 700;
+  &:hover { background: $apple-red; }
 }
 .calMiniDaySel {
-  box-shadow: inset 0 0 0 2px $orange;
-  &:not(.calMiniDayToday) { color: $orange; }
+  box-shadow: inset 0 0 0 2px $apple-red;
+  &:not(.calMiniDayToday) { color: $apple-red; }
 }
 .calMiniDayDot {
   position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
-  width: 4px; height: 4px; border-radius: 50%; background: $orange;
+  width: 4px; height: 4px; border-radius: 50%; background: $apple-red;
 }
 .calSideStats {
   display: flex; gap: 0; border-bottom: 1px solid $border;
@@ -6055,9 +6075,9 @@ $card-bg: rgba(255, 255, 255, 0.03);
   overflow-y: auto; padding: 6px 12px 12px; scrollbar-width: thin;
 }
 .calSideCard {
-  padding: 10px 12px; border-radius: 8px; border-left: 3px solid;
-  background: rgba(255,255,255,0.03); cursor: pointer; transition: all 0.15s;
-  &:hover { background: rgba(255,255,255,0.06); transform: translateX(2px); }
+  padding: 10px 12px; border-radius: 10px; border-left: 3px solid;
+  background: rgba(255,255,255,0.025); cursor: pointer; transition: all 0.2s;
+  &:hover { background: rgba(255,255,255,0.05); transform: translateY(-1px); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 }
 .calSideCardPast { opacity: 0.55; }
 .calSideCardTime {
@@ -6105,7 +6125,7 @@ $card-bg: rgba(255, 255, 255, 0.03);
   padding: 8px 4px; gap: 2px; cursor: pointer; transition: background 0.12s;
   &:hover { background: rgba(255,255,255,0.03); }
 }
-.calWeekColHeaderToday { background: rgba($orange, 0.04); }
+.calWeekColHeaderToday { background: rgba($apple-red, 0.04); }
 .calWeekColDay {
   font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4);
   text-transform: uppercase; letter-spacing: 0.3px;
@@ -6115,7 +6135,7 @@ $card-bg: rgba(255, 255, 255, 0.03);
   width: 32px; height: 32px; display: flex; align-items: center;
   justify-content: center; border-radius: 50%;
 }
-.calWeekColNumToday { background: $orange; color: #fff; }
+.calWeekColNumToday { background: $apple-red; color: #fff; }
 .calWeekColBadge {
   font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 8px;
   color: #fff; line-height: 1.2;
@@ -6134,7 +6154,7 @@ $card-bg: rgba(255, 255, 255, 0.03);
 .calWeekCol {
   position: relative; border-left: 1px solid rgba(255,255,255,0.04);
 }
-.calWeekColToday { background: rgba($orange, 0.02); }
+.calWeekColToday { background: rgba($apple-red, 0.02); }
 .calWeekHourSlot {
   height: 48px; border-bottom: 1px solid rgba(255,255,255,0.03);
   cursor: pointer; transition: background 0.1s; position: relative;
@@ -6146,10 +6166,10 @@ $card-bg: rgba(255, 255, 255, 0.03);
   pointer-events: none;
 }
 .calWeekEvent {
-  position: absolute; border-left: 3px solid; border-radius: 4px;
-  padding: 2px 5px; cursor: pointer; overflow: hidden; z-index: 1;
-  transition: filter 0.15s, transform 0.1s;
-  &:hover { filter: brightness(1.2); transform: scale(1.02); z-index: 3; }
+  position: absolute; border-left: 3px solid; border-radius: 6px;
+  padding: 2px 6px; cursor: pointer; overflow: hidden; z-index: 1;
+  transition: filter 0.2s, transform 0.15s, box-shadow 0.2s;
+  &:hover { filter: brightness(1.15); transform: scale(1.02); z-index: 3; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
 }
 .calWeekEventPast { opacity: 0.45; }
 .calWeekEventTime {
@@ -6180,7 +6200,7 @@ $card-bg: rgba(255, 255, 255, 0.03);
   width: 42px; height: 42px; display: flex; align-items: center;
   justify-content: center; border-radius: 50%;
 }
-.calDayHeaderNumToday { background: $orange; color: #fff; }
+.calDayHeaderNumToday { background: $apple-red; color: #fff; }
 .calDayHeaderMonth {
   font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.4); text-transform: capitalize;
 }
@@ -6240,13 +6260,13 @@ $card-bg: rgba(255, 255, 255, 0.03);
 }
 
 .calDayEvent {
-  position: absolute; left: 6px; right: 6px;
-  border-left: 4px solid; border-radius: 6px; padding: 6px 10px;
+  position: absolute; left: 4px; right: 4px;
+  border-left: 4px solid; border-radius: 8px; padding: 8px 12px;
   cursor: pointer; overflow: hidden; z-index: 2;
-  transition: filter 0.15s, box-shadow 0.15s, transform 0.1s;
+  transition: filter 0.2s, box-shadow 0.2s, transform 0.15s;
   &:hover {
-    filter: brightness(1.15); box-shadow: 0 3px 12px rgba(0,0,0,0.3);
-    transform: translateX(2px);
+    filter: brightness(1.1); box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    transform: translateY(-1px);
   }
 }
 .calDayEventPast { opacity: 0.45; }
@@ -6304,11 +6324,11 @@ $card-bg: rgba(255, 255, 255, 0.03);
   to { opacity: 1; }
 }
 .calEventModal {
-  background: #111827; border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 16px; width: 100%; max-width: 420px;
+  background: #111827; border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px; width: 100%; max-width: 420px;
   overflow: hidden; position: relative;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
-  animation: calModalIn 0.25s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 0.5px rgba(255,255,255,0.05);
+  animation: calModalIn 0.3s cubic-bezier(0.32, 0.72, 0, 1);
 }
 @keyframes calModalIn {
   from { opacity: 0; transform: scale(0.95) translateY(8px); }
@@ -6424,14 +6444,115 @@ $card-bg: rgba(255, 255, 255, 0.03);
   }
 }
 
+/* ── Mobile bottom nav ── */
+
+.bottomNav {
+  display: none;
+}
+
+.bottomNavBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+  position: relative;
+
+  svg { transition: all 0.25s ease; }
+  &:active { transform: scale(0.92); }
+}
+
+.bottomNavBtnActive {
+  color: $orange;
+
+  svg {
+    stroke: $orange;
+    filter: drop-shadow(0 0 6px rgba($orange, 0.4));
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: $orange;
+    box-shadow: 0 0 6px rgba($orange, 0.6);
+  }
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 768px) {
+  .page {
+    padding-bottom: 72px;
+  }
+
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9000;
+    height: 68px;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    align-items: center;
+    justify-content: space-around;
+  }
+  .header {
+    padding: 10px 12px;
+    padding-top: calc(10px + env(safe-area-inset-top, 0px));
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .headerTitle { font-size: 15px; }
+  .bookBtn {
+    padding: 6px 12px;
+    font-size: 12px;
+    border-radius: 8px;
+    order: 3;
+  }
+  .calViewToggle { order: 4; }
+  .calViewToggleBtn {
+    padding: 4px 8px;
+    font-size: 11px;
+    gap: 3px;
+    svg { width: 12px; height: 12px; }
+  }
+
+  .subHeader { padding: 6px 12px; }
+
   .calUpcoming { padding: 8px 12px; gap: 8px; }
   .calUpcomingBookBtn { display: none; }
 
-  .calToolbar { padding: 10px 12px; gap: 8px; }
-  .calTitle { font-size: 14px; }
+  .calToolbar {
+    padding: 8px 12px;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .calToolbarLeft { flex: 1; min-width: 0; }
+  .calToolbarRight { flex-wrap: wrap; justify-content: flex-end; }
+  .calViewTabs { width: 100%; justify-content: center; margin-top: 2px; }
+  .calTitle { font-size: 15px; }
   .calSearchInput { width: 100px; }
 
   .calFilterBar { padding: 6px 12px; gap: 4px; }
@@ -6470,11 +6591,31 @@ $card-bg: rgba(255, 255, 255, 0.03);
   .calUpcoming { display: none; }
   .calFilterBar { display: none; }
 
-  .calToolbarRight { gap: 4px; }
-  .calViewTabs { order: 3; width: 100%; justify-content: center; }
-  .calToolbar { flex-wrap: wrap; }
-  .calTodayBtn { font-size: 11px; padding: 4px 10px; }
+  .header {
+    padding: 8px 10px;
+    padding-top: calc(8px + env(safe-area-inset-top, 0px));
+    gap: 6px;
+  }
+  .headerTitle { font-size: 14px; }
+  .bookBtn {
+    padding: 5px 10px;
+    font-size: 11px;
+    gap: 4px;
+    svg { width: 14px; height: 14px; }
+  }
+  .calViewToggle { display: none; }
+
+  .calToolbar { flex-wrap: wrap; padding: 6px 10px; gap: 4px; }
+  .calToolbarLeft { gap: 4px; flex: 1; min-width: 0; }
+  .calToolbarRight { gap: 4px; width: 100%; justify-content: center; flex-wrap: wrap; }
+  .calNavBtn { width: 26px; height: 26px; }
+  .calViewTabs { width: 100%; justify-content: center; }
+  .calViewTab { padding: 4px 12px; font-size: 11px; }
+  .calTodayBtn { font-size: 10px; padding: 3px 8px; }
   .calSearchBtn { width: 26px; height: 26px; svg { width: 12px; height: 12px; } }
+  .calTitle { font-size: 14px; }
+  .calTitleLong { display: none; }
+  .calTitleShort { display: inline; }
 
   .calWeekHeaderCell { font-size: 10px; padding: 6px 2px; }
 

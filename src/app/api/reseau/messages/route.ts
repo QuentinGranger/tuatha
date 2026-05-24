@@ -201,7 +201,7 @@ export const POST = withAuth(async (request, ctx) => {
         if (otherProIds.length > 0) {
           sendPushToUsers(otherProIds, {
             title: senderName,
-            body: finalContent.slice(0, 200),
+            body: "Nouveau message",
             tag: `group-${conversationId}`,
             url: `/dashboard/${session.specialite}/messagerie`,
           }).catch(() => {});
@@ -259,7 +259,7 @@ export const POST = withAuth(async (request, ctx) => {
       const senderName = message.senderPro ? `${message.senderPro.prenom} ${message.senderPro.nom}` : "Nouveau message";
       sendPushToUser(receiverProId, {
         title: senderName,
-        body: finalContent.slice(0, 200),
+        body: "Nouveau message",
         tag: `msg-${session.id}`,
         url: `/dashboard/${session.specialite}/messagerie`,
       }).catch(() => {});

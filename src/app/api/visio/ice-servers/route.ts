@@ -1,15 +1,25 @@
 import { NextResponse } from "next/server";
+import { getSessionPro } from "@/lib/session";
+import { getSessionAthlete } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 // GET /api/visio/ice-servers
 // Returns ICE server configuration (STUN + TURN) for WebRTC.
+// Requires authentication (pro or athlete session).
 //
 // Supports two TURN modes:
 //   1. Metered.ca API  — set METERED_API_KEY (ephemeral credentials, recommended)
 //   2. Static creds    — set TURN_SERVER_URL + TURN_USERNAME + TURN_CREDENTIAL
 
 export async function GET() {
+  // Require any authenticated session (pro or athlete)
+  const proSession = await getSessionPro();
+  const athleteSession = proSession ? null : await getSessionAthlete();
+  if (!proSession && !athleteSession) {
+    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  }
+
   const iceServers: RTCIceServer[] = [
     { urls: "stun:stun.l.google.com:19302" },
     { urls: "stun:stun1.l.google.com:19302" },

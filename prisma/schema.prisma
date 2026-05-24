@@ -22,12 +22,13 @@ model Professionnel {
   emailVerified       Boolean         @default(false)
   emailVerifyToken    String?
   emailVerifyExpires  DateTime?
-  accountStatus       String          @default("draft") // draft, stripe_pending, profile_pending, compliance_review, active, suspended
+  accountStatus       String          @default("draft") // draft, stripe_pending, profile_pending, compliance_review, active, suspended, restricted, deleted
   verificationStatus  String          @default("unverified") // unverified, pending, verified, rejected
   verifiedAt          DateTime?
   verificationNote    String?
   totpSecret          String?
   twoFactorEnabled    Boolean         @default(false)
+  recoveryCodes       String[]        @default([]) // hashed recovery codes
   adresseCabinet      String?
   searchable          Boolean         @default(true)
   latitude            Float?
@@ -120,6 +121,9 @@ model Professionnel {
   athletePrivacySettings AthletePrivacySettings[]
   athleteDocsReceived AthleteDocument[] @relation("AthleteDocReceiver")
   dataAccessRequests  DataAccessRequest[]
+  athleteBlockedPros  AthleteBlockedPro[]
+  tickets             SupportTicket[]   @relation("ProTickets")
+  investigations      Investigation[]   @relation("ProInvestigations")
 }
 
 // ─── Compte Athlète (inscription autonome) ───
@@ -143,15 +147,34 @@ model AthleteUser {
   emailVerified       Boolean   @default(false)
   emailVerifyToken    String?
   emailVerifyExpires  DateTime?
-  acceptedCguVersion  String?
-  acceptedCguAt       DateTime?
-  acceptedCguIp       String?
+  acceptedCguVersion          String?
+  acceptedCguAt               DateTime?
+  acceptedCguIp               String?
+  acceptedPrivacyVersion      String?
+  acceptedPrivacyAt           DateTime?
+  acceptedHealthCharterVersion String?
+  acceptedHealthCharterAt     DateTime?
+  consentMarketing            Boolean   @default(false)
+  consentMarketingAt          DateTime?
+  consentAI                   Boolean   @default(false)
+  consentAIAt                 DateTime?
+  // MFA / 2FA
+  totpSecret          String?
+  twoFactorEnabled    Boolean   @default(false)
+  recoveryCodes       String[]  @default([]) // hashed recovery codes
+  // Admin
+  accountStatus       String    @default("active") // active, suspended, restricted, deleted
+  suspendedAt         DateTime?
+  suspendedReason     String?
+  deletedAt           DateTime?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
+  athleteConsents     AthleteConsent[]
   authSessions        AuthSession[]
   connectionRequests  ConnectionRequest[]
   blockedByPros       BlockedAthlete[]
+  blockedPros         AthleteBlockedPro[]
   athleteProMessages  AthleteProMessage[]
   athleteGroups       AthleteGroupConversation[]
   bookingReminders    BookingReminder[]
@@ -165,6 +188,13 @@ model AthleteUser {
   healthAppConnections HealthAppConnection[]
   payments            Payment[]
   invoices            Invoice[]
+  nutriDayLogs        NutriDayLog[]
+  nutriCustomEntries  NutriCustomEntry[]
+  athletes            Athlete[]
+  accessLogs          AthleteAccessLog[]
+  passwordResets      PasswordReset[]
+  tickets             SupportTicket[]   @relation("AthleteTickets")
+  investigations      Investigation[]   @relation("AthleteInvestigations")
 }
 
 // ─── Messages athlète ↔ professionnel ───
@@ -297,6 +327,21 @@ model BlockedAthlete {
   @@unique([professionnelId, athleteUserId])
 }
 
+// ─── Blocage pro par un athlète ───
+
+model AthleteBlockedPro {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  professionnelId String
+  reason          String?
+  createdAt       DateTime      @default(now())
+
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  professionnel   Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
+
+  @@unique([athleteUserId, professionnelId])
+}
+
 // ─── Droits utilisateur RGPD (Art. 15, 16, 17) ───
 
 model SubjectAccessRequest {
@@ -358,8 +403,10 @@ model PasswordReset {
   usedAt           DateTime?
   ip               String?
   userAgent        String?
-  professionnelId  String
-  professionnel    Professionnel @relation(fields: [professionnelId], references: [id])
+  professionnelId  String?
+  professionnel    Professionnel? @relation(fields: [professionnelId], references: [id])
+  athleteUserId    String?
+  athleteUser      AthleteUser?  @relation(fields: [athleteUserId], references: [id])
   createdAt        DateTime      @default(now())
 }
 
@@ -369,6 +416,9 @@ model SecurityAlert {
   message          String
   ip               String?
   userAgent        String?
+  resolved         Boolean       @default(false)
+  resolvedAt       DateTime?
+  resolvedBy       String?       // admin who resolved it
   professionnelId  String
   professionnel    Professionnel @relation(fields: [professionnelId], references: [id])
   createdAt        DateTime      @default(now())
@@ -515,6 +565,10 @@ model Athlete {
   dataTracking     String[]      @default([])
   canalCommunication String?
 
+  // Lien vers le compte AthleteUser (optionnel, résolu via ConnectionRequest + email)
+  athleteUserId    String?
+  athleteUser      AthleteUser?  @relation(fields: [athleteUserId], references: [id], onDelete: SetNull)
+
   professionnelId  String
   professionnel    Professionnel @relation(fields: [professionnelId], references: [id], onDelete: Cascade)
   notes            AthleteNote[]
@@ -555,6 +609,50 @@ model Athlete {
   // Soft-delete
   deletedAt        DateTime?
   deletedBy        String?
+
+  @@index([athleteUserId])
+}
+
+// ─── Consentements côté athlète (RGPD) ───
+
+model AthleteConsent {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+
+  // Type: "cgu" | "privacy" | "health_data" | "pro_sharing" | "ai" | "marketing"
+  consentType     String
+  action          String        // "granted" | "revoked"
+  granted         Boolean
+
+  // What was accepted
+  documentVersion String?       // e.g. "CGU-2026-04" or "PRIVACY-2026-04"
+  documentUrl     String?       // URL to the document version
+
+  // Context
+  ip              String?
+  userAgent       String?
+  method          String        @default("digital") // "digital" | "checkbox"
+
+  createdAt       DateTime      @default(now())
+
+  @@index([athleteUserId, consentType])
+  @@index([consentType, action])
+}
+
+// ─── Log d'accès côté athlète (RGPD traçabilité) ───
+
+model AthleteAccessLog {
+  id              String        @id @default(uuid())
+  athleteUserId   String
+  athleteUser     AthleteUser   @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  action          String        // "view_profile" | "view_messages" | "view_documents" | "view_plans" | "view_ordonnances" | "view_vitals" | "export_data" | "update_profile" | "update_privacy" | "delete_document"
+  resource        String?       // optional detail: e.g. "document:abc123" or "pro:xyz"
+  ip              String?
+  userAgent       String?
+  createdAt       DateTime      @default(now())
+
+  @@index([athleteUserId, createdAt])
 }
 
 // ─── Traçabilité des consentements (RGPD santé) ───
@@ -1080,6 +1178,20 @@ model ExerciseTemplate {
   createdAt       DateTime      @default(now())
 }
 
+// ─── Token pré-upload vidéo (sécurité IDOR) ───
+
+model VideoUploadToken {
+  id              String        @id @default(uuid())
+  token           String        @unique
+  athleteId       String
+  professionnelId String
+  expiresAt       DateTime
+  usedAt          DateTime?
+  createdAt       DateTime      @default(now())
+
+  @@index([token])
+}
+
 // ─── Vidéos athlètes (coach) ───
 
 model AthleteVideo {
@@ -1585,6 +1697,163 @@ model AdminLog {
   createdAt       DateTime      @default(now())
 }
 
+model SupportTicket {
+  id              String          @id @default(uuid())
+  subject         String
+  description     String
+  category        String          // security, payment, pro, technical, account, investigation, other
+  priority        String          @default("normal") // low, normal, high, urgent
+  status          String          @default("open")   // open, in_progress, blocked, resolved, closed
+  createdById     String?         // athleteUser or pro who created it
+  createdByRole   String?         // athlete | pro | admin | system
+  assignedToId    String?         // admin who handles it
+  resolution      String?         // notes when resolved
+  resolvedAt      DateTime?
+  blockedReason   String?         // why blocked if status=blocked
+
+  // Relations (nullable — one of the two)
+  professionnelId String?
+  professionnel   Professionnel?  @relation("ProTickets", fields: [professionnelId], references: [id], onDelete: SetNull)
+  athleteUserId   String?
+  athleteUser     AthleteUser?    @relation("AthleteTickets", fields: [athleteUserId], references: [id], onDelete: SetNull)
+
+  // Link to investigation (if this ticket was created by an investigation)
+  investigationId String?
+  investigation   Investigation?  @relation(fields: [investigationId], references: [id], onDelete: SetNull)
+
+  comments        TicketComment[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([status])
+  @@index([professionnelId])
+  @@index([athleteUserId])
+}
+
+model TicketComment {
+  id              String        @id @default(uuid())
+  content         String
+  authorRole      String        // admin | system | pro | athlete
+  authorId        String?       // id of the author (admin name, pro id, etc.)
+  authorName      String?       // display name
+  internal        Boolean       @default(false) // internal admin note vs visible to user
+  ticketId        String
+  ticket          SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+}
+
+// ─── Investigations (compliance, fraud, RGPD) ───
+
+model Investigation {
+  id              String          @id @default(uuid())
+  title           String
+  description     String
+  type            String          // compliance, fraud, security, rgpd, other
+  severity        String          @default("medium") // low, medium, high, critical
+  status          String          @default("open")   // open, in_progress, pending_info, closed_resolved, closed_unfounded
+  outcome         String?         // final decision / resolution notes
+
+  // Who is being investigated (one of the two)
+  professionnelId String?
+  professionnel   Professionnel?  @relation("ProInvestigations", fields: [professionnelId], references: [id], onDelete: SetNull)
+  athleteUserId   String?
+  athleteUser     AthleteUser?    @relation("AthleteInvestigations", fields: [athleteUserId], references: [id], onDelete: SetNull)
+
+  // Who opened & assigned
+  openedBy        String          @default("admin") // admin name or "system"
+  assignedTo      String?         // admin who is responsible
+
+  // Actions taken
+  actionsTaken    String[]        @default([])       // e.g. ["account_suspended", "sessions_revoked", "dpo_notified"]
+  dpoNotifiedAt   DateTime?       // when DPO was notified
+  userNotifiedAt  DateTime?       // when the user was notified
+
+  // Timeline
+  closedAt        DateTime?
+  closedBy        String?
+
+  tickets         SupportTicket[]
+
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([status])
+  @@index([professionnelId])
+  @@index([athleteUserId])
+}
+
+// ─── Platform Health & Monitoring ───
+
+model ApiErrorLog {
+  id              String        @id @default(uuid())
+  endpoint        String
+  method          String
+  statusCode      Int
+  errorMessage    String?
+  userId          String?       // who triggered it (if authenticated)
+  userRole        String?       // athlete | pro | admin
+  ip              String?
+  userAgent       String?
+  requestDuration Int?          // milliseconds
+  createdAt       DateTime      @default(now())
+}
+
+model RequestLog {
+  id              String        @id @default(uuid())
+  endpoint        String
+  method          String
+  duration        Int           // milliseconds
+  statusCode      Int
+  userId          String?
+  userRole        String?
+  ip              String?
+  createdAt       DateTime      @default(now())
+}
+
+model BackupLog {
+  id              String        @id @default(uuid())
+  status          String        // success, failed, partial
+  type            String        // full, incremental
+  sizeBytes       Int?          // backup size
+  errorMessage    String?
+  startedAt       DateTime
+  completedAt     DateTime?
+  createdAt       DateTime      @default(now())
+}
+
+model EmailLog {
+  id              String        @id @default(uuid())
+  to              String
+  subject         String
+  status          String        // sent, delivered, bounced, failed
+  providerId      String?       // SendGrid/Mailgun message ID
+  errorMessage    String?
+  openedAt        DateTime?
+  clickedAt       DateTime?
+  createdAt       DateTime      @default(now())
+}
+
+model HealthCheckLog {
+  id              String        @id @default(uuid())
+  service         String        // database, stripe, email, storage, hds
+  status          String        // healthy, degraded, down
+  responseTime    Int?          // ms
+  errorMessage    String?
+  checkedAt       DateTime      @default(now())
+}
+
+model AdminSession {
+  id          String   @id @default(uuid())
+  token       String   @unique
+  email       String
+  ip          String?
+  userAgent   String?
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 // ─── Consultation Prep (mini checklist) ───
 
 model ConsultationPrep {
@@ -1710,6 +1979,7 @@ model AthletePrivacySettings {
   shareConsultPrep    Boolean       @default(true)
   sharePhoto          Boolean       @default(true)
   shareMessaging      Boolean       @default(true)
+  expiresAt           DateTime?     // Optional access expiration date
 
   createdAt           DateTime      @default(now())
   updatedAt           DateTime      @updatedAt
@@ -1861,4 +2131,38 @@ model Payment {
   @@index([professionnelId])
   @@index([calendarEventId])
   @@index([status])
+}
+
+// ─── Suivi alimentaire journalier ───
+
+model NutriDayLog {
+  id            String      @id @default(uuid())
+  date          DateTime    @db.Date
+  athleteUserId String
+  athleteUser   AthleteUser @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  mealItemId    String
+  consumed      Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([date, athleteUserId, mealItemId])
+  @@index([athleteUserId, date])
+}
+
+model NutriCustomEntry {
+  id            String      @id @default(uuid())
+  date          DateTime    @db.Date
+  athleteUserId String
+  athleteUser   AthleteUser @relation(fields: [athleteUserId], references: [id], onDelete: Cascade)
+  nutriMealId   String
+  name          String
+  quantity      Float       @default(1)
+  unit          String      @default("portion")
+  kcal          Int         @default(0)
+  protein       Float       @default(0)
+  carbs         Float       @default(0)
+  fat           Float       @default(0)
+  createdAt     DateTime    @default(now())
+
+  @@index([athleteUserId, date])
 }

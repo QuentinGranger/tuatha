@@ -9,6 +9,15 @@ import { ALL_MOTIFS, getMotifsForSpec } from "../constants";
 
 type ShowToast = (message: string, type?: "success" | "error" | "info") => void;
 
+async function fetchWithRefresh(url: string, init?: RequestInit): Promise<Response> {
+  let res = await fetch(url, init);
+  if (res.status === 401) {
+    const refresh = await fetch("/api/auth/refresh", { method: "POST" });
+    if (refresh.ok) res = await fetch(url, init);
+  }
+  return res;
+}
+
 export interface QuickBookInsight {
   icon: "calendar" | "clock" | "shield" | "trending" | "repeat" | "zap" | "alert" | "star" | "sun";
   label: string;
@@ -681,7 +690,7 @@ export function useBookingFlow({ connections, learnedPrefs, showToast }: UseBook
     setBookingLoading(true);
     try {
       // 1. Create the calendar event (booking)
-      const res = await fetch("/api/athlete/book-appointment", {
+      const res = await fetchWithRefresh("/api/athlete/book-appointment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -713,7 +722,7 @@ export function useBookingFlow({ connections, learnedPrefs, showToast }: UseBook
       );
 
       try {
-        const checkoutRes = await fetch("/api/payments/create-checkout", {
+        const checkoutRes = await fetchWithRefresh("/api/payments/create-checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

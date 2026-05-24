@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionAthlete } from "@/lib/session";
 import { deregisterUser as deregisterGarmin } from "@/lib/garmin";
 import { deleteUser as deletePolarUser } from "@/lib/polar";
+import { decryptHealthTokens } from "@/lib/encryption";
 
 /**
  * GET /api/athlete/health/connections
@@ -61,12 +62,15 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: "Connexion introuvable." }, { status: 404 });
     }
 
+    // Decrypt tokens for provider API calls
+    const conn = decryptHealthTokens(connection as Record<string, unknown>) as typeof connection;
+
     // Deauthenticate on provider side
-    if (connection.provider === "GARMIN" && connection.accessToken && connection.accessTokenSecret) {
-      await deregisterGarmin(connection.accessToken, connection.accessTokenSecret).catch(() => {});
+    if (conn.provider === "GARMIN" && conn.accessToken && conn.accessTokenSecret) {
+      await deregisterGarmin(conn.accessToken, conn.accessTokenSecret).catch(() => {});
     }
-    if (connection.provider === "POLAR" && connection.accessToken && connection.providerUserId) {
-      await deletePolarUser(connection.accessToken, parseInt(connection.providerUserId)).catch(() => {});
+    if (conn.provider === "POLAR" && conn.accessToken && conn.providerUserId) {
+      await deletePolarUser(conn.accessToken, parseInt(conn.providerUserId)).catch(() => {});
     }
     // WHOOP and Oura: no server-side revoke needed, user revokes from their app
 

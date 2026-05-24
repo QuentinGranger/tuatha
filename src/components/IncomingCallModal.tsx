@@ -50,11 +50,18 @@ export default function IncomingCallModal() {
     const poll = async () => {
       if (!active) return;
       try {
-        const res = await fetch("/api/visio/incoming");
+        let res = await fetch("/api/visio/incoming");
         if (!active) return;
         if (res.status === 401) {
-          setPaused(true);
-          return;
+          const refresh = await fetch("/api/auth/refresh", { method: "POST" });
+          if (!active) return;
+          if (refresh.ok) {
+            res = await fetch("/api/visio/incoming");
+            if (!active) return;
+          } else {
+            setPaused(true);
+            return;
+          }
         }
         if (!res.ok) return;
         const data = await res.json();

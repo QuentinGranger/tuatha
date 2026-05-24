@@ -9,12 +9,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withAuth } from "@/lib/withAuth";
-import { writeFile, mkdir } from "fs/promises";
+import { mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import { scanUploadedFile } from "@/lib/fileScan";
 import { applyRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 import { signFilePathInRecords } from "@/lib/signedUrl";
+import { encryptBuffer } from "@/lib/fileEncryption";
 
 // ─── GET /api/documents/[id]/versions — list version history ───
 
@@ -125,8 +126,10 @@ export const POST = withAuth(async (
     await mkdir(uploadsDir, { recursive: true });
 
     const ext = `.${scan.detectedType}`;
-    const filename = `doc-${randomUUID()}${ext}`;
-    await writeFile(path.join(uploadsDir, filename), scan.buffer);
+    const baseFilename = `doc-${randomUUID()}${ext}`;
+    const diskPath = path.join(uploadsDir, baseFilename);
+    const encPath = await encryptBuffer(scan.buffer, diskPath);
+    const filename = path.basename(encPath);
     const filePath = `/uploads/documents/${filename}`;
 
     const newVersion = doc.currentVersion + 1;

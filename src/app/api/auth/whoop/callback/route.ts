@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionAthlete } from "@/lib/session";
 import { exchangeCodeForToken } from "@/lib/whoop";
+import { encrypt } from "@/lib/encryption";
 
 /**
  * GET /api/auth/whoop/callback?code=...&state=...
@@ -38,16 +39,16 @@ export async function GET(request: NextRequest) {
         athleteUserId: session.id,
         provider: "WHOOP",
         status: "connected",
-        accessToken,
-        refreshToken,
+        accessToken: encrypt(accessToken),
+        refreshToken: encrypt(refreshToken),
         tokenExpiresAt,
         providerUserId: whoopUserId,
         scopes: ["read:recovery", "read:cycles", "read:sleep", "read:workout", "read:profile", "read:body_measurement"],
       },
       update: {
         status: "connected",
-        accessToken,
-        refreshToken,
+        accessToken: encrypt(accessToken),
+        refreshToken: encrypt(refreshToken),
         tokenExpiresAt,
         providerUserId: whoopUserId,
         lastSyncError: null,

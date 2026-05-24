@@ -167,4 +167,103 @@ export const SENSITIVE_FIELDS = {
   professionnel: [
     "telephone",
   ],
+  healthAppConnection: [
+    "accessToken",
+    "accessTokenSecret",
+    "refreshToken",
+  ],
 } as const;
+
+// ─── Data Classification (RGPD Art. 9) ───
+// Tags each data category for audit, access control, and breach notification.
+
+export type DataClassification = "health" | "sport" | "payment" | "identity" | "technical" | "communication";
+
+export const DATA_CLASSIFICATION: Record<string, { fields: readonly string[]; classification: DataClassification; rgpdBasis: string }> = {
+  athlete_medical: {
+    fields: ["antecedents", "traitements", "contreIndications", "injuryNote"],
+    classification: "health",
+    rgpdBasis: "RGPD Art. 9(2)(h) — médecine préventive/du travail, diagnostic médical",
+  },
+  athlete_identity: {
+    fields: ["contactEmail", "contactPhone", "nom", "prenom", "dateNaissance"],
+    classification: "identity",
+    rgpdBasis: "RGPD Art. 6(1)(b) — exécution du contrat",
+  },
+  athlete_sport: {
+    fields: ["sport", "objectif", "taille", "poids", "bodyZone", "frequence"],
+    classification: "sport",
+    rgpdBasis: "RGPD Art. 6(1)(b) — exécution du contrat de suivi sportif",
+  },
+  health_data: {
+    fields: ["heart_rate", "hrv", "spo2", "sleep", "body_temperature", "stress"],
+    classification: "health",
+    rgpdBasis: "RGPD Art. 9(2)(a) — consentement explicite pour données de santé connectée",
+  },
+  health_activity: {
+    fields: ["steps", "calories", "distance", "active_minutes"],
+    classification: "sport",
+    rgpdBasis: "RGPD Art. 6(1)(a) — consentement pour données d'activité",
+  },
+  payment: {
+    fields: ["stripeCustomerId", "stripePaymentId", "amount"],
+    classification: "payment",
+    rgpdBasis: "RGPD Art. 6(1)(b) — exécution du contrat ; PCI-DSS",
+  },
+  oauth_tokens: {
+    fields: ["accessToken", "refreshToken", "accessTokenSecret"],
+    classification: "technical",
+    rgpdBasis: "RGPD Art. 6(1)(b) — nécessaire à la connexion aux services tiers",
+  },
+  communication: {
+    fields: ["content", "attachments"],
+    classification: "communication",
+    rgpdBasis: "RGPD Art. 6(1)(b) — communication patient-professionnel",
+  },
+};
+
+/**
+ * Get the classification for a given data field.
+ * Returns the most sensitive classification if the field appears in multiple categories.
+ */
+export function classifyField(fieldName: string): DataClassification | null {
+  const PRIORITY: DataClassification[] = ["health", "payment", "identity", "communication", "sport", "technical"];
+  for (const cls of PRIORITY) {
+    for (const cat of Object.values(DATA_CLASSIFICATION)) {
+      if (cat.classification === cls && cat.fields.includes(fieldName)) {
+        return cls;
+      }
+    }
+  }
+  return null;
+}
+
+// ─── Health Token helpers ───
+// Convenience wrappers for encrypting/decrypting OAuth tokens on HealthAppConnection.
+
+/** Encrypt health connection tokens before writing to DB */
+export function encryptHealthTokens(data: Record<string, unknown>): Record<string, unknown> {
+  const result = { ...data };
+  for (const field of SENSITIVE_FIELDS.healthAppConnection) {
+    if (typeof result[field] === "string") {
+      result[field] = encrypt(result[field] as string);
+    }
+  }
+  return result;
+}
+
+/** Decrypt health connection tokens after reading from DB */
+export function decryptHealthTokens<T extends Record<string, unknown>>(conn: T): T {
+  const result = { ...conn };
+  for (const field of SENSITIVE_FIELDS.healthAppConnection) {
+    const val = result[field as keyof T];
+    if (typeof val === "string" && isEncrypted(val)) {
+      try {
+        (result as Record<string, unknown>)[field] = decrypt(val);
+      } catch {
+        // If decryption fails, token may already be plaintext (pre-migration)
+      }
+    }
+  }
+  return result;
+}

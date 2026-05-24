@@ -2,13 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { withAuth } from "@/lib/withAuth";
 import { sendDocumentEmail } from "@/lib/email";
-import { writeFile, mkdir } from "fs/promises";
+import { mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 import { secrets } from "@/lib/vault";
 import { applyRateLimit, RATE_LIMITS } from "@/lib/rateLimit";
 import { signFilePathInRecords, signFileUrlForEmail } from "@/lib/signedUrl";
 import { scanUploadedFile } from "@/lib/fileScan";
+import { encryptBuffer } from "@/lib/fileEncryption";
 import { softDelete, notDeleted } from "@/lib/softDelete";
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -172,8 +173,10 @@ export const POST = withAuth(async (req, ctx) => {
     await mkdir(uploadsDir, { recursive: true });
 
     const ext = `.${scan.detectedType}`;
-    const filename = `doc-${randomUUID()}${ext}`;
-    await writeFile(path.join(uploadsDir, filename), scan.buffer);
+    const baseFilename = `doc-${randomUUID()}${ext}`;
+    const diskPath = path.join(uploadsDir, baseFilename);
+    const encPath = await encryptBuffer(scan.buffer, diskPath);
+    const filename = path.basename(encPath);
     const filePath = `/uploads/documents/${filename}`;
 
     const doc = await (prisma as any).sharedDocument.create({
@@ -197,6 +200,12 @@ export const POST = withAuth(async (req, ctx) => {
         receiverAthlete: { select: { id: true, name: true } },
       },
     });
+
+    // Audit log: document uploaded (CNIL traceability)
+    console.log(
+      `[SECURITY-AUDIT] DOCUMENT_UPLOADED by=${session.id} docId=${doc.id} category=${category} ` +
+      `receiver=${receiverAthleteId || receiverProId || "none"} size=${file.size}`,
+    );
 
     // Create initial version entry (v1)
     (prisma as any).documentVersion.create({

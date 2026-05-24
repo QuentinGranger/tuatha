@@ -26,9 +26,61 @@ $card-bg: rgba(255, 255, 255, 0.03);
 
 .emptyState {
   text-align: center;
-  padding: 60px 0;
+  padding: 80px 0;
   color: rgba(255, 255, 255, 0.4);
   font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  svg { opacity: 0.3; }
+  p { margin: 0; }
+}
+
+// ─── Skeleton Loading ───
+
+.loadingSkeleton {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 80px 0;
+}
+
+.skeletonCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  flex-shrink: 0;
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeletonLines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px 0;
+}
+
+.skeletonLine {
+  height: 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+  width: 100%;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
 }
 
 // ─── Banner ───
@@ -88,31 +140,523 @@ $card-bg: rgba(255, 255, 255, 0.03);
 // ─── Back ───
 
 .backBtn {
-  position: absolute;
-  top: 16px;
-  left: 16px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.65);
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   padding: 8px 14px;
-  transition: background 0.2s;
-  z-index: 2;
+  transition: background 0.2s, color 0.2s;
+  align-self: flex-start;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.65);
+    background: rgba(255, 255, 255, 0.08);
     color: #fff;
   }
 
   svg {
     flex-shrink: 0;
+  }
+}
+
+// ─── Profile Hero (Doctolib-style) ───
+
+.profileHero {
+  position: relative;
+  background: linear-gradient(180deg, rgba($orange, 0.08) 0%, transparent 100%);
+  border-bottom: 1px solid $border;
+  padding: 24px 24px 0;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.profileHeroCard {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.profileAvatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba($orange, 0.18) 0%, rgba($orange, 0.06) 100%);
+  border: 3px solid rgba($orange, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.profileAvatarInitials {
+  font-size: 32px;
+  font-weight: 700;
+  color: rgba($orange, 0.6);
+  letter-spacing: 2px;
+}
+
+.profileHeroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.profileName {
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.3px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.profileSpec {
+  font-size: 15px;
+  font-weight: 600;
+  color: $orange;
+}
+
+.profileAddress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+  text-decoration: none;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $orange;
+    svg { color: $orange; }
+  }
+
+  svg {
+    color: rgba(255, 255, 255, 0.35);
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+}
+
+.profileSince {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+
+  svg {
+    color: #22c55e;
+    flex-shrink: 0;
+  }
+}
+
+// ─── Quick Actions ───
+
+.profileActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.profileActionPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: $orange;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+
+  &:hover {
+    background: $orange-light;
+    transform: translateY(-1px);
+  }
+
+  svg { flex-shrink: 0; }
+}
+
+.profileActionSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: #fff;
+  }
+
+  svg { flex-shrink: 0; }
+}
+
+// ─── View Toggle ───
+
+.profileViewToggle {
+  display: flex;
+  gap: 0;
+  margin-top: 24px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.06);
+}
+
+.profileViewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.45);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+
+  svg { flex-shrink: 0; }
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.profileViewBtnActive {
+  color: $orange;
+  border-bottom-color: $orange;
+  font-weight: 600;
+}
+
+// ─── Profile Cards ───
+
+.profileCards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.profileCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 20px;
+  min-width: 0;
+}
+
+.profileCardTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: $orange;
+  margin: 0 0 16px;
+
+  svg {
+    flex-shrink: 0;
+    color: $orange;
+  }
+}
+
+.profileCardRows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.profileCardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  gap: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.profileCardLabel {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  flex-shrink: 0;
+}
+
+.profileCardNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: rgba($orange, 0.06);
+  border: 1px solid rgba($orange, 0.12);
+  border-radius: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+
+  svg {
+    flex-shrink: 0;
+    color: $orange;
+    margin-top: 1px;
+  }
+}
+
+.profileLink {
+  color: $orange;
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.profileBadge {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba($orange, 0.12);
+  color: $orange;
+
+  &[data-conv="oui"],
+  &[data-conv="secteur_1"] {
+    background: rgba(#22c55e, 0.12);
+    color: #22c55e;
+  }
+
+  &[data-conv="non"] {
+    background: rgba(#ef4444, 0.12);
+    color: #ef4444;
+  }
+
+  &[data-conv="secteur_2"] {
+    background: rgba(#f59e0b, 0.12);
+    color: #f59e0b;
+  }
+}
+
+// ─── Tarifs ───
+
+.tarifsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tarifCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: rgba($orange, 0.2);
+  }
+}
+
+.tarifHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.tarifLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tarifPrice {
+  font-size: 18px;
+  font-weight: 700;
+  color: $orange;
+}
+
+.tarifMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tarifDuration {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+
+  svg {
+    color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.tarifFormat {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(#3b82f6, 0.12);
+  color: #60a5fa;
+}
+
+.tarifRembours {
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.tarifDesc {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.tarifBookBtn {
+  margin-top: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: $orange;
+  background: rgba($orange, 0.08);
+  border: 1px solid rgba($orange, 0.2);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  width: 100%;
+
+  &:hover {
+    background: rgba($orange, 0.14);
+    border-color: rgba($orange, 0.35);
+  }
+}
+
+// ─── Horaires ───
+
+.horairesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.horaireRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 13px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.horaireJour {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.horaireHeure {
+  color: rgba(255, 255, 255, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+
+// ─── Responsive ───
+
+@media (max-width: 768px) {
+  .profileCards {
+    grid-template-columns: 1fr;
+  }
+
+  .profileHeroCard {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .profileHeroInfo {
+    align-items: center;
+  }
+
+  .profileActions {
+    justify-content: center;
+  }
+
+  .profileViewToggle {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileHero {
+    padding: 16px 16px 0;
+  }
+
+  .profileAvatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profileName {
+    font-size: 22px;
+  }
+
+  .profileActions {
+    flex-direction: column;
+  }
+
+  .profileActionPrimary,
+  .profileActionSecondary {
+    justify-content: center;
+    width: 100%;
   }
 }
 

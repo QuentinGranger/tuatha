@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.scss";
+import ReportUserButton from "@/components/ReportUserButton";
 import { openVisioRoom } from "@/lib/visio";
 
 interface Athlete {
@@ -335,6 +336,8 @@ export default function MedecinDashboardPage() {
                                 {trendLabels[t].label}
                               </button>
                             ))}
+                            <div className={styles.menuDivider} />
+                            <ReportUserButton reportedUserId={a.id} reportedUserType="athlete" variant="menu-item" />
                           </div>
                         )}
                       </div>

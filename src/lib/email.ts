@@ -1469,3 +1469,170 @@ export async function sendProVerificationEmail(params: ProVerificationEmailParam
   console.log(`[Email] Pro ${status} email sent to ${to}, id:`, data?.id);
   return data;
 }
+
+// ─── Account deleted confirmation email ───
+
+interface AccountDeletedEmailParams {
+  to: string;
+  prenom: string;
+}
+
+export async function sendAccountDeletedEmail({ to, prenom }: AccountDeletedEmailParams) {
+  checkResendKillSwitch();
+  const html = `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Compte supprime - Tuatha</title></head>
+<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;padding:40px 20px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="display:inline-block;background:linear-gradient(135deg,#f47b20,#ff9a44);color:#fff;font-weight:800;font-size:22px;padding:12px 32px;border-radius:14px;letter-spacing:-0.5px;">Tuatha</div>
+    </div>
+    <div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#64748b,#94a3b8);padding:32px 36px;">
+        <h1 style="margin:0 0 6px;font-size:24px;font-weight:800;color:#fff;">Compte supprime</h1>
+        <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.85);">Votre compte Tuatha a ete definitivement supprime</p>
+      </div>
+      <div style="padding:36px;">
+        <p style="color:rgba(255,255,255,0.6);font-size:14px;line-height:1.7;margin:0 0 24px;">
+          Bonjour <strong style="color:#fff;">${prenom}</strong>, nous vous confirmons que votre compte Tuatha a ete supprime avec succes.
+        </p>
+        <div style="margin-bottom:24px;">
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:18px;margin-bottom:10px;">
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">Ce qui a ete supprime</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.8;">
+              <div>&#10003; Votre profil et vos donnees personnelles</div>
+              <div>&#10003; Vos connexions avec les professionnels</div>
+              <div>&#10003; Vos messages et documents</div>
+              <div>&#10003; Vos sessions et appareils connectes</div>
+              <div>&#10003; Vos connexions aux appareils de sante (Garmin, Polar, etc.)</div>
+            </div>
+          </div>
+          <div style="background:rgba(244,123,32,0.06);border:1px solid rgba(244,123,32,0.15);border-radius:12px;padding:18px;">
+            <div style="font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">Donnees conservees (obligation legale)</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.8;">
+              Les factures et justificatifs de paiement sont conserves pendant 10 ans conformement au Code de commerce (Art. L.123-22). Ces donnees sont anonymisees.
+            </div>
+          </div>
+        </div>
+        <p style="color:rgba(255,255,255,0.35);font-size:12px;text-align:center;margin:0;">
+          Si vous n'etes pas a l'origine de cette suppression, contactez immediatement <a href="mailto:support@tuatha-app.com" style="color:#f47b20;">support@tuatha-app.com</a>
+        </p>
+      </div>
+    </div>
+    ${FOOTER_HTML}
+  </div>
+</body>
+</html>
+  `;
+
+  const subject = "Confirmation de suppression de votre compte Tuatha";
+  const text = htmlToText(html);
+
+  console.log("[Email] Sending account deleted confirmation to:", to);
+
+  const { data, error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to,
+    replyTo: REPLY_TO,
+    subject,
+    html,
+    text,
+    headers: emailHeaders(),
+  });
+
+  if (error) {
+    console.error("[Email] Account deleted email error:", JSON.stringify(error));
+    throw new Error(`Erreur envoi email: ${error.message}`);
+  }
+
+  console.log("[Email] Account deleted email sent, id:", data?.id);
+  return data;
+}
+
+// ─── Admin action notification email ───
+
+interface AdminActionEmailParams {
+  to: string;
+  prenom: string;
+  actionTitle: string;
+  actionDescription: string;
+  actionColor?: string; // hex color for the banner
+  details?: { label: string; value: string }[];
+}
+
+export async function sendAdminActionEmail({
+  to,
+  prenom,
+  actionTitle,
+  actionDescription,
+  actionColor = "#dc2626",
+  details = [],
+}: AdminActionEmailParams) {
+  checkResendKillSwitch();
+
+  const detailsHtml = details.length > 0
+    ? `<div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:18px;margin-bottom:24px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;font-weight:600;">Détails</div>
+        ${details.map(d => `<div style="font-size:13px;color:rgba(255,255,255,0.6);line-height:2;"><span style="color:rgba(255,255,255,0.4);">${d.label} :</span> <strong style="color:#fff;">${d.value}</strong></div>`).join("")}
+      </div>`
+    : "";
+
+  const html = `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${actionTitle} - Tuatha</title></head>
+<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;padding:40px 20px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="display:inline-block;background:linear-gradient(135deg,#f47b20,#ff9a44);color:#fff;font-weight:800;font-size:22px;padding:12px 32px;border-radius:14px;letter-spacing:-0.5px;">Tuatha</div>
+    </div>
+    <div style="background:#141414;border:1px solid rgba(255,255,255,0.08);border-radius:20px;overflow:hidden;">
+      <div style="background:${actionColor};padding:32px 36px;">
+        <h1 style="margin:0 0 6px;font-size:24px;font-weight:800;color:#fff;">${actionTitle}</h1>
+        <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.85);">Action effectuée sur votre compte</p>
+      </div>
+      <div style="padding:36px;">
+        <p style="color:rgba(255,255,255,0.6);font-size:14px;line-height:1.7;margin:0 0 24px;">
+          Bonjour <strong style="color:#fff;">${prenom}</strong>,
+        </p>
+        <p style="color:rgba(255,255,255,0.6);font-size:14px;line-height:1.7;margin:0 0 28px;">
+          ${actionDescription}
+        </p>
+        ${detailsHtml}
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.5;">
+            Si vous pensez qu'il s'agit d'une erreur, contactez notre support à <a href="mailto:support@tuatha-app.com" style="color:#f47b20;">support@tuatha-app.com</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    ${FOOTER_HTML}
+  </div>
+</body>
+</html>
+  `;
+
+  const subject = `${actionTitle} — Tuatha`;
+  const text = htmlToText(html);
+
+  console.log("[Email] Sending admin action email to:", to, "action:", actionTitle);
+
+  const { data, error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to,
+    replyTo: REPLY_TO,
+    subject,
+    html,
+    text,
+    headers: emailHeaders(),
+  });
+
+  if (error) {
+    console.error("[Email] Admin action email error:", JSON.stringify(error));
+    throw new Error(`Erreur envoi email: ${error.message}`);
+  }
+
+  console.log("[Email] Admin action email sent, id:", data?.id);
+  return data;
+}

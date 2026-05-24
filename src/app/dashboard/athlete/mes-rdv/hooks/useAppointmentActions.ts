@@ -8,6 +8,15 @@ import type {
 
 type ShowToast = (message: string, type?: "success" | "error" | "info") => void;
 
+async function fetchWithRefresh(url: string, init?: RequestInit): Promise<Response> {
+  let res = await fetch(url, init);
+  if (res.status === 401) {
+    const refresh = await fetch("/api/auth/refresh", { method: "POST" });
+    if (refresh.ok) res = await fetch(url, init);
+  }
+  return res;
+}
+
 interface UseAppointmentActionsParams {
   appointments: NextRdv[];
   setAppointments: React.Dispatch<React.SetStateAction<NextRdv[]>>;
@@ -45,7 +54,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
     if (!modifyingRdv) return;
     setModifyLoading(true);
     try {
-      const res = await fetch("/api/athlete/cancel-appointment", {
+      const res = await fetchWithRefresh("/api/athlete/cancel-appointment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ eventId: modifyingRdv.id, reason: cancelReason || null }),
@@ -83,7 +92,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
     if (!modifyingRdv) return;
     setModifyLoading(true);
     try {
-      const res = await fetch("/api/athlete/reschedule-appointment", {
+      const res = await fetchWithRefresh("/api/athlete/reschedule-appointment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,7 +123,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
     const isOnWaitlist = waitlistStatus[eventId];
     try {
       if (isOnWaitlist) {
-        await fetch("/api/athlete/waitlist", {
+        await fetchWithRefresh("/api/athlete/waitlist", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ eventId }),
@@ -122,7 +131,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
         setWaitlistStatus((prev) => ({ ...prev, [eventId]: false }));
         showToast("Alerte désactivée", "info");
       } else {
-        await fetch("/api/athlete/waitlist", {
+        await fetchWithRefresh("/api/athlete/waitlist", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ eventId }),
@@ -178,7 +187,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
     if (!prep) return;
     setPrepSaving(true);
     try {
-      await fetch("/api/athlete/consultation-prep", {
+      await fetchWithRefresh("/api/athlete/consultation-prep", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -214,7 +223,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
   const sendDelayNotification = async (eventId: string) => {
     setDelaySending(true);
     try {
-      await fetch("/api/athlete/notify-delay", {
+      await fetchWithRefresh("/api/athlete/notify-delay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ eventId, delayMinutes, message: delayMessage }),
@@ -246,7 +255,7 @@ export function useAppointmentActions({ appointments, setAppointments, showToast
   const submitSlotAlert = async (selectedProId: string | null, selectedMotif: any) => {
     setSlotAlertSaving(true);
     try {
-      await fetch("/api/athlete/slot-alerts", {
+      await fetchWithRefresh("/api/athlete/slot-alerts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

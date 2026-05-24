@@ -331,18 +331,24 @@ export async function revokeSession(sessionId: string, reason = "logout"): Promi
 
 // ─── Revoke ALL sessions for a user (logout global) ───
 
-export async function revokeAllSessions(professionnelId: string, exceptSessionId?: string): Promise<number> {
+export async function revokeAllSessions(
+  userId: string,
+  exceptSessionId?: string,
+  userType: "pro" | "athlete" = "pro",
+  reason = "logout",
+): Promise<number> {
   const where: Record<string, unknown> = {
-    professionnelId,
     revoked: false,
   };
+  if (userType === "athlete") where.athleteUserId = userId;
+  else where.professionnelId = userId;
   if (exceptSessionId) {
     where.id = { not: exceptSessionId };
   }
 
   const result = await prisma.authSession.updateMany({
     where,
-    data: { revoked: true, revokedAt: new Date(), revokedReason: "logout" },
+    data: { revoked: true, revokedAt: new Date(), revokedReason: reason },
   });
 
   return result.count;

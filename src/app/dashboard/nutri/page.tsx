@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import styles from "./page.module.scss";
+import ReportUserButton from "@/components/ReportUserButton";
 
 interface Athlete {
   id: string;
@@ -312,6 +313,8 @@ export default function NutriDashboardPage() {
                                 {trendLabels[t].label}
                               </button>
                             ))}
+                            <div className={styles.menuDivider} />
+                            <ReportUserButton reportedUserId={a.id} reportedUserType="athlete" variant="menu-item" />
                           </div>
                         )}
                       </div>

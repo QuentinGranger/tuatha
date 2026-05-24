@@ -1,0 +1,136 @@
+# ─── Tuatha Security CI/CD Pipeline ───
+# Runs on every push and pull request to main/develop.
+# Blocks merge if any security test fails.
+
+name: Security Tests & Dependency Audit
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ─── 1. Security Tests ───
+  security-tests:
+    name: Security Test Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run security test suite
+        run: npx vitest run src/lib/__tests__/ --reporter=verbose 2>&1 | tee security-test-report.txt
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-test-report
+          path: security-test-report.txt
+          retention-days: 90
+
+  # ─── 2. Dependency Audit ───
+  dependency-audit:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: npm audit (high + critical)
+        run: npm audit --audit-level=high 2>&1 | tee npm-audit-report.txt
+        continue-on-error: true
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-audit-report
+          path: npm-audit-report.txt
+          retention-days: 90
+
+  # ─── 3. Build Check ───
+  build-check:
+    name: Build Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [security-tests]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Build application
+        run: npx next build
+        env:
+          DATABASE_URL: "postgresql://localhost:5432/tuatha_test"
+          SKIP_ENV_VALIDATION: "true"
+
+  # ─── 4. Secret Scan ───
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for secrets in code
+        run: |
+          echo "=== Scanning for potential secret patterns ==="
+          # Check for common secret patterns in tracked files
+          PATTERNS="sk_live_|sk_test_|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|-----BEGIN (RSA |EC )?PRIVATE KEY"
+          FOUND=$(git grep -lE "$PATTERNS" -- ':!.env*' ':!*.lock' ':!node_modules/' ':!.github/' 2>/dev/null || true)
+          if [ -n "$FOUND" ]; then
+            echo "⚠️  Potential secrets found in:"
+            echo "$FOUND"
+            echo ""
+            echo "Review these files to ensure no real secrets are committed."
+            # Don't fail — just warn. Real secrets should be caught by .gitignore.
+          else
+            echo "✅ No secret patterns detected in tracked files."
+          fi

@@ -87,7 +87,13 @@ export default function AidePage() {
           <section id="contact" className={styles.section}>
             <h2 className={styles.sectionTitle}>2. Comment contacter le support ?</h2>
             <div className={styles.sectionBody}>
-              <h3 className={styles.subTitle}>Canal principal</h3>
+              <h3 className={styles.subTitle}>Formulaire de demande (recommandé)</h3>
+              <p className={styles.paragraph}>
+                <Link href="/dashboard/athlete/aide/support" style={{ display: "inline-block", padding: "0.6rem 1.2rem", borderRadius: "8px", background: "#2563eb", color: "#fff", fontWeight: 600, fontSize: "0.85rem", textDecoration: "none" }}>
+                  Contacter le support
+                </Link>
+              </p>
+              <h3 className={styles.subTitle}>Canal email</h3>
               <p className={styles.paragraph}>Email : <a href="mailto:contact@tuatha-app.com">contact@tuatha-app.com</a></p>
 
               <h3 className={styles.subTitle}>Canal secondaire</h3>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { ensureDecrypted } from "@/lib/encryption";
 
 /**
  * POST /api/athlete/health/webhook
@@ -26,10 +27,11 @@ export async function POST(request: NextRequest) {
         const userAccessToken = item.userAccessToken;
         if (!userAccessToken) continue;
 
-        // Find the connection by access token
-        const connection = await prisma.healthAppConnection.findFirst({
-          where: { accessToken: userAccessToken, provider: "GARMIN", status: "connected" },
+        // Find the connection by access token (tokens are encrypted at rest)
+        const garminConns = await prisma.healthAppConnection.findMany({
+          where: { provider: "GARMIN", status: "connected" },
         });
+        const connection = garminConns.find((c) => ensureDecrypted(c.accessToken) === userAccessToken);
         if (!connection) continue;
 
         const dateStr = item.calendarDate || item.summaryDate || new Date().toISOString().slice(0, 10);

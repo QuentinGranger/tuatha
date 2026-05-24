@@ -296,6 +296,35 @@ export function CalendarAgenda({ appointments, pastAppointments, onSelectRdv, on
   const handleDayClick = (d: Date) => { setSelectedDate(d); setSelectedEvent(null); };
   const openDay = (d: Date) => { setCursor(d); setSelectedDate(d); setView("day"); };
 
+  /* Touch swipe navigation (Apple-like) */
+  const touchRef = useRef<{ x: number; y: number; t: number } | null>(null);
+  useEffect(() => {
+    const el = agendaRef.current;
+    if (!el) return;
+    const onStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      touchRef.current = { x: touch.clientX, y: touch.clientY, t: Date.now() };
+    };
+    const onEnd = (e: TouchEvent) => {
+      if (!touchRef.current) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchRef.current.x;
+      const dy = touch.clientY - touchRef.current.y;
+      const dt = Date.now() - touchRef.current.t;
+      touchRef.current = null;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && dt < 300) {
+        if (dx > 0) goPrev();
+        else goNext();
+      }
+    };
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchend", onEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchend", onEnd);
+    };
+  }, [goPrev, goNext]);
+
   /* Title */
   const viewTitle = useMemo(() => {
     if (view === "month") return `${MONTHS_FR[cursor.getMonth()]} ${cursor.getFullYear()}`;
@@ -306,6 +335,16 @@ export function CalendarAgenda({ appointments, pastAppointments, onSelectRdv, on
       return `${f.getDate()} ${MONTHS_FR[f.getMonth()].slice(0, 3)} – ${l.getDate()} ${MONTHS_FR[l.getMonth()].slice(0, 3)} ${l.getFullYear()}`;
     }
     return cursor.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  }, [view, cursor]);
+
+  const viewTitleShort = useMemo(() => {
+    if (view === "month") return `${MONTHS_FR[cursor.getMonth()].slice(0, 3)} ${cursor.getFullYear()}`;
+    if (view === "week") {
+      const days = getWeekDays(cursor);
+      const f = days[0], l = days[6];
+      return `${f.getDate()} – ${l.getDate()} ${MONTHS_FR[f.getMonth()].slice(0, 3)}`;
+    }
+    return cursor.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" });
   }, [view, cursor]);
 
   /* Side panel */
@@ -361,7 +400,7 @@ export function CalendarAgenda({ appointments, pastAppointments, onSelectRdv, on
             <button className={styles.calNavBtn} onClick={goPrev}>{IconChevronLeft}</button>
             <button className={styles.calNavBtn} onClick={goNext}>{IconChevronRight}</button>
           </div>
-          <h2 className={styles.calTitle}>{viewTitle}</h2>
+          <h2 className={styles.calTitle}><span className={styles.calTitleLong}>{viewTitle}</span><span className={styles.calTitleShort}>{viewTitleShort}</span></h2>
         </div>
         <div className={styles.calToolbarRight}>
           {/* Search toggle */}

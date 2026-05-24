@@ -515,6 +515,52 @@ async function getNotificationsForAthlete(athleteUserId: string) {
     }));
   } catch (_) { /* silent */ }
 
+  // Upcoming RDV reminders (appointments in next 3 hours)
+  let upcomingRdvNotifs: any[] = [];
+  try {
+    const nowUR = new Date();
+    const in3h = new Date(nowUR.getTime() + 3 * 60 * 60 * 1000);
+
+    const soonEvents = await prisma.calendarEvent.findMany({
+      where: {
+        athleteUserId,
+        deletedAt: null,
+        date: { gt: nowUR, lte: in3h },
+      },
+      include: {
+        professionnel: { select: { id: true, nom: true, prenom: true, specialite: true, avatarPath: true } },
+      },
+      orderBy: { date: "asc" },
+    });
+
+    upcomingRdvNotifs = soonEvents.map((e: any) => {
+      const minsUntil = Math.round((new Date(e.date).getTime() - nowUR.getTime()) / 60000);
+      const countdown = minsUntil <= 60
+        ? `dans ${minsUntil} min`
+        : `dans ${Math.floor(minsUntil / 60)}h${minsUntil % 60 > 0 ? String(minsUntil % 60).padStart(2, "0") : ""}`;
+      return {
+        id: `upcoming-rdv-${e.id}`,
+        title: `RDV ${countdown}`,
+        subtitle: `${e.title} — ${e.professionnel.prenom} ${e.professionnel.nom}`,
+        date: nowUR,
+        type: "upcoming_rdv",
+        color: "red",
+        source: "upcoming_rdv",
+        meta: {
+          eventId: e.id,
+          proId: e.professionnelId,
+          proName: `${e.professionnel.prenom} ${e.professionnel.nom}`,
+          proSpecialite: e.professionnel.specialite,
+          avatarPath: signAvatarUrl(e.professionnel.avatarPath),
+          eventDate: e.date,
+          eventTitle: e.title,
+          countdown,
+          format: e.format,
+        },
+      };
+    });
+  } catch (_) { /* silent */ }
+
   // Consultation prep reminder: upcoming events (next 24h) without completed ConsultationPrep
   let consultPrepNotifs: any[] = [];
   try {
@@ -678,6 +724,7 @@ async function getNotificationsForAthlete(athleteUserId: string) {
   let protocolNotifs: any[] = [];
   let medAlertNotifs: any[] = [];
   let nutriAlertNotifs: any[] = [];
+  let kineAlertNotifs: any[] = [];
   let sharedDocNotifs: any[] = [];
   try {
     const athleteUser = await prisma.athleteUser.findUnique({
@@ -936,6 +983,46 @@ async function getNotificationsForAthlete(athleteUserId: string) {
           },
         }));
 
+        // Kiné alerts (pain alerts, compliance issues from kiné)
+        try {
+          const recentKineAlerts = await (prisma as any).kineAlert.findMany({
+            where: {
+              athleteId: { in: athleteIds },
+              status: "open",
+              createdAt: { gte: sevenDaysAgoKP },
+            },
+            include: {
+              athlete: {
+                select: {
+                  professionnel: { select: { id: true, nom: true, prenom: true, specialite: true, avatarPath: true } },
+                },
+              },
+            },
+            orderBy: { createdAt: "desc" },
+            take: 10,
+          });
+
+          kineAlertNotifs = recentKineAlerts.map((ka: any) => ({
+            id: `kine-alert-${ka.id}`,
+            title: ka.severity === "high" ? `Alerte kiné urgente` : `Alerte kiné`,
+            subtitle: `${ka.reason} — ${ka.athlete.professionnel.prenom} ${ka.athlete.professionnel.nom}`,
+            date: ka.createdAt,
+            type: "kine_alert",
+            color: ka.severity === "high" ? "red" : "amber",
+            source: "kine_alert",
+            meta: {
+              alertId: ka.id,
+              alertSeverity: ka.severity,
+              alertReason: ka.reason,
+              alertDetails: ka.details,
+              proId: ka.athlete.professionnel.id,
+              proName: `${ka.athlete.professionnel.prenom} ${ka.athlete.professionnel.nom}`,
+              proSpecialite: ka.athlete.professionnel.specialite,
+              avatarPath: signAvatarUrl(ka.athlete.professionnel.avatarPath),
+            },
+          }));
+        } catch (_) { /* kineAlert table might not exist */ }
+
         // Documents partagés (non lus, envoyés à l'athlète)
         const recentSharedDocs = await (prisma as any).sharedDocument.findMany({
           where: {
@@ -974,7 +1061,7 @@ async function getNotificationsForAthlete(athleteUserId: string) {
     }
   } catch (_) { /* silent */ }
 
-  return [...medAlertNotifs, ...nutriAlertNotifs, ...cancelledByProNotifs, ...rescheduledByProNotifs, ...paymentFailedNotifs, ...refundNotifs, ...consultPrepNotifs, ...paymentConfirmedNotifs, ...kinePlanNotifs, ...nutriPlanNotifs, ...ordonnanceNotifs, ...prescriptionNotifs, ...protocolNotifs, ...sharedDocNotifs, ...sessionNotifs, ...feedbackRequestedNotifs, ...dataAccessNotifs, ...slotAlertNotifs, ...connectionNotifs, ...connectionAcceptedNotifs, ...connectionRejectedNotifs, ...groupMessageNotifs, ...healthSyncNotifs, ...messageNotifs];
+  return [...upcomingRdvNotifs, ...medAlertNotifs, ...nutriAlertNotifs, ...kineAlertNotifs, ...cancelledByProNotifs, ...rescheduledByProNotifs, ...paymentFailedNotifs, ...refundNotifs, ...consultPrepNotifs, ...paymentConfirmedNotifs, ...kinePlanNotifs, ...nutriPlanNotifs, ...ordonnanceNotifs, ...prescriptionNotifs, ...protocolNotifs, ...sharedDocNotifs, ...sessionNotifs, ...feedbackRequestedNotifs, ...dataAccessNotifs, ...slotAlertNotifs, ...connectionNotifs, ...connectionAcceptedNotifs, ...connectionRejectedNotifs, ...groupMessageNotifs, ...healthSyncNotifs, ...messageNotifs];
 }
 
 // ─── Simple hash for change detection ───

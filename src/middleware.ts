@@ -40,7 +40,10 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
   // Content Security Policy
   const cspDirectives = [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",  // Next.js requires unsafe-eval in dev
+    // Next.js requires unsafe-eval in dev; production uses strict inline only
+    IS_PRODUCTION
+      ? "script-src 'self' 'unsafe-inline'"
+      : "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
@@ -114,6 +117,15 @@ export function middleware(request: NextRequest) {
     response.headers.set("Access-Control-Allow-Credentials", "true");
     response.headers.set("Vary", "Origin");
     return response;
+  }
+
+  // ─── Admin back-office protection ───
+  if (pathname.startsWith("/admin") && !pathname.startsWith("/admin/login")) {
+    const adminToken = request.cookies.get("tuatha_admin_session")?.value;
+    if (!adminToken) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+    return applySecurityHeaders(NextResponse.next());
   }
 
   // /dashboard/confirmation is always accessible (post-registration page)

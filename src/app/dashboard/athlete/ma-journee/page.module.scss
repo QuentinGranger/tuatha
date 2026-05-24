@@ -1,0 +1,1015 @@
+$orange: #e67e22;
+$orange-light: #f0a500;
+$bg-gradient: linear-gradient(135deg, #0c2442 0%, #000000 100%);
+$border: rgba(255, 255, 255, 0.06);
+$card-bg: rgba(255, 255, 255, 0.03);
+
+.page {
+  min-height: 100dvh;
+  background: $bg-gradient;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+// ─── Main content ───
+
+.main {
+  flex: 1;
+  padding: 24px;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  overflow-y: auto;
+}
+
+// ─── Hero ───
+
+.hero {
+  text-align: center;
+  padding: 20px 0 28px;
+}
+
+.heroIcon {
+  color: $orange;
+  margin-bottom: 8px;
+  svg { filter: drop-shadow(0 0 8px rgba($orange, 0.4)); }
+}
+
+.heroTitle {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 4px;
+}
+
+.heroDate {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  text-transform: capitalize;
+  margin: 0;
+}
+
+// ─── Skeleton loading ───
+
+.skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skeletonCard {
+  height: 80px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ─── Error ───
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  font-size: 13px;
+
+  button {
+    background: none;
+    border: none;
+    color: $orange;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+}
+
+// ─── Empty state ───
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 12px;
+}
+
+.emptyIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10b981;
+}
+
+.emptyTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.emptyDesc {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.4);
+  max-width: 340px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+// ─── Sections ───
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba($orange, 0.1);
+  color: $orange;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+
+.sectionCount {
+  background: rgba($orange, 0.12);
+  color: $orange;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+// ─── RDV Card ───
+
+.rdvCard {
+  display: flex;
+  gap: 14px;
+  padding: 14px 16px;
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { border-color: rgba($orange, 0.2); background: rgba(255, 255, 255, 0.04); }
+}
+
+.rdvTime {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  padding: 4px 0;
+  border-right: 2px solid $orange;
+  padding-right: 14px;
+}
+
+.rdvHour {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rdvEndHour {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.rdvDateLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: capitalize;
+  margin-top: 2px;
+}
+
+.rdvInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.rdvTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rdvPro {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.rdvMeta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  svg { flex-shrink: 0; }
+}
+
+// ─── Plan Card (shared) ───
+
+.planCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.planHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.planTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.planPro {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  &::before { content: "·"; margin-right: 6px; }
+}
+
+.planObjective {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.planFreq {
+  font-size: 11px;
+  color: $orange;
+  font-weight: 600;
+}
+
+.planNote {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px solid rgba($orange, 0.3);
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.planProgress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  height: 6px;
+  width: 80px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.planProgressBar {
+  height: 100%;
+  background: $orange;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+
+.planProgressLabel {
+  position: absolute;
+  right: -30px;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+// ─── Exercises ───
+
+.exerciseList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.exerciseCard {
+  display: flex;
+  gap: 12px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+}
+
+.exerciseThumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+}
+
+.exerciseInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.exerciseName {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.exerciseMeta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+
+  span {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+}
+
+.exerciseConsignes {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+  line-height: 1.4;
+}
+
+// ─── Nutri Tracker (Yazio / MFP style) ───
+
+.nutriTracker {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.nutriDashboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 20px 20px;
+  background: linear-gradient(135deg, rgba(230,126,34,0.06) 0%, $card-bg 40%);
+  border: 1px solid $border;
+  border-radius: 20px;
+}
+
+// ── Calorie ring ──
+
+.calorieRing {
+  position: relative;
+  flex-shrink: 0;
+  width: 130px;
+  height: 130px;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.calorieRingInner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.calorieRingValue {
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+}
+
+.calorieRingLabel {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+
+// ── Eaten / Objective stats row ──
+
+.nutriStats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nutriStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.nutriStatVal {
+  font-size: 20px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1;
+}
+
+.nutriStatLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 500;
+}
+
+.nutriStatDivider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+// ── Macro mini-circles ──
+
+.nutriMacroRow {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+}
+
+.macroCircle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.macroCircleVal {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: -2px;
+}
+
+.macroCircleLabel {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.macroCircleTarget {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.2);
+  margin-top: -2px;
+}
+
+.nutriProLabel {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  width: 100%;
+}
+
+// ── Meal list ──
+
+.mealList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mealCard {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: 16px;
+  padding: 16px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.mealCardDone {
+  border-color: rgba(16, 185, 129, 0.2);
+  background: rgba(16, 185, 129, 0.02);
+}
+
+.mealHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mealHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.mealIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: $orange;
+  flex-shrink: 0;
+}
+
+.mealHeaderText {
+  display: flex;
+  flex-direction: column;
+}
+
+.mealHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mealName {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.2;
+}
+
+.mealTime {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 500;
+}
+
+.mealKcalBadge {
+  font-size: 13px;
+  font-weight: 700;
+  color: $orange;
+}
+
+.mealRule {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 8px 0 0;
+  font-style: italic;
+}
+
+.mealItems {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 12px;
+}
+
+.mealItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  width: 100%;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+
+  &:hover { background: rgba(255, 255, 255, 0.03); }
+  &:active { transform: scale(0.98); }
+  &:disabled { opacity: 0.5; pointer-events: none; }
+}
+
+.mealItemConsumed {
+  background: rgba(16, 185, 129, 0.04);
+
+  .mealItemName {
+    text-decoration: line-through;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .mealItemDetail { color: rgba(255, 255, 255, 0.18); }
+}
+
+.mealItemCheck {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  color: transparent;
+}
+
+.mealItemCheckOn {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
+}
+
+.mealItemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mealItemName {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.15s;
+}
+
+.mealItemDetail {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  transition: color 0.15s;
+}
+
+.mealItemDelete {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+
+  &:hover { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+}
+
+// ── Add food button & form ──
+
+.addFoodBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border: 2px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: rgba($orange, 0.3);
+    color: $orange;
+    background: rgba($orange, 0.04);
+  }
+}
+
+.addFoodForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+}
+
+.addFoodRow {
+  display: flex;
+  gap: 8px;
+}
+
+.addFoodInput {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+  &:focus { border-color: rgba($orange, 0.4); }
+}
+
+.addFoodInputSm {
+  width: 0;
+  flex: 1;
+  padding: 10px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.15s;
+  appearance: textfield;
+  -moz-appearance: textfield;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button { -webkit-appearance: none; }
+  &::placeholder { color: rgba(255, 255, 255, 0.2); }
+  &:focus { border-color: rgba($orange, 0.4); }
+}
+
+.addFoodActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.addFoodCancel {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { background: rgba(255, 255, 255, 0.08); color: rgba(255, 255, 255, 0.6); }
+}
+
+.addFoodSubmit {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 8px;
+  background: $orange;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover { background: lighten($orange, 5%); }
+}
+
+// ─── Med Plan ───
+
+.medStatus {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.medList {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.medListLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 2px;
+}
+
+.medListLabelWarn {
+  color: #f59e0b;
+}
+
+.medListItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 6px;
+
+  &::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+  }
+}
+
+.medListItemWarn {
+  background: rgba(245, 158, 11, 0.06);
+  &::before { background: #f59e0b; }
+}
+
+.medListItemDone {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+.medCheckIcon {
+  color: #10b981;
+  display: flex;
+  align-items: center;
+}
+
+// ─── Mobile bottom nav ───
+
+.bottomNav {
+  display: none;
+}
+
+.bottomNavBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+  position: relative;
+
+  svg { transition: all 0.25s ease; }
+  &:active { transform: scale(0.92); }
+}
+
+.bottomNavBtnActive {
+  color: $orange;
+
+  svg {
+    stroke: $orange;
+    filter: drop-shadow(0 0 6px rgba($orange, 0.4));
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: $orange;
+    box-shadow: 0 0 6px rgba($orange, 0.6);
+  }
+}
+
+// ─── Responsive ───
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 72px;
+  }
+
+  .main {
+    padding: 16px;
+  }
+
+  .heroTitle { font-size: 18px; }
+
+  .bottomNav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9000;
+    height: 68px;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    align-items: center;
+    justify-content: space-around;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 12px;
+  }
+
+  .hero { padding: 14px 0 20px; }
+  .heroTitle { font-size: 16px; }
+
+  .planCard { padding: 12px; }
+  .rdvCard { padding: 10px 12px; gap: 10px; }
+  .exerciseThumb { width: 44px; height: 44px; }
+
+  .nutriDashboard { padding: 16px 14px; gap: 16px; }
+  .calorieRing { width: 110px; height: 110px; }
+  .calorieRingValue { font-size: 24px; }
+  .nutriStatVal { font-size: 17px; }
+  .nutriMacroRow { gap: 18px; }
+  .mealCard { padding: 12px; }
+  .mealName { font-size: 14px; }
+  .mealItem { padding: 8px; gap: 8px; }
+  .mealItemCheck { width: 22px; height: 22px; }
+  .mealItemName { font-size: 13px; }
+  .addFoodBtn { padding: 10px; font-size: 12px; }
+  .addFoodInput, .addFoodInputSm { padding: 8px 10px; font-size: 12px; }
+}

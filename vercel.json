@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/data-retention",
+      "schedule": "0 3 * * 0"
+    },
+    {
+      "path": "/api/cron/booking-reminders",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/cron/slot-alerts",
+      "schedule": "*/10 * * * *"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionAthlete } from "@/lib/session";
+import { logAthleteAccess } from "@/lib/athleteAccessLog";
 
 export const dynamic = "force-dynamic";
 
@@ -96,6 +97,62 @@ export async function GET() {
       take: 500,
     }), []);
 
+    // ── Données manquantes pour Art.20 ──
+
+    const healthConnections = await safe(() => (prisma as any).healthAppConnection.findMany({
+      where: { athleteUserId: athlete.id },
+      select: {
+        provider: true, status: true, scopes: true,
+        lastSyncAt: true, createdAt: true,
+      },
+    }), []);
+
+    const healthData = await safe(() => (prisma as any).healthDataPoint.findMany({
+      where: { athleteUserId: athlete.id },
+      select: {
+        category: true, value: true, unit: true, date: true,
+        metadata: true, createdAt: true,
+        connection: { select: { provider: true } },
+      },
+      orderBy: { date: "desc" },
+      take: 2000,
+    }), []);
+
+    const documents = await safe(() => (prisma as any).athleteDocument.findMany({
+      where: { athleteUserId: athlete.id, deletedAt: null },
+      select: {
+        originalName: true, mimeType: true, size: true, category: true,
+        note: true, createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    }), []);
+
+    const nutriDayLogs = await safe(() => (prisma as any).nutriDayLog.findMany({
+      where: { athleteUserId: athlete.id },
+      select: {
+        date: true, notes: true, createdAt: true,
+      },
+      orderBy: { date: "desc" },
+      take: 500,
+    }), []);
+
+    const athleteAccessLogs = await safe(() => (prisma as any).athleteAccessLog.findMany({
+      where: { athleteUserId: athlete.id },
+      select: {
+        action: true, resource: true, createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 500,
+    }), []);
+
+    const dataAccessRequests = await safe(() => (prisma as any).dataAccessRequest.findMany({
+      where: { athleteUserId: athlete.id },
+      select: {
+        type: true, status: true, createdAt: true, resolvedAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+    }), []);
+
     const exportData = {
       exportDate: new Date().toISOString(),
       profil: {
@@ -157,7 +214,7 @@ export async function GET() {
         completeLe: cp.completedAt,
         date: cp.createdAt,
       })),
-      historiqueAcces: accessLogs.map((l: any) => ({
+      historiqueAccesPro: accessLogs.map((l: any) => ({
         professionnel: `${l.professionnel.prenom} ${l.professionnel.nom}`,
         specialite: l.professionnel.specialite,
         action: l.action,
@@ -165,7 +222,49 @@ export async function GET() {
         bloque: l.blocked,
         date: l.createdAt,
       })),
+      appareilsConnectes: healthConnections.map((hc: any) => ({
+        fournisseur: hc.provider,
+        statut: hc.status,
+        scopes: hc.scopes,
+        derniereSynchro: hc.lastSyncAt,
+        connecteLe: hc.createdAt,
+      })),
+      donneesSante: healthData.map((dp: any) => ({
+        categorie: dp.category,
+        valeur: dp.value,
+        unite: dp.unit,
+        date: dp.date,
+        fournisseur: dp.connection?.provider,
+        metadata: dp.metadata,
+      })),
+      documents: documents.map((d: any) => ({
+        nomOriginal: d.originalName,
+        type: d.mimeType,
+        taille: d.size,
+        categorie: d.category,
+        note: d.note,
+        date: d.createdAt,
+      })),
+      journauxNutrition: nutriDayLogs.map((n: any) => ({
+        date: n.date,
+        notes: n.notes,
+        cree: n.createdAt,
+      })),
+      historiqueAccesAthlete: athleteAccessLogs.map((l: any) => ({
+        action: l.action,
+        ressource: l.resource,
+        date: l.createdAt,
+      })),
+      demandesAcces: dataAccessRequests.map((d: any) => ({
+        type: d.type,
+        statut: d.status,
+        demandeLe: d.createdAt,
+        resoluLe: d.resolvedAt,
+      })),
     };
+
+    // Log this export action
+    logAthleteAccess(athlete.id, "export_data").catch(() => {});
 
     const json = JSON.stringify(exportData, null, 2);
 

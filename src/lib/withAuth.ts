@@ -34,8 +34,9 @@ export function withAuth(handler: AuthHandler, options: WithAuthOptions = {}) {
     // 1. Authenticate
     const session = await getSessionPro();
     if (!session) {
-      // Distinguish "expired but refreshable" from "truly unauthenticated"
-      // The client should call POST /api/auth/refresh when it sees TOKEN_EXPIRED
+      const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+        || request.headers.get("x-real-ip") || "unknown";
+      securityMonitor.trackAuthFailure(ip, request.nextUrl.pathname, 401);
       return NextResponse.json(
         { error: "Non authentifié.", code: "TOKEN_EXPIRED" },
         { status: 401 }
@@ -61,6 +62,7 @@ export function withAuth(handler: AuthHandler, options: WithAuthOptions = {}) {
 
     // 3. Check role whitelist (if provided)
     if (options.roles && !options.roles.includes(role)) {
+      securityMonitor.trackAuthFailure(currentIp || "unknown", request.nextUrl.pathname, 403);
       return NextResponse.json(
         { error: "Accès non autorisé pour votre spécialité." },
         { status: 403 }
@@ -71,6 +73,7 @@ export function withAuth(handler: AuthHandler, options: WithAuthOptions = {}) {
     if (options.resource) {
       const action = options.action || methodToAction(request.method);
       if (!hasPermission(role, options.resource, action)) {
+        securityMonitor.trackAuthFailure(currentIp || "unknown", request.nextUrl.pathname, 403);
         return NextResponse.json(
           { error: "Vous n'avez pas la permission d'effectuer cette action." },
           { status: 403 }

@@ -6,6 +6,7 @@ import { scanUploadedFile } from "@/lib/fileScan";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import { encryptBuffer } from "@/lib/fileEncryption";
 
 export const dynamic = "force-dynamic";
 
@@ -72,8 +73,11 @@ export async function POST(request: NextRequest) {
     await mkdir(uploadsDir, { recursive: true });
 
     const ext = `.${scan.detectedType}`;
-    const filename = `vid-${randomUUID()}${ext}`;
-    await writeFile(path.join(uploadsDir, filename), scan.buffer);
+    const baseFilename = `vid-${randomUUID()}${ext}`;
+    const diskPath = path.join(uploadsDir, baseFilename);
+    // Encrypt file at rest
+    const encPath = await encryptBuffer(scan.buffer, diskPath);
+    const filename = path.basename(encPath);
     const filePath = `/uploads/videos/${filename}`;
 
     // Create DB record

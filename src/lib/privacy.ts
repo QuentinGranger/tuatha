@@ -244,27 +244,44 @@ Si certains prestataires impliquent des transferts de données hors de l'Union E
   {
     id: "ia",
     title: "10. Intelligence Artificielle (OpenAI)",
-    content: `La Plateforme utilise des services d'intelligence artificielle (OpenAI) pour des fonctionnalités d'assistance :
-• Vérification automatique des documents professionnels (diplômes, justificatifs) ;
-• Analyse et structuration de contenus ;
-• Aide à la qualification et au tri d'informations.
+    content: `La Plateforme utilise des services d'intelligence artificielle fournis par **OpenAI** (modèles GPT-4o et GPT-4o-mini) pour les fonctionnalités suivantes :
 
-**10.1. Données transmises à l'IA**
+• **Vérification de documents professionnels** : analyse automatisée des diplômes et cartes professionnelles. Aucune donnée athlète n'est concernée.
+• **Résumés automatiques** : lorsqu'un professionnel n'a pas accès à certaines données médicales, un résumé anonymisé peut être généré pour indiquer la nature de l'information sans révéler le contenu. Ce traitement est soumis au **consentement explicite** de l'athlète (opt-in).
+• **Assistance facturation** : analyse de données financières agrégées du professionnel. Aucune donnée de santé n'est transmise.
 
-Seules les données strictement nécessaires à la fonctionnalité sont transmises (principe de minimisation). Les données de santé des patients ne sont **pas** envoyées à des services d'IA tiers sans nécessité fonctionnelle documentée.
+**10.1. Données transmises à l'IA (minimisation)**
 
-**10.2. Encadrement**
+Seules les données strictement nécessaires sont transmises :
+• Un extrait limité à **2 000 caractères maximum** ;
+• Aucun nom, prénom, date de naissance, numéro de sécurité sociale ou identifiant patient ;
+• Aucun document complet si un extrait suffit.
 
-OpenAI agit en tant que sous-traitant, encadré contractuellement. L'utilisation est transparente : les résultats d'analyse IA sont identifiés comme tels dans l'interface (score de confiance, résumé IA).
+**10.2. Sous-traitance et encadrement contractuel**
+
+• OpenAI agit en qualité de **sous-traitant**, encadré par un Data Processing Addendum (DPA) conforme au RGPD Art. 28 ;
+• Les données API ne sont **pas** utilisées pour l'entraînement de modèles (opt-out API) ;
+• Les données sont supprimées après 30 jours maximum côté OpenAI ;
+• **Transfert hors UE** : les données transitent vers les États-Unis, encadrées par les clauses contractuelles types (CCT) de la Commission européenne ;
+• **Kill switch** : l'intégration peut être désactivée en urgence par l'administrateur via le système de réponse aux incidents.
 
 **10.3. Aucune décision médicale automatisée**
 
-Les résultats de l'IA sont des **assistances techniques**. Ils ne constituent en aucun cas :
-• Un diagnostic médical ;
-• Une décision clinique ;
-• Une recommandation thérapeutique.
+L'IA ne formule **jamais** de diagnostic, pronostic, prescription ou recommandation thérapeutique. Les résultats sont des **assistances techniques** purement descriptives. Le Professionnel reste seul responsable de ses décisions cliniques.
 
-Le Professionnel reste seul responsable de ses décisions cliniques.`,
+**10.4. Marquage et transparence**
+
+Tout contenu généré par l'IA est explicitement marqué comme tel dans l'interface (préfixe « [Résumé IA] », score de confiance). L'utilisateur est toujours informé de l'origine automatisée du contenu.
+
+**10.5. Opt-out et suppression**
+
+• L'athlète peut **désactiver** l'usage de l'IA à tout moment via ses paramètres de consentement (consentAI) ;
+• L'athlète peut **demander la suppression** des résumés IA générés à partir de ses données ;
+• Les résumés sont générés à la volée et ne sont pas stockés de manière permanente.
+
+**10.6. Logs IA**
+
+Les journaux d'utilisation de l'IA enregistrent uniquement : le type de champ traité, le nombre de caractères en entrée/sortie, et le modèle utilisé. Aucun contenu médical n'est conservé dans les logs.`,
   },
   {
     id: "cookies",

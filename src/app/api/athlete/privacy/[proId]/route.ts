@@ -98,11 +98,16 @@ export async function PUT(
       "shareConsultPrep", "sharePhoto", "shareMessaging",
     ];
 
-    const data: Record<string, boolean> = {};
+    const data: Record<string, unknown> = {};
     for (const field of ALLOWED_FIELDS) {
       if (typeof body[field] === "boolean") {
         data[field] = body[field];
       }
+    }
+
+    // Optional access expiration
+    if (body.expiresAt !== undefined) {
+      data.expiresAt = body.expiresAt ? new Date(body.expiresAt) : null;
     }
 
     if (Object.keys(data).length === 0) {

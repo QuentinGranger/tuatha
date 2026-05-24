@@ -81,6 +81,8 @@ async function aiSummarize({ fieldLabel, rawValue, context }: SummarizeOptions):
             "- Ne pas reproduire de phrases du contenu original.",
             "- Résumer en 1-2 phrases maximum la NATURE de l'information (ex: 'Antécédents chirurgicaux notés').",
             "- Si le contenu est un JSON, décrire la structure sans les valeurs.",
+            "- Ne JAMAIS formuler de diagnostic, pronostic, prescription ou recommandation thérapeutique.",
+            "- Ne JAMAIS interpréter cliniquement les données — uniquement décrire leur nature.",
             `- Le champ s'appelle : "${fieldLabel}".`,
             context ? `- Contexte : ${context}` : "",
           ].filter(Boolean).join("\n"),
@@ -93,8 +95,14 @@ async function aiSummarize({ fieldLabel, rawValue, context }: SummarizeOptions):
     });
 
     const summary = response.choices?.[0]?.message?.content?.trim();
+
+    // Log AI usage without medical content
+    console.log(
+      `[AI-AUDIT] redaction_summary field=${fieldLabel} inputChars=${rawValue.length} outputChars=${summary?.length ?? 0} model=gpt-4o-mini`,
+    );
+
     return summary
-      ? `📋 ${summary.slice(0, SUMMARY_MAX_LENGTH)}`
+      ? `📋 [Résumé IA] ${summary.slice(0, SUMMARY_MAX_LENGTH)}`
       : `${MASK_PLACEHOLDER} (${fieldLabel})`;
   } catch (error) {
     console.error(`[Redaction] AI summarize failed for ${fieldLabel}:`, error);

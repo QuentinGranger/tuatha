@@ -11,6 +11,7 @@ import { usePushSubscription } from "@/hooks/usePushSubscription";
 import { offlineFetch } from "@/lib/offlineFetch";
 import { openVisioRoom } from "@/lib/visio";
 import IncomingCallModal from "@/components/IncomingCallModal";
+import InactivityGuard from "@/components/InactivityGuard";
 
 const navItems = [
   { label: "Tableau de Bord", href: "/dashboard/coach", icon: "grid" },
@@ -21,6 +22,7 @@ const navItems = [
   { label: "Documents", href: "/dashboard/coach/documents", icon: "file" },
   { label: "Cabinet / Équipe", href: "/dashboard/coach/cabinet", icon: "building" },
   { label: "Facturation et Paiements", href: "/dashboard/coach/facturation", icon: "wallet" },
+  { label: "Support", href: "/dashboard/support", icon: "help" },
 ];
 
 const icons: Record<string, React.ReactNode> = {
@@ -83,6 +85,13 @@ const icons: Record<string, React.ReactNode> = {
       <path d="M8 10h.01" /><path d="M8 14h.01" />
     </svg>
   ),
+  help: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  ),
 };
 
 function getBreadcrumb(pathname: string): { label: string; href: string | null }[] {
@@ -120,8 +129,14 @@ export default function CoachDashboardLayout({
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [notifFilter, setNotifFilter] = useState<"all" | "priority" | "action">("all");
-  const [notifications, setNotifications] = useState<{ id: string; title: string; subtitle?: string; date: string; type: string; color: string; athlete: { name: string } | null; source?: string; meta?: any }[]>([]);
-  const [readIds, setReadIds] = useState<Set<string>>(new Set());
+  const [notifications, setNotifications] = useState<{ id: string; title: string; subtitle?: string; date: string; type: string; color: string; athlete: { id?: string; name: string } | null; source?: string; meta?: any }[]>([]);
+  const [readIds, setReadIds] = useState<Set<string>>(() => {
+    if (typeof window === "undefined") return new Set();
+    try {
+      const stored = localStorage.getItem("tuatha_notif_read_ids");
+      return stored ? new Set(JSON.parse(stored)) : new Set();
+    } catch { return new Set(); }
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
   const notifRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -157,10 +172,42 @@ export default function CoachDashboardLayout({
       .catch(() => {});
   }, []);
 
+  const seenNotifIdsRef = useRef<Set<string>>(new Set());
+
+  // Notification sound via Web Audio API
+  const playNotifSound = useCallback(() => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, ctx.currentTime);
+      osc.frequency.setValueAtTime(1047, ctx.currentTime + 0.08);
+      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.25);
+    } catch { /* AudioContext not available */ }
+  }, []);
+
   // Real-time notifications via SSE (replaces polling)
   useSSE<any[]>({
     url: "/api/notifications/stream",
-    onMessage: (data) => { if (Array.isArray(data)) setNotifications(data); },
+    onMessage: (data) => {
+      if (!Array.isArray(data)) return;
+      setNotifications(data);
+      const urgentSources = new Set(["visio_join", "connection", "booking", "cancelled_by_athlete", "med_alert", "kine_alert", "nutri_alert", "athlete_message", "message"]);
+      let hasNew = false;
+      for (const n of data) {
+        if (!seenNotifIdsRef.current.has(n.id)) {
+          seenNotifIdsRef.current.add(n.id);
+          if (urgentSources.has(n.source) || n.color === "red") hasNew = true;
+        }
+      }
+      if (hasNew && seenNotifIdsRef.current.size > data.length) playNotifSound();
+    },
   });
 
   useEffect(() => {
@@ -208,7 +255,11 @@ export default function CoachDashboardLayout({
   }, []);
 
   const markAsRead = (eventId: string) => {
-    setReadIds((prev) => new Set(prev).add(eventId));
+    setReadIds((prev) => {
+      const next = new Set(prev).add(eventId);
+      try { localStorage.setItem("tuatha_notif_read_ids", JSON.stringify([...next])); } catch {}
+      return next;
+    });
   };
 
   const deleteNotif = async (eventId: string, source?: string) => {
@@ -218,7 +269,7 @@ export default function CoachDashboardLayout({
       body: JSON.stringify({ eventId, source }),
     });
     setNotifications((prev) => prev.filter((n) => n.id !== eventId));
-    setReadIds((prev) => { const s = new Set(prev); s.delete(eventId); return s; });
+    setReadIds((prev) => { const s = new Set(prev); s.delete(eventId); try { localStorage.setItem("tuatha_notif_read_ids", JSON.stringify([...s])); } catch {} return s; });
   };
 
   const respondInvite = async (inviteId: string, accept: boolean) => {
@@ -289,6 +340,7 @@ export default function CoachDashboardLayout({
   const initials = user ? `${user.prenom[0]}${user.nom[0]}` : "";
 
   return (
+    <InactivityGuard>
     <div className={styles.layout}>
       <IncomingCallModal />
       {/* <ScreenShieldWrapper /> */}
@@ -448,7 +500,7 @@ export default function CoachDashboardLayout({
                     <span className={styles.notifHeaderTitle}>Centre</span>
                     <div className={styles.notifHeaderActions}>
                       {notifications.filter(n => !readIds.has(n.id)).length > 0 && (
-                        <button className={styles.notifMarkAllBtn} onClick={() => { setReadIds(new Set(notifications.map(n => n.id))); }} title="Tout marquer lu">
+                        <button className={styles.notifMarkAllBtn} onClick={() => { const all = new Set(notifications.map(n => n.id)); setReadIds(all); try { localStorage.setItem("tuatha_notif_read_ids", JSON.stringify([...all])); } catch {} }} title="Tout marquer lu">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="1 5.5 5 9.5 15 1.5"/><polyline points="1 12.5 5 16.5 15 8.5"/></svg>
                         </button>
                       )}
@@ -481,12 +533,27 @@ export default function CoachDashboardLayout({
                         return (
                           <div key={n.id} className={`${styles.notifItem} ${styles[`notifItem_${level}`]} ${readIds.has(n.id) ? styles.notifItemRead : ""}`} onClick={() => {
                             markAsRead(n.id);
-                            if (n.source === "message" || n.source === "athlete_message") { setNotifOpen(false); router.push("/dashboard/coach/messagerie"); }
-                            else if (n.athlete) { setNotifOpen(false); }
+                            setNotifOpen(false);
+                            const base = "/dashboard/coach";
+                            if (n.source === "message" || n.source === "athlete_message") router.push(`${base}/messagerie`);
+                            else if (n.source === "group_message") router.push(`${base}/messagerie`);
+                            else if (n.source === "connection" || n.source === "connection_accepted" || n.source === "connection_rejected") router.push(base);
+                            else if (n.source === "booking" || n.source === "cancelled_by_athlete" || n.source === "delay_notice") router.push(`${base}/calendrier`);
+                            else if (n.source === "visio_join" && n.meta?.roomId) router.push(`${base}/visio/${n.meta.roomId}`);
+                            else if (n.source === "payment") router.push(`${base}/facturation`);
+                            else if (n.source === "invoice") router.push(`${base}/facturation`);
+                            else if (n.source === "athlete_document" && n.athlete?.id) router.push(`${base}/patients/${n.athlete.id}?tab=documents`);
+                            else if (n.source === "consult_prep" && n.meta?.eventId) router.push(`${base}/calendrier`);
+                            else if ((n.source === "kine_alert" || n.source === "nutri_alert" || n.source === "med_alert") && n.athlete?.id) router.push(`${base}/patients/${n.athlete.id}`);
+                            else if (n.source === "exercise_log" && n.meta?.planId) router.push(`${base}/patients/${n.athlete?.id || ""}`);
+                            else if (n.source === "athlete_feedback" && n.meta?.sessionId) router.push(`${base}/patients/${n.athlete?.id || ""}`);
+                            else if (n.source === "data_access") router.push(base);
+                            else if (n.source === "event" || n.source === "kanban") router.push(`${base}/calendrier`);
                           }}>
                             <div className={styles.notifItemIcon}>{levelIcons[level]}</div>
                             <div className={styles.notifItemContent}>
                               <span className={styles.notifItemTitle}>{n.title}</span>
+                              {n.subtitle && <span className={styles.notifItemSub}>{n.subtitle}</span>}
                               <span className={styles.notifItemMeta}>
                                 {n.athlete ? n.athlete.name : "Système"} • {formatNotifTime(n.date)}
                                 {n.meta?.role && n.source === "invite" && ` • ${n.meta.role}`}
@@ -578,5 +645,6 @@ export default function CoachDashboardLayout({
         </div>
       </div>
     </div>
+    </InactivityGuard>
   );
 }

@@ -69,12 +69,38 @@ export async function GET(request: NextRequest) {
     });
     const blockedProIds = blockedByPros.map((b: any) => b.professionnelId);
 
+    // Get IDs of pros already connected to this athlete
+    const myConnections = await prisma.connectionRequest.findMany({
+      where: { athleteUserId: session.id, status: { in: ["accepted", "pending"] } },
+      select: { professionnelId: true },
+    });
+    const connectedProIds = myConnections.map((c: any) => c.professionnelId);
+
+    const notBlocked = blockedProIds.length > 0 ? { id: { notIn: blockedProIds } } : {};
+
+    // Connected pros can appear even if not verified/searchable
     const where = {
-      OR: searchConditions,
-      emailVerified: true,
-      verificationStatus: "verified",
-      searchable: true,
-      ...(blockedProIds.length > 0 ? { id: { notIn: blockedProIds } } : {}),
+      AND: [
+        notBlocked,
+        {
+          OR: [
+            // Public searchable pros
+            {
+              OR: searchConditions,
+              emailVerified: true,
+              verificationStatus: "verified",
+              searchable: true,
+            },
+            // Already connected pros (bypass verification/searchable filters)
+            ...(connectedProIds.length > 0
+              ? [{
+                  OR: searchConditions,
+                  id: { in: connectedProIds },
+                }]
+              : []),
+          ],
+        },
+      ],
     };
 
     // Count total for pagination

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import * as OTPAuth from "otpauth";
 import QRCode from "qrcode";
 import { withAuth } from "@/lib/withAuth";
+import { generateRecoveryCodes } from "@/lib/mfa";
 
 // POST — Generate TOTP secret + QR code (setup, not yet enabled)
 export const POST = withAuth(async (_req, ctx) => {
@@ -78,12 +79,21 @@ export const PUT = withAuth(async (request, ctx) => {
       return NextResponse.json({ error: "Code invalide" }, { status: 403 });
     }
 
+    // Generate recovery codes on first activation
+    const { plain, hashed } = await generateRecoveryCodes();
+
     await prisma.professionnel.update({
       where: { id: proId },
-      data: { twoFactorEnabled: true },
+      data: { twoFactorEnabled: true, recoveryCodes: hashed },
     });
 
-    return NextResponse.json({ message: "2FA activé avec succès" });
+    console.log(`[SECURITY-AUDIT] PRO_2FA_ENABLED userId=${proId}`);
+
+    return NextResponse.json({
+      message: "2FA activé avec succès",
+      recoveryCodes: plain,
+      warning: "Conservez ces codes de secours en lieu sûr. Ils ne seront plus affichés.",
+    });
   } catch (error) {
     console.error("PUT /api/profil/2fa:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });

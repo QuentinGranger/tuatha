@@ -94,7 +94,7 @@ export const GET = withAuth(async (_request, ctx) => {
       messageNotifs = Array.from(byPro.values()).map((g) => ({
         id: `msg-${g.sender.id}`,
         title: `${g.sender.prenom} ${g.sender.nom}`,
-        subtitle: g.count === 1 ? g.lastMsg.content : `${g.count} nouveaux messages`,
+        subtitle: g.count === 1 ? (g.lastMsg.content?.slice(0, 50) + (g.lastMsg.content?.length > 50 ? "…" : "")) : `${g.count} nouveaux messages`,
         date: g.lastMsg.createdAt,
         type: "message",
         color: "blue",
@@ -104,7 +104,7 @@ export const GET = withAuth(async (_request, ctx) => {
           senderName: `${g.sender.prenom} ${g.sender.nom}`,
           senderSpecialite: g.sender.specialite,
           avatarPath: signAvatarUrl(g.sender.avatarPath),
-          preview: g.lastMsg.content,
+          preview: g.lastMsg.content?.slice(0, 80) || "",
           count: g.count,
         },
       }));
@@ -134,7 +134,7 @@ export const GET = withAuth(async (_request, ctx) => {
       athleteMessageNotifs = Array.from(byAthlete.values()).map((g) => ({
         id: `ath-msg-${g.athlete.id}`,
         title: `${g.athlete.prenom} ${g.athlete.nom}`,
-        subtitle: g.count === 1 ? g.lastMsg.content : `${g.count} nouveaux messages`,
+        subtitle: g.count === 1 ? (g.lastMsg.content?.slice(0, 50) + (g.lastMsg.content?.length > 50 ? "…" : "")) : `${g.count} nouveaux messages`,
         date: g.lastMsg.createdAt,
         type: "message",
         color: "green",
@@ -145,7 +145,7 @@ export const GET = withAuth(async (_request, ctx) => {
           senderName: `${g.athlete.prenom} ${g.athlete.nom}`,
           senderSport: g.athlete.sport,
           avatarPath: signAvatarUrl(g.athlete.avatarPath),
-          preview: g.lastMsg.content,
+          preview: g.lastMsg.content?.slice(0, 80) || "",
           count: g.count,
         },
       }));
@@ -899,7 +899,7 @@ export const GET = withAuth(async (_request, ctx) => {
   }
 }, { resource: "notifications" });
 
-// POST /api/notifications/dismiss — mark a reminder as seen (event or kanban)
+// POST /api/notifications/dismiss — mark a notification as seen / dismissed
 export const POST = withAuth(async (request, ctx) => {
   try {
     const pro = ctx.session;
@@ -907,27 +907,203 @@ export const POST = withAuth(async (request, ctx) => {
     const { eventId, source } = await request.json();
     if (!eventId) return NextResponse.json({ error: "eventId requis" }, { status: 400 });
 
-    if (source === "security") {
-      // Dismiss security alert — remove the sec- prefix to get the real ID
-      const realId = eventId.startsWith("sec-") ? eventId.slice(4) : eventId;
-      await prisma.securityAlert.deleteMany({
-        where: { id: realId, professionnelId: pro.id },
-      });
-      return NextResponse.json({ ok: true });
-    } else if (source === "invite") {
-      // Dismiss invite notification = mark as seen (no action taken, user can still respond later)
-      // We don't change status here — accept/decline is handled via /api/invitation/[id]
-      return NextResponse.json({ ok: true });
-    } else if (source === "kanban") {
-      await (prisma as any).kanbanTask.updateMany({
-        where: { id: eventId, professionnelId: pro.id },
-        data: { reminderSeen: true },
-      });
-    } else {
-      await (prisma as any).calendarEvent.updateMany({
-        where: { id: eventId, professionnelId: pro.id },
-        data: { reminderSeen: true },
-      });
+    // Strip synthetic prefixes to get real DB id
+    const stripPrefix = (id: string, prefix: string) =>
+      id.startsWith(prefix) ? id.slice(prefix.length) : id;
+
+    switch (source) {
+      // ── Security ──
+      case "security": {
+        const realId = stripPrefix(eventId, "sec-");
+        await prisma.securityAlert.deleteMany({ where: { id: realId, professionnelId: pro.id } });
+        break;
+      }
+
+      // ── Invitations ──
+      case "invite":
+        // No DB change — accept/decline is via /api/invitation/[id]
+        break;
+
+      // ── Kanban tasks ──
+      case "kanban":
+        await (prisma as any).kanbanTask.updateMany({
+          where: { id: eventId, professionnelId: pro.id },
+          data: { reminderSeen: true },
+        });
+        break;
+
+      // ── Calendar events (reminders) ──
+      case "event":
+        await (prisma as any).calendarEvent.updateMany({
+          where: { id: eventId, professionnelId: pro.id },
+          data: { reminderSeen: true },
+        });
+        break;
+
+      // ── Connection requests ──
+      case "connection":
+      case "connection_accepted":
+      case "connection_rejected":
+        // These are transient; no DB field to mark. SSE will stop showing them after expiry.
+        break;
+
+      // ── Messages (pro→pro) — mark all from sender as read ──
+      case "message": {
+        const proSenderId = stripPrefix(eventId, "msg-");
+        try {
+          await (prisma as any).proMessage.updateMany({
+            where: { receiverProId: pro.id, senderProId: proSenderId, read: false },
+            data: { read: true },
+          });
+        } catch (_) { /* table might not exist */ }
+        break;
+      }
+
+      // ── Messages (athlete→pro) — mark all from athlete as read ──
+      case "athlete_message": {
+        const athleteId = stripPrefix(eventId, "ath-msg-");
+        try {
+          await (prisma as any).athleteProMessage.updateMany({
+            where: { professionnelId: pro.id, athleteUserId: athleteId, senderType: "athlete", read: false },
+            data: { read: true },
+          });
+        } catch (_) { /* table might not exist */ }
+        break;
+      }
+
+      // ── Group messages from athletes ──
+      case "group_message": {
+        const convId = stripPrefix(eventId, "grp-ath-msg-");
+        try {
+          await (prisma as any).athleteGroupMessage.updateMany({
+            where: { conversationId: convId, senderType: "athlete", read: false },
+            data: { read: true },
+          });
+        } catch (_) { /* table might not exist */ }
+        break;
+      }
+
+      // ── Bookings (new) — mark reminder as seen ──
+      case "booking": {
+        const evId = stripPrefix(eventId, "booking-");
+        try {
+          await (prisma as any).calendarEvent.updateMany({
+            where: { id: evId, professionnelId: pro.id },
+            data: { reminderSeen: true },
+          });
+        } catch (_) { /* silent */ }
+        break;
+      }
+
+      // ── RDV cancelled by athlete ──
+      case "cancelled_by_athlete":
+        // Transient (based on deletedAt window). No dismiss field.
+        break;
+
+      // ── Payment notifications ──
+      case "payment":
+        // Transient (based on paidAt/updatedAt window). No dismiss field.
+        break;
+
+      // ── Athlete documents — mark as read ──
+      case "athlete_document": {
+        const docId = stripPrefix(eventId, "ath-doc-");
+        try {
+          await (prisma as any).athleteDocument.updateMany({
+            where: { id: docId, professionnelId: pro.id, readAt: null },
+            data: { readAt: new Date() },
+          });
+        } catch (_) { /* table might not exist */ }
+        break;
+      }
+
+      // ── Kiné alerts — mark as read ──
+      case "kine_alert": {
+        const alertId = stripPrefix(eventId, "kine-alert-");
+        try {
+          await (prisma as any).kineAlert.updateMany({
+            where: { id: alertId, professionnelId: pro.id, status: "unread" },
+            data: { status: "read" },
+          });
+        } catch (_) { /* silent */ }
+        break;
+      }
+
+      // ── Nutri alerts — mark as read ──
+      case "nutri_alert": {
+        const alertId = stripPrefix(eventId, "nutri-alert-");
+        try {
+          await (prisma as any).nutriAlert.update({
+            where: { id: alertId },
+            data: { status: "read" },
+          });
+        } catch (_) { /* silent */ }
+        break;
+      }
+
+      // ── Medical alerts — mark as acknowledged ──
+      case "med_alert": {
+        const alertId = stripPrefix(eventId, "med-alert-");
+        try {
+          await (prisma as any).medAlert.update({
+            where: { id: alertId },
+            data: { status: "acknowledged" },
+          });
+        } catch (_) { /* silent */ }
+        break;
+      }
+
+      // ── Consultation prep completed ──
+      case "consult_prep":
+        // Transient (based on completedAt window). No dismiss.
+        break;
+
+      // ── Athlete feedback on sessions ──
+      case "athlete_feedback":
+        // Transient. No dismiss field.
+        break;
+
+      // ── Exercise logs ──
+      case "exercise_log":
+        // Transient (3-day window). No dismiss.
+        break;
+
+      // ── Data access responses ──
+      case "data_access":
+        // Transient (7-day window). No dismiss.
+        break;
+
+      // ── Delay notices — dismiss BookingReminder ──
+      case "delay_notice": {
+        const remId = stripPrefix(eventId, "delay-");
+        try {
+          await prisma.bookingReminder.updateMany({
+            where: { id: remId, professionnelId: pro.id, dismissed: false },
+            data: { dismissed: true },
+          });
+        } catch (_) { /* silent */ }
+        break;
+      }
+
+      // ── Invoice overdue ──
+      case "invoice":
+        // Cannot dismiss an overdue invoice — it stays until paid.
+        break;
+
+      // ── Visio join (waiting room) ──
+      case "visio_join":
+        // Transient (5-min window). No dismiss.
+        break;
+
+      // ── Default fallback: try calendarEvent reminderSeen ──
+      default:
+        try {
+          await (prisma as any).calendarEvent.updateMany({
+            where: { id: eventId, professionnelId: pro.id },
+            data: { reminderSeen: true },
+          });
+        } catch (_) { /* silent */ }
+        break;
     }
 
     return NextResponse.json({ ok: true });

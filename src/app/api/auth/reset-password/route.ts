@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import { validatePassword } from "@/lib/security";
 import { sendPasswordChangedAlert } from "@/lib/email";
 import { validateBody, resetPasswordSchema } from "@/lib/validation";
+import { revokeAllSessions } from "@/lib/session";
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,35 +39,68 @@ export async function POST(request: NextRequest) {
 
     // Hash new password
     const hashedPassword = await bcrypt.hash(password, 12);
+    const isPro = !!resetRecord.professionnelId;
+    const userId = resetRecord.professionnelId || resetRecord.athleteUserId;
+
+    if (!userId) {
+      return NextResponse.json({ error: "Lien de réinitialisation invalide." }, { status: 400 });
+    }
 
     // Update password + mark token as used (transaction)
-    await prisma.$transaction([
-      prisma.professionnel.update({
-        where: { id: resetRecord.professionnelId },
-        data: { password: hashedPassword },
-      }),
+    const txOps: any[] = [
       prisma.passwordReset.update({
         where: { id: resetRecord.id },
         data: { used: true, usedAt: new Date() },
       }),
-      prisma.securityAlert.create({
-        data: {
-          type: "password_changed",
-          message: "Mot de passe modifié via lien de réinitialisation.",
-          ip,
-          userAgent,
-          professionnelId: resetRecord.professionnelId,
-        },
-      }),
-    ]);
+    ];
+
+    if (isPro) {
+      txOps.push(
+        prisma.professionnel.update({
+          where: { id: userId },
+          data: { password: hashedPassword },
+        }),
+        prisma.securityAlert.create({
+          data: {
+            type: "password_changed",
+            message: "Mot de passe modifié via lien de réinitialisation.",
+            ip, userAgent, professionnelId: userId,
+          },
+        }),
+      );
+    } else {
+      txOps.push(
+        prisma.athleteUser.update({
+          where: { id: userId },
+          data: { password: hashedPassword },
+        }),
+      );
+    }
+
+    await prisma.$transaction(txOps);
+
+    // Revoke all active sessions — forces re-login with new password
+    await revokeAllSessions(userId, undefined, isPro ? "pro" : "athlete", "password_changed");
 
     // Send security alert email (non-blocking)
-    const pro = await prisma.professionnel.findUnique({
-      where: { id: resetRecord.professionnelId },
-      select: { email: true, prenom: true },
-    });
+    let userEmail: string | null = null;
+    let userPrenom: string | null = null;
 
-    if (pro) {
+    if (isPro) {
+      const pro = await prisma.professionnel.findUnique({
+        where: { id: userId },
+        select: { email: true, prenom: true },
+      });
+      if (pro) { userEmail = pro.email; userPrenom = pro.prenom; }
+    } else {
+      const athlete = await prisma.athleteUser.findUnique({
+        where: { id: userId },
+        select: { email: true, prenom: true },
+      });
+      if (athlete) { userEmail = athlete.email; userPrenom = athlete.prenom; }
+    }
+
+    if (userEmail) {
       const now = new Date();
       const dateStr = now.toLocaleDateString("fr-FR", {
         weekday: "long", year: "numeric", month: "long", day: "numeric",
@@ -74,8 +108,8 @@ export async function POST(request: NextRequest) {
       });
 
       sendPasswordChangedAlert({
-        to: pro.email,
-        prenom: pro.prenom,
+        to: userEmail,
+        prenom: userPrenom || "Utilisateur",
         ip,
         date: dateStr,
       }).catch((err) => {

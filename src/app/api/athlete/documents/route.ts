@@ -6,6 +6,7 @@ import { scanUploadedFile } from "@/lib/fileScan";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
+import { encryptBuffer } from "@/lib/fileEncryption";
 
 export const dynamic = "force-dynamic";
 
@@ -166,8 +167,11 @@ export async function POST(request: NextRequest) {
     await mkdir(uploadsDir, { recursive: true });
 
     const ext = `.${scan.detectedType}`;
-    const filename = `adoc-${randomUUID()}${ext}`;
-    await writeFile(path.join(uploadsDir, filename), scan.buffer);
+    const baseFilename = `adoc-${randomUUID()}${ext}`;
+    const diskPath = path.join(uploadsDir, baseFilename);
+    // Encrypt file at rest
+    const encPath = await encryptBuffer(scan.buffer, diskPath);
+    const filename = path.basename(encPath);
     const filePath = `/uploads/athlete-documents/${filename}`;
 
     // Find athlete record for this pro
@@ -199,6 +203,11 @@ export async function POST(request: NextRequest) {
         professionnelId: proId,
       },
     });
+
+    // Audit log: athlete document uploaded (CNIL traceability)
+    console.log(
+      `[SECURITY-AUDIT] ATHLETE_DOCUMENT_UPLOADED by=athlete:${session.id} docId=${doc.id} category=${category} proId=${proId} size=${file.size}`,
+    );
 
     return NextResponse.json({
       document: {

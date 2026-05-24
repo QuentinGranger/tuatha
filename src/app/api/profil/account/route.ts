@@ -22,7 +22,7 @@ export const DELETE = withAuth(async (req: NextRequest, ctx) => {
     // Verify the user exists and check password
     const pro = await prisma.professionnel.findUnique({
       where: { id: proId },
-      select: { id: true, password: true, email: true },
+      select: { id: true, password: true, email: true, prenom: true },
     });
 
     if (!pro) {
@@ -34,6 +34,25 @@ export const DELETE = withAuth(async (req: NextRequest, ctx) => {
       return NextResponse.json({ error: "Mot de passe incorrect." }, { status: 403 });
     }
 
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
+    const userAgent = req.headers.get("user-agent") || null;
+
+    // Log security alert BEFORE cascade delete (so it persists in structured logs)
+    console.warn(
+      `[SECURITY-AUDIT] ACCOUNT_DELETED user=${proId} email=${pro.email} ip=${ip} ua=${userAgent}`,
+    );
+
+    // Create the alert before deletion (will be cascade-deleted, but structured log persists)
+    await prisma.securityAlert.create({
+      data: {
+        type: "account_deleted",
+        message: `Compte supprimé volontairement par l'utilisateur (${pro.email}).`,
+        ip,
+        userAgent,
+        professionnelId: proId,
+      },
+    });
+
     // Revoke all sessions before deletion
     await prisma.authSession.updateMany({
       where: { professionnelId: proId, revoked: false },
@@ -43,7 +62,13 @@ export const DELETE = withAuth(async (req: NextRequest, ctx) => {
     // Delete the account — cascades to all related records
     await prisma.professionnel.delete({ where: { id: proId } });
 
-    console.log(`[ACCOUNT-DELETE] Account deleted: ${pro.email} (${proId})`);
+    // Confirmation email (non-blocking)
+    try {
+      const { sendAccountDeletedEmail } = await import("@/lib/email");
+      await sendAccountDeletedEmail({ to: pro.email, prenom: pro.prenom });
+    } catch (emailErr) {
+      console.error("[ACCOUNT-DELETE] Failed to send confirmation email:", emailErr);
+    }
 
     const response = NextResponse.json({ message: "Compte supprimé avec succès." });
     clearAuthCookies(response);

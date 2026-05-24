@@ -51,6 +51,16 @@ export const POST = withAuth(async (req, ctx) => {
     const baseUrl = secrets.appUrl();
     const uploadUrl = `${baseUrl}/upload-video/${token}`;
 
+    // Persist token for validation on upload (expires in 24h)
+    await (prisma as any).videoUploadToken.create({
+      data: {
+        token,
+        athleteId,
+        professionnelId: session.id,
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      },
+    });
+
     return NextResponse.json({
       token,
       uploadUrl,

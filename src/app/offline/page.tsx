@@ -1,6 +1,34 @@
 "use client";
 
+import { useState } from "react";
+
 export default function OfflinePage() {
+  const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleRetry = async () => {
+    setChecking(true);
+    setError("");
+    try {
+      // Use a cache-busted URL so the SW won't intercept with a cached response
+      const probe = `/api/auth/me?_=${Date.now()}`;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      const res = await fetch(probe, { cache: "no-store", signal: controller.signal });
+      clearTimeout(timeout);
+      // The SW returns 503 with { offline: true } when truly offline.
+      // Any non-503 response (even 401) means the network is back.
+      if (res.status !== 503) {
+        window.location.href = "/";
+        return;
+      }
+      setError("Toujours hors ligne…");
+    } catch {
+      setError("Toujours hors ligne…");
+    }
+    setChecking(false);
+  };
+
   return (
     <div
       style={{
@@ -44,23 +72,31 @@ export default function OfflinePage() {
         Pas de connexion
       </h1>
       <p style={{ fontSize: "0.95rem", color: "#94a3b8", maxWidth: 360, lineHeight: 1.5 }}>
-        Vérifiez votre connexion internet et réessayez. L'application sera disponible dès que vous serez de nouveau en ligne.
+        Vérifiez votre connexion internet et réessayez. L&apos;application sera disponible dès que vous serez de nouveau en ligne.
       </p>
+      {error && (
+        <p style={{ fontSize: "0.85rem", color: "#f87171", marginTop: 12 }}>
+          {error}
+        </p>
+      )}
       <button
-        onClick={() => window.location.reload()}
+        onClick={handleRetry}
+        disabled={checking}
         style={{
           marginTop: 24,
           padding: "10px 24px",
-          background: "#3b82f6",
+          background: checking ? "#2563eb" : "#3b82f6",
           color: "#fff",
           border: "none",
           borderRadius: 8,
           fontSize: "0.9rem",
           fontWeight: 500,
-          cursor: "pointer",
+          cursor: checking ? "wait" : "pointer",
+          opacity: checking ? 0.7 : 1,
+          transition: "all 0.2s",
         }}
       >
-        Réessayer
+        {checking ? "Vérification…" : "Réessayer"}
       </button>
     </div>
   );

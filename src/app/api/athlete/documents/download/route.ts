@@ -4,6 +4,7 @@ import { getSessionAthlete } from "@/lib/session";
 import { applyRateLimit, getIP, RATE_LIMITS } from "@/lib/rateLimit";
 import { readFile } from "fs/promises";
 import path from "path";
+import { readFileAuto } from "@/lib/fileEncryption";
 
 export const dynamic = "force-dynamic";
 
@@ -118,12 +119,15 @@ export async function GET(request: NextRequest) {
     }
 
     const absPath = path.join(process.cwd(), filePath.replace(/^\//, ""));
-    const ext = path.extname(absPath).toLowerCase();
+    // Strip .enc extension for MIME type detection
+    const cleanPath = absPath.replace(/\.enc$/, "");
+    const ext = path.extname(cleanPath).toLowerCase();
     const contentType = mimeType || MIME_TYPES[ext] || "application/octet-stream";
 
-    const file = await readFile(absPath);
+    // Auto-decrypt if .enc version exists
+    const fileBuf = await readFileAuto(absPath.replace(/\.enc$/, ""));
 
-    return new NextResponse(file, {
+    return new NextResponse(fileBuf as unknown as BodyInit, {
       headers: {
         "Content-Type": contentType,
         "Content-Disposition": `inline; filename="${encodeURIComponent(originalName || "document")}"`,

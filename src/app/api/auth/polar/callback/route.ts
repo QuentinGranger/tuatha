@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionAthlete } from "@/lib/session";
 import { exchangeCodeForToken, registerUser } from "@/lib/polar";
+import { encrypt } from "@/lib/encryption";
 
 /**
  * GET /api/auth/polar/callback?code=...
@@ -39,13 +40,13 @@ export async function GET(request: NextRequest) {
         athleteUserId: session.id,
         provider: "POLAR",
         status: "connected",
-        accessToken,
+        accessToken: encrypt(accessToken),
         providerUserId: polarUserId.toString(),
         scopes: ["accesslink.read_all"],
       },
       update: {
         status: "connected",
-        accessToken,
+        accessToken: encrypt(accessToken),
         providerUserId: polarUserId.toString(),
         lastSyncError: null,
       },

@@ -86,6 +86,27 @@ export const PUT = withAuth(async (request, ctx) => {
     if (body.mutuelleAcceptee !== undefined && isValidMutuelle(body.mutuelleAcceptee)) updateData.mutuelleAcceptee = body.mutuelleAcceptee;
     if (body.remboursementNote !== undefined) updateData.remboursementNote = body.remboursementNote;
 
+    // Security: detect email change and log it
+    if (email !== undefined) {
+      const currentPro = await prisma.professionnel.findUnique({
+        where: { id: proId },
+        select: { email: true },
+      });
+      if (currentPro && currentPro.email !== email) {
+        const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
+        const userAgent = request.headers.get("user-agent") || null;
+        await prisma.securityAlert.create({
+          data: {
+            type: "email_changed",
+            message: `Email modifié de ${currentPro.email} vers ${email}.`,
+            ip,
+            userAgent,
+            professionnelId: proId,
+          },
+        });
+      }
+    }
+
     await prisma.professionnel.update({ where: { id: proId }, data: updateData });
 
     // Replace services if provided

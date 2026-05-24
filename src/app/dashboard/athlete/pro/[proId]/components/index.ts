@@ -10,3 +10,6 @@ export { default as UploadDocModal } from "./UploadDocModal";
 export { default as AlertsList } from "./AlertsList";
 export { default as HistoryList } from "./HistoryList";
 export { default as DocumentsList } from "./DocumentsList";
+export { default as ProfileHero } from "./ProfileHero";
+export { default as ProfileInfoView } from "./ProfileInfoView";
+export { default as SuiviView } from "./SuiviView";

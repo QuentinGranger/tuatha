@@ -587,6 +587,10 @@ $topbar-height: 64px;
   font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.9);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.notifItemSub {
+  font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.3;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 .notifItemMeta { font-size: 11px; color: $text-muted; }
 
 .notifItemRead {

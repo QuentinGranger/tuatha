@@ -28,6 +28,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Lien invalide" }, { status: 400 });
     }
 
+    // Validate the upload token: must exist, not expired, not used, and match IDs
+    const uploadToken = await (prisma as any).videoUploadToken.findUnique({
+      where: { token },
+    });
+    if (
+      !uploadToken ||
+      uploadToken.usedAt ||
+      uploadToken.expiresAt < new Date() ||
+      uploadToken.athleteId !== athleteId ||
+      uploadToken.professionnelId !== professionnelId
+    ) {
+      return NextResponse.json({ error: "Lien invalide ou expiré" }, { status: 403 });
+    }
+
     // Security: magic bytes + content scan before writing to disk
     const scan = await scanUploadedFile(file, "video");
     if (!scan.safe) {
@@ -52,19 +66,26 @@ export async function POST(req: NextRequest) {
     await writeFile(path.join(uploadsDir, filename), scan.buffer);
     const filePath = `/uploads/videos/${filename}`;
 
-    const video = await (prisma as any).athleteVideo.create({
-      data: {
-        filename,
-        originalName: file.name,
-        mimeType: file.type,
-        size: file.size,
-        filePath,
-        note: note || null,
-        uploadToken: token,
-        athleteId,
-        professionnelId,
-      },
-    });
+    // Create video record + mark token as used atomically
+    const [video] = await (prisma as any).$transaction([
+      (prisma as any).athleteVideo.create({
+        data: {
+          filename,
+          originalName: file.name,
+          mimeType: file.type,
+          size: file.size,
+          filePath,
+          note: note || null,
+          uploadToken: token,
+          athleteId,
+          professionnelId,
+        },
+      }),
+      (prisma as any).videoUploadToken.update({
+        where: { token },
+        data: { usedAt: new Date() },
+      }),
+    ]);
 
     return NextResponse.json({ ok: true, id: video.id });
   } catch (error) {
