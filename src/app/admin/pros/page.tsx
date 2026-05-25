@@ -120,6 +120,10 @@ export default function ProsPage() {
 
   const showMsg = (msg: string) => { setActionMsg(msg); setTimeout(() => setActionMsg(null), 3500); };
 
+  const reloadList = useCallback(() => {
+    fetch("/api/admin/pros").then(r => r.json()).then(setData).catch(() => {});
+  }, []);
+
   useEffect(() => {
     fetch("/api/admin/pros").then(r => r.json()).then(setData).catch(() => {}).finally(() => setLoading(false));
   }, []);
@@ -157,14 +161,14 @@ export default function ProsPage() {
   const handleAction = (action: string, label: string, confirm_msg?: string, opts?: { danger?: boolean }) => {
     if (!confirm_msg) {
       callAction({ action, proId: selected?.id }).then(d => {
-        if (d.success) { showMsg(d.message); if (selected) loadDetail(selected); }
+        if (d.success) { showMsg(d.message); reloadList(); if (selected) loadDetail(selected); }
         else showMsg(`Erreur : ${d.error}`);
       });
       return;
     }
     openConfirm(label, confirm_msg, async () => {
       const d = await callAction({ action, proId: selected?.id });
-      if (d.success) { showMsg(d.message); if (selected) loadDetail(selected); }
+      if (d.success) { showMsg(d.message); reloadList(); if (selected) loadDetail(selected); }
       else showMsg(`Erreur : ${d.error}`);
       setConfirmModal(null);
     }, opts);
@@ -172,7 +176,7 @@ export default function ProsPage() {
 
   const handleVerifyDoc = async (docId: string, status: string) => {
     const d = await callAction({ action: "update_verification_doc", docId, status });
-    if (d.success) { showMsg(d.message); if (selected) loadDetail(selected); }
+    if (d.success) { showMsg(d.message); reloadList(); if (selected) loadDetail(selected); }
     else showMsg(`Erreur : ${d.error}`);
   };
 
@@ -215,12 +219,12 @@ export default function ProsPage() {
       {/* Stats bar */}
       <div className="admin-stats-row" style={{ marginBottom: "1rem" }}>
         {[
-          { label: "Professionnels actifs", value: st.total ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>, change: "+12% vs hier", color: "#2563eb" },
-          { label: "En attente", value: st.pending ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, change: `+2 vs hier`, color: "#f59e0b" },
-          { label: "Suspendus", value: st.suspended ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.8"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>, change: `+1 vs hier`, color: "#ef4444" },
-          { label: "Signalements", value: st.alerts ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>, change: `+2 vs hier`, color: "#dc2626" },
-          { label: "Documents vérifiés", value: st.verified ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>, change: "+6 vs hier", color: "#16a34a" },
-          { label: "Risque élevé", value: (data?.pros ?? []).filter((p: any) => riskScore(p) > 70).length, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>, change: "+1 vs hier", color: "#f59e0b" },
+          { label: "Professionnels actifs", value: st.total ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>, color: "#2563eb" },
+          { label: "En attente", value: st.pending ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>, color: "#f59e0b" },
+          { label: "Suspendus", value: st.suspended ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.8"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>, color: "#ef4444" },
+          { label: "Signalements", value: st.alerts ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="1.8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>, color: "#dc2626" },
+          { label: "Dossiers vérifiés", value: st.verified ?? "...", icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>, color: "#16a34a" },
+          { label: "Risque élevé", value: (data?.pros ?? []).filter((p: any) => riskScore(p) > 70).length, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>, color: "#f59e0b" },
         ].map((s, i) => (
           <div key={i} style={{ background: "#fff", borderRadius: "10px", border: "1px solid #e2e8f0", padding: "0.75rem 1rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem" }}>
@@ -228,7 +232,6 @@ export default function ProsPage() {
               <span style={{ fontSize: "0.65rem", color: "#64748b" }}>{s.label}</span>
             </div>
             <div style={{ fontSize: "1.4rem", fontWeight: 800, color: s.color }}>{s.value}</div>
-            <div style={{ fontSize: "0.63rem", color: "#94a3b8", marginTop: "0.1rem" }}>{s.change}</div>
           </div>
         ))}
       </div>
@@ -249,7 +252,7 @@ export default function ProsPage() {
               <button onClick={() => setShowFilters(v => !v)} style={{ display: "flex", alignItems: "center", gap: "0.25rem", padding: "0.3rem 0.6rem", borderRadius: "7px", border: activeFilter ? "1px solid #2563eb" : "1px solid #e2e8f0", background: activeFilter ? "#dbeafe" : "#f8fafc", fontSize: "0.7rem", color: activeFilter ? "#1d4ed8" : "#475569", cursor: "pointer" }}>
                 {SVG.filter} Filtres {activeFilter && <span style={{ background: "#2563eb", color: "#fff", fontSize: "0.58rem", fontWeight: 700, borderRadius: "99px", padding: "0 4px", lineHeight: "14px" }}>1</span>}
               </button>
-              <button onClick={() => { setLoading(true); fetch("/api/admin/pros").then(r => r.json()).then(setData).finally(() => setLoading(false)); }} style={{ padding: "0.3rem 0.5rem", borderRadius: "7px", border: "1px solid #e2e8f0", background: "#f8fafc", cursor: "pointer", color: "#475569" }}>{SVG.refresh}</button>
+              <button onClick={() => { setLoading(true); reloadList(); setTimeout(() => setLoading(false), 500); }} style={{ padding: "0.3rem 0.5rem", borderRadius: "7px", border: "1px solid #e2e8f0", background: "#f8fafc", cursor: "pointer", color: "#475569" }}>{SVG.refresh}</button>
             </div>
             {/* Status filter chips */}
             {showFilters && (
@@ -361,14 +364,48 @@ export default function ProsPage() {
                       </div>
                       <div>
                         <SectionTitle>Activité</SectionTitle>
-                        <DRow label="Statut vérification" value={VERIF_LABELS[detail.verificationStatus]?.label ?? detail.verificationStatus} />
-                        <DRow label="Statut compte" value={ACCOUNT_LABELS[detail.accountStatus]?.label ?? detail.accountStatus} />
-                        <DRow label="Inscrit le" value={fmtDate(detail.createdAt)} />
-                        <DRow label="Vérifié le" value={fmtDate(detail.verifiedAt)} />
-                        <DRow label="Athlètes liés" value={String(detail.connectionsAsPro?.length ?? 0)} />
-                        <DRow label="Documents envoyés" value={String(detail.docsSent?.length ?? 0)} />
-                        <DRow label="Signalements" value={String(detail.securityAlerts?.length ?? 0)} />
-                        <DRow label="Taux d'activité" value={detail.searchable ? "82%" : "Masqué"} />
+                        {(() => {
+                          const sessions = detail.authSessions ?? [];
+                          const docs = detail.docsSent ?? [];
+                          const connections = detail.connectionsAsPro ?? [];
+                          const alerts = detail.securityAlerts ?? [];
+                          const now = Date.now();
+                          const d30 = 30 * 24 * 60 * 60 * 1000;
+                          const d7 = 7 * 24 * 60 * 60 * 1000;
+                          // Sessions actives (non révoquées, non expirées)
+                          const activeSessions = sessions.filter((s: any) => !s.revoked && new Date(s.expiresAt) > new Date());
+                          // Dernière connexion
+                          const lastSession = sessions[0]?.lastActiveAt;
+                          // Sessions dans les 30 derniers jours
+                          const sessions30d = sessions.filter((s: any) => now - new Date(s.createdAt).getTime() < d30).length;
+                          // Documents cette semaine
+                          const docs7d = docs.filter((d: any) => now - new Date(d.createdAt).getTime() < d7).length;
+                          // Documents lus (avec readAt)
+                          const docsRead = docs.filter((d: any) => d.readAt).length;
+                          // Athlètes actifs (connectés)
+                          const activeAthletes = connections.filter((c: any) => c.status === "connecte").length;
+                          // Taux d'activité: basé sur connexions récentes
+                          const daysSinceCreation = Math.max(1, Math.floor((now - new Date(detail.createdAt).getTime()) / (24 * 60 * 60 * 1000)));
+                          const activityRate = Math.min(100, Math.round((sessions.length / Math.min(daysSinceCreation, 90)) * 100));
+                          return (
+                            <>
+                              <DRow label="Statut vérification" value={VERIF_LABELS[detail.verificationStatus]?.label ?? detail.verificationStatus} />
+                              <DRow label="Statut compte" value={ACCOUNT_LABELS[detail.accountStatus]?.label ?? detail.accountStatus} />
+                              <DRow label="Inscrit le" value={fmtDate(detail.createdAt)} />
+                              <DRow label="Vérifié le" value={fmtDate(detail.verifiedAt)} />
+                              <DRow label="Dernière connexion" value={lastSession ? timeAgo(lastSession) : "Jamais"} />
+                              <DRow label="Sessions actives" value={String(activeSessions.length)} />
+                              <DRow label="Connexions (30j)" value={String(sessions30d)} />
+                              <DRow label="Taux d'activité" value={`${activityRate}%`} />
+                              <DRow label="Athlètes actifs" value={`${activeAthletes} / ${connections.length}`} />
+                              <DRow label="Docs envoyés (total)" value={String(docs.length)} />
+                              <DRow label="Docs cette semaine" value={String(docs7d)} />
+                              <DRow label="Docs consultés" value={`${docsRead} / ${docs.length}`} />
+                              <DRow label="Signalements" value={String(alerts.length)} accent={alerts.filter((a: any) => !a.resolved).length > 0} />
+                              <DRow label="Visible annuaire" value={detail.searchable ? "Oui" : "Non"} />
+                            </>
+                          );
+                        })()}
                       </div>
                       <div>
                         <SectionTitle>Actions rapides</SectionTitle>
@@ -472,10 +509,32 @@ export default function ProsPage() {
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
                       <div>
                         <SectionTitle>Statistiques d'accès</SectionTitle>
-                        <DRow label="Documents consultés" value={String(detail.docsSent?.length ?? 0)} />
-                        <DRow label="Sessions actives" value={String(detail.authSessions?.filter((s: any) => !s.revoked && new Date(s.expiresAt) > new Date()).length ?? 0)} />
-                        <DRow label="Signalements reçus" value={String(detail.securityAlerts?.length ?? 0)} />
-                        <DRow label="Signalements non résolus" value={String(detail.securityAlerts?.filter((a: any) => !a.resolved).length ?? 0)} accent />
+                        {(() => {
+                          const sessions = detail.authSessions ?? [];
+                          const docs = detail.docsSent ?? [];
+                          const alerts = detail.securityAlerts ?? [];
+                          const now = Date.now();
+                          const d7 = 7 * 24 * 60 * 60 * 1000;
+                          const d30 = 30 * 24 * 60 * 60 * 1000;
+                          const activeSessions = sessions.filter((s: any) => !s.revoked && new Date(s.expiresAt) > new Date());
+                          const sessions7d = sessions.filter((s: any) => now - new Date(s.createdAt).getTime() < d7).length;
+                          const docs30d = docs.filter((d: any) => now - new Date(d.createdAt).getTime() < d30).length;
+                          const docsDeleted = docs.filter((d: any) => d.deletedAt).length;
+                          const unresolvedAlerts = alerts.filter((a: any) => !a.resolved).length;
+                          // Unique IPs
+                          const uniqueIPs = new Set(sessions.map((s: any) => s.ip).filter(Boolean)).size;
+                          return (
+                            <>
+                              <DRow label="Sessions actives" value={String(activeSessions.length)} />
+                              <DRow label="Connexions (7j)" value={String(sessions7d)} />
+                              <DRow label="IPs distinctes" value={String(uniqueIPs)} accent={uniqueIPs > 5} />
+                              <DRow label="Documents envoyés (30j)" value={String(docs30d)} />
+                              <DRow label="Documents supprimés" value={String(docsDeleted)} accent={docsDeleted > 0} />
+                              <DRow label="Signalements reçus" value={String(alerts.length)} />
+                              <DRow label="Signalements non résolus" value={String(unresolvedAlerts)} accent={unresolvedAlerts > 0} />
+                            </>
+                          );
+                        })()}
                         <SectionTitle>Sessions récentes</SectionTitle>
                         {(detail.authSessions ?? []).slice(0, 5).map((s: any) => (
                           <div key={s.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.25rem 0", borderBottom: "1px solid #f8fafc" }}>

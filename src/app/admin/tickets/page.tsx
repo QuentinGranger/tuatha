@@ -173,6 +173,13 @@ export default function TicketsPage() {
     else showMsg(`Erreur: ${d.error}`);
   };
 
+  const handleNotifyUser = async (investigationId: string) => {
+    if (!confirm("Envoyer une notification à l'utilisateur concerné ?")) return;
+    const d = await callAction({ action: "notify_user", investigationId });
+    if (d.success) { showMsg("Utilisateur notifié."); loadInvestigationDetail(investigationId); }
+    else showMsg(`Erreur: ${d.error}`);
+  };
+
   const handleCreate = async () => {
     if (createModal === "ticket") {
       const d = await callAction({ action: "create_ticket", ...form });
@@ -221,7 +228,7 @@ export default function TicketsPage() {
             { label: "Ouverts", value: data.stats.open, color: "#2563eb" },
             { label: "En cours", value: data.stats.inProgress, color: "#d97706" },
             { label: "Bloqués", value: data.stats.blocked, color: "#dc2626" },
-            { label: "Urgents", value: data.stats.urgent, color: "#dc2626" },
+            { label: "Priorité haute (P0/P1)", value: data.stats.urgent, color: "#dc2626" },
             { label: "Investigations actives", value: data.stats.activeInvestigations, color: "#7c3aed" },
           ].map(s => (
             <div key={s.label} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "0.6rem 1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -475,11 +482,6 @@ export default function TicketsPage() {
                   </div>
                 </div>
 
-                {/* Pièces jointes (placeholder) */}
-                <div style={{ padding: "0.75rem 1.25rem", borderBottom: "1px solid #f1f5f9" }}>
-                  <SectionTitle>Pièces jointes</SectionTitle>
-                  <div style={{ fontSize: "0.72rem", color: "#94a3b8", fontStyle: "italic" }}>Aucune pièce jointe. (fonctionnalité upload à venir)</div>
-                </div>
 
                 {/* Notes internes séparées */}
                 {(detail.comments ?? []).filter((c: any) => c.internal).length > 0 && (
@@ -538,6 +540,7 @@ export default function TicketsPage() {
                   <span style={{ fontSize: "0.7rem", fontWeight: 600, color: "#64748b", marginRight: "0.25rem" }}>Actions:</span>
                   {!detail.status.startsWith("closed") && <MiniBtn label="En cours" color="#d97706" onClick={() => handleUpdateInvestigation(detail.id, { status: "in_progress" })} />}
                   {!detail.dpoNotifiedAt && <MiniBtn label="Notifier DPO" color="#7c3aed" onClick={() => handleNotifyDPO(detail.id)} />}
+                  {!detail.userNotifiedAt && <MiniBtn label="Notifier utilisateur" color="#0891b2" onClick={() => handleNotifyUser(detail.id)} />}
                   {!detail.status.startsWith("closed") && <MiniBtn label="Clore (résolu)" color="#16a34a" onClick={() => { const o = prompt("Issue / résolution :"); if (o) handleUpdateInvestigation(detail.id, { status: "closed_resolved", outcome: o }); }} />}
                   {!detail.status.startsWith("closed") && <MiniBtn label="Clore (infondé)" color="#64748b" onClick={() => { const o = prompt("Motif :"); if (o) handleUpdateInvestigation(detail.id, { status: "closed_unfounded", outcome: o }); }} />}
                   <select onChange={e => { if (e.target.value) handleUpdateInvestigation(detail.id, { severity: e.target.value }); e.target.value = ""; }} style={{ padding: "0.25rem 0.4rem", borderRadius: "6px", border: "1px solid #e2e8f0", fontSize: "0.68rem", background: "#fff" }}>

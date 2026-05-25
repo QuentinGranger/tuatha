@@ -231,7 +231,7 @@ export async function GET(req: NextRequest) {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     // Fetch all Athlete records (pro-created) with their linked pro and optional user account
-    const [allAthletes, totalUsers, unverifiedUsers, failedPayments, riskHigh] = await Promise.all([
+    const [allAthletes, totalUsers, unverifiedUsers, failedPayments, riskHigh, openTicketsCount, deletionRequests, exportRequests] = await Promise.all([
       (prisma as any).athlete.findMany({
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
@@ -259,6 +259,9 @@ export async function GET(req: NextRequest) {
       (prisma as any).athleteUser.count({ where: { emailVerified: false } }),
       (prisma as any).payment.count({ where: { status: "payment_failed" } }),
       prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "SecurityAlert" WHERE resolved = false`.then((r: any) => r[0]?.c ?? 0),
+      (prisma as any).supportTicket.count({ where: { status: { in: ["open", "in_progress"] }, createdByRole: "athlete" } }),
+      (prisma as any).athleteUser.count({ where: { accountStatus: "deleted" } }),
+      (prisma as any).athleteUser.count({ where: { accountStatus: { in: ["export_requested", "deletion_requested"] } } }).catch(() => 0),
     ]);
 
     // Also get AthleteUser records that are NOT linked to any Athlete (standalone accounts)
@@ -349,8 +352,9 @@ export async function GET(req: NextRequest) {
         todayCount,
         unverified: unverifiedUsers,
         failedPayments,
-        exportRequests: 0,
-        deletionRequests: 0,
+        openTickets: openTicketsCount,
+        exportRequests,
+        deletionRequests,
         riskHigh,
       },
       athletes: rows,

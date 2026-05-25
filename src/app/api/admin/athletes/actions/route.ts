@@ -250,6 +250,23 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, message: "Aucune connexion à révoquer." });
       }
 
+      case "resend_invitation": {
+        if (!connectionId) return NextResponse.json({ error: "connectionId requis." }, { status: 400 });
+        const conn = await (prisma as any).proConnection.findUnique({
+          where: { id: connectionId },
+          select: { athleteId: true, connectedPro: { select: { prenom: true, nom: true, specialite: true } } },
+        });
+        if (!conn) return NextResponse.json({ error: "Connexion introuvable." }, { status: 404 });
+        const proName = `${conn.connectedPro?.prenom ?? ""} ${conn.connectedPro?.nom ?? ""}`.trim();
+        if (conn.athleteId) {
+          notifyAthlete(conn.athleteId, "Rappel d'invitation", `Vous avez une invitation en attente du professionnel ${proName} (${conn.connectedPro?.specialite ?? ""}). Connectez-vous pour l'accepter ou la refuser.`, "#2563eb", [
+            { label: "Professionnel", value: proName },
+            { label: "Date", value: new Date().toLocaleString("fr-FR") },
+          ]);
+        }
+        return NextResponse.json({ success: true, message: "Invitation renvoyée par email." });
+      }
+
       default:
         return NextResponse.json({ error: `Action inconnue: ${action}` }, { status: 400 });
     }

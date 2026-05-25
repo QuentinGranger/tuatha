@@ -68,10 +68,10 @@ export default function AdminCommandCenter() {
 
       {/* KPI Cards */}
       <div className="admin-kpi-grid">
-        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>} label="Athlètes" value={loading ? "..." : v("users.totalAthleteUsers")} change={loading ? "" : `+${v("users.recentAthletes")} (30j)`} positive href="/admin/athletes" />
-        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>} label="Pros actifs" value={loading ? "..." : v("users.totalPros")} change={loading ? "" : `+${v("users.recentPros")} (30j)`} positive href="/admin/pros" />
-        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 1 1 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 1 1 0-4V7a2 2 0 0 0-2-2H5z"/></svg>} label="Tickets" value={loading ? "..." : v("support.openTickets")} change={loading ? "" : `${v("support.urgentTickets")} urgents`} positive={Number(v("support.urgentTickets")) === 0} href="/admin/tickets" />
-        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} label="MRR" value={loading ? "..." : `${v("billing.revenueEuros")} €`} change={loading ? "" : `${v("billing.paidPayments")} paiements`} positive href="/admin/payments" />
+        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>} label="Athlètes" value={loading ? "..." : v("users.totalAthleteUsers")} change={loading ? "" : `+${v("users.recentAthletes")} (30j) · ${Number(v("users.athleteChange")) >= 0 ? "+" : ""}${v("users.athleteChange")} aujourd'hui`} positive href="/admin/athletes" />
+        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" strokeWidth="1.8"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>} label="Pros actifs" value={loading ? "..." : v("users.totalPros")} change={loading ? "" : `+${v("users.recentPros")} (30j) · ${Number(v("users.prosChange")) >= 0 ? "+" : ""}${v("users.prosChange")} aujourd'hui`} positive href="/admin/pros" />
+        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><path d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 0 0-2 2v3a2 2 0 1 1 0 4v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 1 1 0-4V7a2 2 0 0 0-2-2H5z"/></svg>} label="Tickets" value={loading ? "..." : v("support.openTickets")} change={loading ? "" : `${v("support.urgentTickets")} urgent${Number(v("support.urgentTickets")) !== 1 ? "s" : ""} · ${v("support.blockedTickets")} bloqué${Number(v("support.blockedTickets")) !== 1 ? "s" : ""}`} positive={Number(v("support.urgentTickets")) === 0} href="/admin/tickets" />
+        <KPI icon={<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>} label="MRR" value={loading ? "..." : `${v("billing.revenueEuros")} €`} change={loading ? "" : `${v("billing.paidPayments")} paiement${Number(v("billing.paidPayments")) !== 1 ? "s" : ""} · ${v("billing.failedPayments")} échoué${Number(v("billing.failedPayments")) !== 1 ? "s" : ""}`} positive={Number(v("billing.failedPayments")) === 0} href="/admin/payments" />
       </div>
 
       {/* 4 detail columns */}
@@ -82,21 +82,21 @@ export default function AdminCommandCenter() {
           <Row label="Connexions échouées" val={loading ? "..." : v("billing.failedPayments")} />
           <Row label="Erreurs API (24h)" val={loading ? "..." : v("security.apiErrors24h")} badge={Number(v("security.apiErrors24h")) > 0 ? "orange" : "green"} />
           <Row label="Temps moyen réponse" val={loading ? "..." : `${v("health.avgResponseTime")} ms`} />
-          <Row label="Disponibilité" val={loading ? "..." : (v("health.dbStatus") === "healthy" ? "99,98%" : "—")} />
+          <Row label="Disponibilité" val={loading ? "..." : (v("health.dbStatus") === "healthy" ? "OK" : v("health.dbStatus") === "unknown" ? "Inconnu" : "Dégradé")} badge={v("health.dbStatus") === "healthy" ? "green" : v("health.dbStatus") === "unknown" ? undefined : "orange"} />
           <Row label="Dernier backup" val={loading ? "..." : v("health.backupStatus")} badge={v("health.backupStatus") === "OK" ? "green" : "orange"} />
           <Row label="Statut HDS / cloud" val={loading ? "..." : v("health.dbStatus")} badge={v("health.dbStatus") === "healthy" ? "green" : "orange"} />
           <Row label="Statut paiements" val={loading ? "..." : v("health.stripeStatus")} badge={v("health.stripeStatus") === "healthy" ? "green" : "orange"} />
           <Row label="Statut emails" val={loading ? "..." : v("health.emailStatus")} badge={v("health.emailStatus") === "healthy" ? "green" : "orange"} />
         </Col>
         <Col title="Sécurité">
-          <Row label="Alertes critiques" val={loading ? "..." : v("security.urgentTickets")} badge={Number(v("security.urgentTickets")) > 0 ? "red" : "green"} />
+          <Row label="Alertes critiques" val={loading ? "..." : v("security.unresolvedAlerts")} badge={Number(v("security.unresolvedAlerts")) > 0 ? "red" : "green"} />
           <Row label="Tentatives connexion suspectes" val={loading ? "..." : v("security.recentAlerts")} badge={Number(v("security.recentAlerts")) > 0 ? "orange" : "green"} />
           <Row label="Erreurs 403 répétées (24h)" val={loading ? "..." : v("security.errors403")} badge={Number(v("security.errors403")) > 0 ? "orange" : "green"} />
           <Row label="Comptes supprimés" val={loading ? "..." : v("security.deletedAccounts")} badge={Number(v("security.deletedAccounts")) > 0 ? "orange" : "green"} />
           <Row label="Actions admin sensibles" val={loading ? "..." : v("security.adminLogsToday")} />
-          <Row label="Exports de données récents" val={loading ? "..." : "—"} />
-          <Row label="Téléchargements massifs" val={loading ? "..." : "—"} />
-          <Row label="Accès inhabituels" val={loading ? "..." : "—"} />
+          <Row label="Emails envoyés (24h)" val={loading ? "..." : v("health.emails24h")} />
+          <Row label="Emails échoués (24h)" val={loading ? "..." : v("health.failedEmails24h")} badge={Number(v("health.failedEmails24h")) > 0 ? "orange" : "green"} />
+          <Row label="Logs d'accès total" val={loading ? "..." : v("security.totalAccessLogs")} />
         </Col>
         <Col title="Support">
           <Row label="Tickets ouverts" val={loading ? "..." : v("support.openTickets")} badge={Number(v("support.openTickets")) > 0 ? "blue" : "green"} />
@@ -113,9 +113,9 @@ export default function AdminCommandCenter() {
           <Row label="Taux d'activation" val={loading ? "..." : `${v("growth.activationRate")}%`} />
           <Row label="Athlètes connectés un pro" val={loading ? "..." : `${Math.round((Number(v("connections.active")) / Number(v("users.totalAthleteUsers") || 1)) * 100)}%`} />
           <Row label="Athlètes ayant uploadé un doc" val={loading ? "..." : `${v("growth.docsRate")}%`} />
-          <Row label="Athlètes ayant partagé des données" val={loading ? "..." : "—"} />
-          <Row label="Churn" val={loading ? "..." : "—"} />
-          <Row label="Conversion gratuit → payant" val={loading ? "..." : "—"} />
+          <Row label="Connexions actives" val={loading ? "..." : v("connections.active")} />
+          <Row label="Messages échangés (7j)" val={loading ? "..." : v("messaging.recentMessages")} />
+          <Row label="Comptes supprimés" val={loading ? "..." : v("security.deletedAccounts")} badge={Number(v("security.deletedAccounts")) > 0 ? "orange" : "green"} />
         </Col>
       </div>
 
@@ -229,7 +229,7 @@ function KPI({ icon, label, value, change, positive, href }: { icon: React.React
         <span style={{ fontSize: "0.75rem", color: "#64748b" }}>{label}</span>
       </div>
       <div style={{ fontSize: "1.5rem", fontWeight: 800 }}>{value}</div>
-      <div style={{ fontSize: "0.68rem", color: positive ? "#22c55e" : "#f59e0b", fontWeight: 500, marginTop: "0.15rem" }}>{change} vs hier</div>
+      {change && <div style={{ fontSize: "0.68rem", color: positive ? "#22c55e" : "#f59e0b", fontWeight: 500, marginTop: "0.15rem" }}>{change}</div>}
     </div>
   );
 }

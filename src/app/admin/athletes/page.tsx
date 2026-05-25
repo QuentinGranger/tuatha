@@ -172,6 +172,10 @@ export default function AthletesPage() {
   const [modalReason, setModalReason] = useState("");
   const [athleteInvestigations, setAthleteInvestigations] = useState<any[]>([]);
 
+  const reloadList = useCallback(() => {
+    fetch("/api/admin/athletes").then(r => r.json()).then(setData).catch(() => {});
+  }, []);
+
   useEffect(() => {
     fetch("/api/admin/athletes")
       .then(r => r.json())
@@ -232,7 +236,7 @@ export default function AthletesPage() {
           body: JSON.stringify({ action: "revoke_connection", connectionId }),
         });
         const data = await r.json();
-        if (data.success) { showMsg("Connexion révoquée."); if (selected) loadDetail(selected); }
+        if (data.success) { showMsg("Connexion révoquée."); reloadList(); if (selected) loadDetail(selected); }
         else showMsg(`Erreur : ${data.error}`);
       } catch { showMsg("Erreur réseau."); }
       setConfirmModal(null);
@@ -248,7 +252,7 @@ export default function AthletesPage() {
           body: JSON.stringify({ action: "disconnect_all_sessions", athleteId: selected?.id }),
         });
         const data = await r.json();
-        if (data.success) { showMsg("Toutes les sessions révoquées."); if (selected) loadDetail(selected); }
+        if (data.success) { showMsg("Toutes les sessions révoquées."); reloadList(); if (selected) loadDetail(selected); }
         else showMsg(`Erreur : ${data.error}`);
       } catch { showMsg("Erreur réseau."); }
       setConfirmModal(null);
@@ -310,7 +314,7 @@ export default function AthletesPage() {
     openConfirm(title, message, async (reason) => {
       try {
         const d = await callAction({ action, athleteUserId: detail.athleteUserId, ...(reason ? { reason } : {}) });
-        if (d.success) { showMsg(d.message); if (selected) loadDetail(selected); }
+        if (d.success) { showMsg(d.message); reloadList(); if (selected) loadDetail(selected); }
         else showMsg(`Erreur : ${d.error}`);
       } catch { showMsg("Erreur réseau."); }
       setConfirmModal(null);
@@ -358,9 +362,9 @@ export default function AthletesPage() {
       <div className="admin-stats-row" style={{ marginBottom: "1.25rem" }}>
         <Stat icon={SVG.users} label="Athlètes actifs" value={loading ? "..." : stats.total ?? 0} sub={stats.todayCount > 0 ? `+${stats.todayCount} aujourd'hui` : undefined} color="#2563eb" />
         <Stat icon={SVG.shield} label="Comptes non vérifiés" value={loading ? "..." : stats.unverified ?? 0} color="#f59e0b" />
-        <Stat icon={SVG.ticket} label="Tickets ouverts" value={loading ? "..." : 0} sub="+0 vs hier" color="#8b5cf6" />
-        <Stat icon={SVG.export} label="Exports demandés" value={loading ? "..." : stats.exportRequests ?? 0} color="#06b6d4" />
-        <Stat icon={SVG.trash} label="Suppressions demandées" value={loading ? "..." : stats.deletionRequests ?? 0} color="#ec4899" />
+        <Stat icon={SVG.ticket} label="Tickets ouverts" value={loading ? "..." : stats.openTickets ?? 0} color="#8b5cf6" />
+        <Stat icon={SVG.wallet} label="Paiements échoués" value={loading ? "..." : stats.failedPayments ?? 0} color="#dc2626" />
+        <Stat icon={SVG.trash} label="Comptes supprimés" value={loading ? "..." : stats.deletionRequests ?? 0} color="#ec4899" />
         <Stat icon={SVG.alert} label="Risque élevé" value={loading ? "..." : stats.riskHigh ?? 0} color="#ef4444" />
       </div>
 
@@ -400,7 +404,8 @@ export default function AthletesPage() {
                 onClick={() => {
                   setLoading(true);
                   setSelected(null); setDetail(null);
-                  fetch("/api/admin/athletes").then(r => r.json()).then(setData).catch(() => {}).finally(() => setLoading(false));
+                  reloadList();
+                  setTimeout(() => setLoading(false), 500);
                   showMsg("Données actualisées.");
                 }}
                 title="Actualiser les données"
@@ -457,7 +462,7 @@ export default function AthletesPage() {
 
           {/* Footer */}
           <div style={{ padding: "0.5rem 0.75rem", borderTop: "1px solid #f1f5f9", fontSize: "0.68rem", color: "#94a3b8" }}>
-            Affichage de 1 à {Math.min(filtered.length, 12)} sur {filtered.length} athlètes
+            {filtered.length} athlète{filtered.length !== 1 ? "s" : ""} affiché{filtered.length !== 1 ? "s" : ""}
           </div>
         </div>
 
@@ -544,23 +549,53 @@ export default function AthletesPage() {
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
                       <div>
                         <SectionTitle>Aperçu du compte</SectionTitle>
-                        <DRow label="Membre depuis le" value={fmtDate(detail.createdAt)} />
-                        <DRow label="Statut du compte" value={
-                          detail.accountStatus === "suspended" ? "Suspendu" :
-                          detail.accountStatus === "restricted" ? "Restreint" :
-                          detail.accountStatus === "deleted" ? "Supprimé" : "Actif"
-                        } accent />
-                        <DRow label="Athlète actif" value={detail.athletes?.some((a: any) => a.status === "active") ? "Oui" : "Non"} />
-                        <DRow label="Pros de santé liés" value={detail.athletes?.length ?? 0} accent />
-                        <DRow label="Documents partagés" value={detail.athleteDocsSent?.length ?? 0} accent />
-                        <DRow label="Consentements à jour" value={detail.acceptedCguAt ? "Oui" : "Non"} />
+                        {(() => {
+                          const sessions = detail.authSessions ?? [];
+                          const docs = detail.athleteDocsSent ?? [];
+                          const connections = detail.athletes ?? [];
+                          const now = Date.now();
+                          const d30 = 30 * 24 * 60 * 60 * 1000;
+                          const d7 = 7 * 24 * 60 * 60 * 1000;
+                          const activeSessions = sessions.filter((s: any) => !s.revoked && new Date(s.expiresAt) > new Date());
+                          const sessions30d = sessions.filter((s: any) => now - new Date(s.createdAt).getTime() < d30).length;
+                          const activePros = connections.filter((c: any) => c.status === "active").length;
+                          const docs7d = docs.filter((d: any) => now - new Date(d.createdAt).getTime() < d7).length;
+                          const docsDeleted = docs.filter((d: any) => d.deletedAt).length;
+                          const daysSinceCreation = Math.max(1, Math.floor((now - new Date(detail.createdAt).getTime()) / (24 * 60 * 60 * 1000)));
+                          const activityRate = Math.min(100, Math.round((sessions.length / Math.min(daysSinceCreation, 90)) * 100));
+                          return (
+                            <>
+                              <DRow label="Membre depuis le" value={fmtDate(detail.createdAt)} />
+                              <DRow label="Statut du compte" value={
+                                detail.accountStatus === "suspended" ? "Suspendu" :
+                                detail.accountStatus === "restricted" ? "Restreint" :
+                                detail.accountStatus === "deleted" ? "Supprimé" : "Actif"
+                              } accent />
+                              <DRow label="Taux d'activité" value={`${activityRate}%`} />
+                              <DRow label="Connexions (30j)" value={String(sessions30d)} />
+                              <DRow label="Pros actifs" value={`${activePros} / ${connections.length}`} accent />
+                              <DRow label="Documents partagés" value={`${docs.length} (${docs7d} cette semaine)`} />
+                              <DRow label="Documents désactivés" value={String(docsDeleted)} accent={docsDeleted > 0} />
+                              <DRow label="Consentements à jour" value={detail.acceptedCguAt ? "Oui" : "Non"} />
+                            </>
+                          );
+                        })()}
                       </div>
                       <div>
                         <SectionTitle>Sécurité du compte</SectionTitle>
-                        <DRow label="Dernière connexion" value={fmtDateTime(detail.authSessions?.[0]?.lastActiveAt)} />
-                        <DRow label="Appareils actifs" value={`${detail.authSessions?.filter((s: any) => !s.revoked).length ?? 0} appareils`} />
-                        <DRow label="MFA activée" value={detail.twoFactorEnabled ? "Oui" : "Non"} />
-                        <DRow label="Sessions actives" value={`${detail.authSessions?.filter((s: any) => !s.revoked && new Date(s.expiresAt) > new Date()).length ?? 0} sessions`} />
+                        {(() => {
+                          const sessions = detail.authSessions ?? [];
+                          const activeSessions = sessions.filter((s: any) => !s.revoked && new Date(s.expiresAt) > new Date());
+                          const uniqueIPs = new Set(sessions.map((s: any) => s.ip).filter(Boolean)).size;
+                          return (
+                            <>
+                              <DRow label="Dernière connexion" value={fmtDateTime(sessions[0]?.lastActiveAt)} />
+                              <DRow label="Sessions actives" value={`${activeSessions.length} session${activeSessions.length !== 1 ? "s" : ""}`} />
+                              <DRow label="Appareils distincts" value={`${uniqueIPs} IP${uniqueIPs !== 1 ? "s" : ""}`} accent={uniqueIPs > 5} />
+                              <DRow label="MFA activée" value={detail.twoFactorEnabled ? "Oui" : "Non"} accent={!detail.twoFactorEnabled} />
+                            </>
+                          );
+                        })()}
                         <div style={{ marginTop: "0.75rem" }}>
                           <ActBtn label="Déconnecter tous les appareils" icon={SVG.logout} danger onClick={handleDisconnectAll} />
                         </div>
@@ -691,7 +726,11 @@ export default function AthletesPage() {
                                   <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap" }}>
                                     <ActBtn label="Permissions" icon={SVG.eye} onClick={() => handlePermissions(a.id)} />
                                     <ActBtn label="Révoquer" icon={SVG.unlink} danger onClick={() => handleRevoke(a.id, `${a.professionnel?.prenom} ${a.professionnel?.nom}`)} />
-                                    <ActBtn label="Renvoyer invitation" icon={SVG.send} onClick={() => showMsg("Invitation renvoyée (simulé).")} />
+                                    <ActBtn label="Renvoyer invitation" icon={SVG.send} onClick={async () => {
+                                      const d = await callAction({ action: "resend_invitation", connectionId: a.id });
+                                      if (d.success) showMsg(d.message);
+                                      else showMsg(`Erreur : ${d.error}`);
+                                    }} />
                                   </div>
                                 </td>
                               </tr>

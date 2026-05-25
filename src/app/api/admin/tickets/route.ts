@@ -64,10 +64,10 @@ export async function GET(req: NextRequest) {
       },
     }),
     Promise.all([
-      (prisma as any).supportTicket.count({ where: { status: "open" } }),
+      (prisma as any).supportTicket.count({ where: { status: { in: ["open", "new"] } } }),
       (prisma as any).supportTicket.count({ where: { status: "in_progress" } }),
       (prisma as any).supportTicket.count({ where: { status: "blocked" } }),
-      (prisma as any).supportTicket.count({ where: { priority: "urgent" } }),
+      (prisma as any).supportTicket.count({ where: { priority: { in: ["urgent", "p0", "p1"] } } }),
       (prisma as any).investigation.count({ where: { status: { in: ["open", "in_progress", "pending_info"] } } }),
     ]),
   ]);
@@ -180,17 +180,71 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ success: true, investigation, message: "Investigation mise à jour." });
       }
 
-      // ── Notify DPO (marks timestamp) ──
+      // ── Notify DPO (marks timestamp + sends email) ──
       case "notify_dpo": {
         const { investigationId } = body;
         if (!investigationId) return NextResponse.json({ error: "investigationId requis." }, { status: 400 });
-        await (prisma as any).investigation.update({
+        const inv = await (prisma as any).investigation.update({
           where: { id: investigationId },
           data: { dpoNotifiedAt: new Date(), actionsTaken: { push: "dpo_notified" } },
         });
-        // In production: send email to DPO here
+        // Send DPO notification email
+        try {
+          const { sendAdminActionEmail } = await import("@/lib/email");
+          await sendAdminActionEmail({
+            to: process.env.DPO_EMAIL ?? "dpo@tuatha-app.com",
+            prenom: "DPO",
+            actionTitle: "Investigation ouverte — Notification DPO",
+            actionDescription: `Une investigation nécessite votre attention : "${inv.title}". Veuillez consulter le panneau d'administration pour les détails et actions requises.`,
+            actionColor: "#7c3aed",
+            details: [
+              { label: "ID", value: investigationId.slice(0, 8) },
+              { label: "Type", value: inv.type },
+              { label: "Sévérité", value: inv.severity },
+            ],
+          });
+        } catch (emailErr) {
+          console.error("[DPO] Email notification error:", emailErr);
+        }
         console.log(`[DPO] Notification sent for investigation ${investigationId} at ${new Date().toISOString()}`);
-        return NextResponse.json({ success: true, message: "DPO notifié." });
+        return NextResponse.json({ success: true, message: "DPO notifié par email." });
+      }
+
+      // ── Notify user concerned by the investigation ──
+      case "notify_user": {
+        const { investigationId } = body;
+        if (!investigationId) return NextResponse.json({ error: "investigationId requis." }, { status: 400 });
+        const inv = await (prisma as any).investigation.findUnique({
+          where: { id: investigationId },
+          include: {
+            professionnel: { select: { email: true, prenom: true } },
+            athleteUser: { select: { email: true, prenom: true } },
+          },
+        });
+        if (!inv) return NextResponse.json({ error: "Investigation introuvable." }, { status: 404 });
+        const userEmail = inv.professionnel?.email ?? inv.athleteUser?.email;
+        const userPrenom = inv.professionnel?.prenom ?? inv.athleteUser?.prenom ?? "Utilisateur";
+        if (!userEmail) return NextResponse.json({ error: "Aucun email utilisateur trouvé." }, { status: 400 });
+        await (prisma as any).investigation.update({
+          where: { id: investigationId },
+          data: { userNotifiedAt: new Date(), actionsTaken: { push: "user_notified" } },
+        });
+        try {
+          const { sendAdminActionEmail } = await import("@/lib/email");
+          await sendAdminActionEmail({
+            to: userEmail,
+            prenom: userPrenom,
+            actionTitle: "Notification concernant votre compte",
+            actionDescription: "Une vérification est en cours concernant votre compte Tuatha. Notre équipe de conformité vous contactera si des informations supplémentaires sont nécessaires. En attendant, votre accès reste inchangé.",
+            actionColor: "#0891b2",
+            details: [
+              { label: "Référence", value: investigationId.slice(0, 8) },
+            ],
+          });
+        } catch (emailErr) {
+          console.error("[Investigation] User notification email error:", emailErr);
+        }
+        return NextResponse.json({ success: true, message: "Utilisateur notifié par email." });
       }
 
       default:

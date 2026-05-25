@@ -81,26 +81,84 @@ function getSharedTypes(share: any): string {
 }
 
 function exportConsentProof(detail: any) {
-  const proof = {
-    id: detail.id,
-    type: "consent_proof",
-    athlete: { name: athleteName(detail), email: detail.athleteUser?.email },
-    professionnel: { name: proName(detail), email: detail.professionnel?.email, specialite: detail.professionnel?.specialite },
-    status: detail.status,
-    requestedBy: detail.requestedBy,
-    createdAt: detail.createdAt,
-    respondedAt: detail.respondedAt,
-    athlete_consent: detail.athlete?.consentement ?? false,
-    athlete_consent_date: detail.athlete?.consentementDate ?? null,
-    exportedAt: new Date().toISOString(),
-  };
-  const blob = new Blob([JSON.stringify(proof, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `preuve-consentement-${detail.id.slice(0, 8)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  const fmtDate = (d: string | null) => d ? new Date(d).toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "—";
+  const statusLabel: Record<string, string> = { accepted: "Accepté", pending: "En attente", rejected: "Refusé", revoked: "Révoqué" };
+  const html = `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="utf-8"><title>Preuve de consentement</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;padding:40px 50px;color:#1e293b;font-size:13px;line-height:1.6}
+  .header{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #f47b20;padding-bottom:16px;margin-bottom:32px}
+  .logo{font-size:22px;font-weight:800;color:#f47b20}
+  .subtitle{font-size:11px;color:#64748b}
+  h1{font-size:18px;font-weight:700;margin-bottom:8px;color:#0f172a}
+  .badge{display:inline-block;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
+  .section{margin-bottom:24px}
+  .section-title{font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:#94a3b8;font-weight:600;margin-bottom:8px;border-bottom:1px solid #f1f5f9;padding-bottom:4px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .field{margin-bottom:10px}
+  .field-label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px}
+  .field-value{font-size:13px;color:#1e293b;font-weight:500}
+  .footer{margin-top:40px;padding-top:16px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;text-align:center}
+  .stamp{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 16px;margin-top:24px;text-align:center}
+  .stamp-title{font-size:11px;font-weight:700;color:#16a34a}
+  @media print{body{padding:20px 30px}}
+</style></head>
+<body>
+  <div class="header">
+    <div><div class="logo">Tuatha</div><div class="subtitle">Plateforme de suivi interprofessionnel</div></div>
+    <div style="text-align:right"><div style="font-size:11px;color:#64748b">Preuve de consentement</div><div style="font-size:10px;color:#94a3b8">ID: ${detail.id.slice(0, 8)}</div></div>
+  </div>
+  <h1>Attestation de consentement de partage de données</h1>
+  <p style="color:#64748b;margin-bottom:24px;font-size:12px">Document généré automatiquement — valeur probante conformément au RGPD (Art. 7)</p>
+
+  <div class="section">
+    <div class="section-title">Athlète (personne concernée)</div>
+    <div class="grid">
+      <div class="field"><div class="field-label">Nom</div><div class="field-value">${athleteName(detail)}</div></div>
+      <div class="field"><div class="field-label">Email</div><div class="field-value">${detail.athleteUser?.email ?? "—"}</div></div>
+      <div class="field"><div class="field-label">Consentement général</div><div class="field-value">${detail.athlete?.consentement ? "✓ Accordé" : "✗ Non accordé"}</div></div>
+      <div class="field"><div class="field-label">Date consentement</div><div class="field-value">${fmtDate(detail.athlete?.consentementDate)}</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Professionnel (destinataire)</div>
+    <div class="grid">
+      <div class="field"><div class="field-label">Nom</div><div class="field-value">${proName(detail)}</div></div>
+      <div class="field"><div class="field-label">Email</div><div class="field-value">${detail.professionnel?.email ?? "—"}</div></div>
+      <div class="field"><div class="field-label">Spécialité</div><div class="field-value">${detail.professionnel?.specialite ?? "—"}</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Détails du consentement</div>
+    <div class="grid">
+      <div class="field"><div class="field-label">Statut</div><div class="field-value">${statusLabel[detail.status] ?? detail.status}</div></div>
+      <div class="field"><div class="field-label">Initié par</div><div class="field-value">${detail.requestedBy === "athlete" ? "Athlète" : "Professionnel"}</div></div>
+      <div class="field"><div class="field-label">Date de la demande</div><div class="field-value">${fmtDate(detail.createdAt)}</div></div>
+      <div class="field"><div class="field-label">Date de réponse</div><div class="field-value">${fmtDate(detail.respondedAt)}</div></div>
+    </div>
+  </div>
+
+  <div class="stamp">
+    <div class="stamp-title">✓ Document certifié conforme</div>
+    <div style="font-size:10px;color:#64748b;margin-top:4px">Exporté le ${new Date().toLocaleString("fr-FR")} — Réf. ${detail.id}</div>
+  </div>
+
+  <div class="footer">
+    <p>Tuatha SAS — France — Ce document atteste de la traçabilité du consentement conformément au Règlement Général sur la Protection des Données (UE 2016/679).</p>
+    <p style="margin-top:4px">Document non modifiable — Toute altération invalide cette attestation.</p>
+  </div>
+</body></html>`;
+
+  const printWindow = window.open("", "_blank");
+  if (printWindow) {
+    printWindow.document.write(html);
+    printWindow.document.close();
+    setTimeout(() => printWindow.print(), 300);
+  }
 }
 
 // ─── Page ───────────────────────────────────────────────────────────────────────
@@ -241,6 +299,8 @@ export default function ConsentsPage() {
             <span>Athlète</span>
             <span>Professionnel</span>
             <span>Type données</span>
+            <span>Demandé par</span>
+            <span>Accepté par</span>
             <span>Début</span>
             <span>Fin</span>
             <span>Statut</span>
@@ -257,6 +317,8 @@ export default function ConsentsPage() {
                 <span style={{ fontWeight: 600 }}>{athleteName(s)}</span>
                 <span>{proName(s)}</span>
                 <span style={{ fontSize: "0.65rem", color: "#475569" }}>{getSharedTypes(s)}</span>
+                <span style={{ fontSize: "0.65rem" }}>{s.requestedBy === "athlete" ? "Athlète" : "Professionnel"}</span>
+                <span style={{ fontSize: "0.65rem" }}>{s.status === "accepted" ? (s.requestedBy === "athlete" ? "Professionnel" : "Athlète") : "—"}</span>
                 <span>{fmtDate(s.createdAt)}</span>
                 <span>Non définie</span>
                 <Badge text={st.label} color={st.color} bg={st.bg} />
@@ -328,12 +390,12 @@ export default function ConsentsPage() {
                     <SectionTitle>Informations de consentement</SectionTitle>
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                       <InfoRow label="Consentement santé" value={detail.athlete?.consentement ? "Actif" : "Non"} accent={!detail.athlete?.consentement} />
-                      <InfoRow label="Type de partage" value="Explicite" />
-                      <InfoRow label="Source" value="Validation in-app" />
+                      <InfoRow label="Type de partage" value={detail.requestedBy === "athlete" ? "Initié par l'athlète" : "Initié par le professionnel"} />
+                      <InfoRow label="Source" value={detail.athleteConsents?.length > 0 ? (detail.athleteConsents[0].method === "digital" ? "Signature numérique" : "Validation in-app") : "Validation in-app (connexion)"} />
                       <InfoRow label="Date de validation" value={fmtDate(detail.respondedAt ?? detail.createdAt)} />
                       <InfoRow label="Dernière mise à jour" value={fmtDate(detail.respondedAt ?? detail.createdAt)} />
                       <InfoRow label="Expiration" value="Non définie" />
-                      <InfoRow label="Preuve disponible" value="Oui" />
+                      <InfoRow label="Preuve disponible" value={detail.respondedAt ? "Oui" : "Non (en attente)"} accent={!detail.respondedAt} />
                     </div>
                   </div>
 
@@ -343,7 +405,7 @@ export default function ConsentsPage() {
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                       <ActionBtn icon={Icons.history("#2563eb")} label="Voir historique" color="#2563eb" onClick={() => setDetailTab(1)} />
                       {detail.status === "accepted" && <ActionBtn icon={Icons.pause("#d97706")} label="Suspendre partage" color="#d97706" onClick={() => handleSuspend(detail.id)} />}
-                      {detail.status === "pending" && <ActionBtn icon={Icons.play("#16a34a")} label="Réactiver le partage" color="#16a34a" onClick={() => handleReactivate(detail.id)} />}
+                      {(detail.status === "pending" || detail.status === "rejected") && <ActionBtn icon={Icons.play("#16a34a")} label="Réactiver le partage" color="#16a34a" onClick={() => handleReactivate(detail.id)} />}
                       <ActionBtn icon={Icons.download("#16a34a")} label="Exporter preuve de consentement" color="#16a34a" onClick={() => { exportConsentProof(detail); showMsg("Preuve téléchargée."); }} />
                       {detail.status !== "rejected" && (
                         <div>
@@ -412,12 +474,13 @@ export default function ConsentsPage() {
                   <SectionTitle>Preuve de consentement</SectionTitle>
                   <div style={{ background: "#f8fafc", borderRadius: "10px", padding: "1rem", border: "1px solid #e2e8f0" }}>
                     <div className="admin-detail-grid-2">
-                      <InfoRow label="Horodatage" value={fmtDateTime(detail.createdAt)} />
+                      <InfoRow label="Horodatage" value={fmtDateTime(detail.respondedAt ?? detail.createdAt)} />
                       <InfoRow label="Version" value={detail.athleteConsents?.[0]?.documentVersion ?? "v1.0"} />
-                      <InfoRow label="Validé par" value={athleteName(detail)} />
-                      <InfoRow label="Méthode" value="Signature électronique (in-app)" />
+                      <InfoRow label="Validé par" value={detail.status === "accepted" ? (detail.requestedBy === "athlete" ? proName(detail) : athleteName(detail)) : "—"} />
+                      <InfoRow label="Méthode" value={detail.athleteConsents?.[0]?.method === "digital" ? "Signature numérique" : detail.athleteConsents?.[0]?.method ?? "Acceptation in-app"} />
                       <InfoRow label="ID Partage" value={detail.id} />
                       <InfoRow label="Demandé par" value={detail.requestedBy === "athlete" ? "Athlète" : "Professionnel"} />
+                      <InfoRow label="Accepté par" value={detail.status === "accepted" ? (detail.requestedBy === "athlete" ? "Professionnel" : "Athlète") : "—"} />
                     </div>
                     <div style={{ marginTop: "1rem" }}>
                       <button onClick={() => { exportConsentProof(detail); showMsg("Preuve téléchargée."); }} style={{ display: "flex", alignItems: "center", gap: "0.4rem", padding: "0.45rem 0.85rem", borderRadius: "8px", border: "1px solid #16a34a", background: "#f0fdf4", color: "#16a34a", fontSize: "0.72rem", fontWeight: 600, cursor: "pointer" }}>

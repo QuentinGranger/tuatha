@@ -1,5 +1,56 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendAdminActionEmail } from "@/lib/email";
+
+// ─── Resolve document owner email for notifications ─────────────────────────
+async function getOwnerEmail(docId: string, source: string): Promise<{ email: string; prenom: string } | null> {
+  try {
+    if (source === "verification") {
+      const doc = await (prisma as any).verificationDocument.findUnique({
+        where: { id: docId },
+        include: { professionnel: { select: { email: true, prenom: true } } },
+      });
+      return doc?.professionnel ? { email: doc.professionnel.email, prenom: doc.professionnel.prenom } : null;
+    }
+    if (source === "video") {
+      const doc = await (prisma as any).athleteVideo.findUnique({
+        where: { id: docId },
+        include: { professionnel: { select: { email: true, prenom: true } } },
+      });
+      return doc?.professionnel ? { email: doc.professionnel.email, prenom: doc.professionnel.prenom } : null;
+    }
+    // SharedDocument — owner is senderPro
+    const doc = await (prisma as any).sharedDocument.findUnique({
+      where: { id: docId },
+      include: { senderPro: { select: { email: true, prenom: true } } },
+    });
+    return doc?.senderPro ? { email: doc.senderPro.email, prenom: doc.senderPro.prenom } : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Fire-and-forget email notification — never blocks the action */
+function notifyOwner(
+  docId: string,
+  source: string,
+  actionTitle: string,
+  actionDescription: string,
+  actionColor: string,
+  details: { label: string; value: string }[] = [],
+) {
+  getOwnerEmail(docId, source).then(owner => {
+    if (!owner) return;
+    sendAdminActionEmail({
+      to: owner.email,
+      prenom: owner.prenom,
+      actionTitle,
+      actionDescription,
+      actionColor,
+      details,
+    }).catch(err => console.error("[Documents] Email notification error:", err));
+  });
+}
 
 // ─── GET: List documents + KPIs ──────────────────────────────────────────────
 export async function GET(req: NextRequest) {
@@ -176,13 +227,13 @@ export async function POST(req: NextRequest) {
 
   switch (action) {
     case "rescan": {
-      // Simulate relaunching antivirus scan (mark as pending analysis)
       if (source === "verification") {
         await (prisma as any).verificationDocument.update({
           where: { id: docId },
           data: { aiVerified: null, aiConfidence: null, aiSummary: null },
         });
       }
+      notifyOwner(docId, source, "Scan antivirus relancé", "Un scan antivirus a été relancé sur l'un de vos documents par l'équipe Tuatha. Si des problèmes sont détectés, vous en serez informé.", "#2563eb", [{ label: "Document", value: docId.slice(0, 8) }]);
       return NextResponse.json({ success: true, message: "Scan antivirus relancé." });
     }
     case "quarantine": {
@@ -193,12 +244,14 @@ export async function POST(req: NextRequest) {
       } else {
         await (prisma as any)[table].update({ where: { id: docId }, data: { deletedAt: new Date(), deletedBy: "admin" } });
       }
+      notifyOwner(docId, source, "Document mis en quarantaine", "L'un de vos documents a été placé en quarantaine par l'équipe de sécurité Tuatha. Le fichier n'est plus accessible en téléchargement. Si vous pensez qu'il s'agit d'une erreur, contactez le support.", "#d97706", [{ label: "Document", value: docId.slice(0, 8) }, { label: "Raison", value: "Décision administrative" }]);
       return NextResponse.json({ success: true, message: "Document mis en quarantaine." });
     }
     case "block_download": {
       // Mark document as blocked (soft-delete as blocking mechanism)
       const table = source === "video" ? "athleteVideo" : "sharedDocument";
       await (prisma as any)[table].update({ where: { id: docId }, data: { deletedAt: new Date(), deletedBy: "admin_block" } });
+      notifyOwner(docId, source, "Téléchargement bloqué", "Le téléchargement de l'un de vos documents a été bloqué par l'équipe de sécurité Tuatha. Si vous pensez qu'il s'agit d'une erreur, contactez le support.", "#dc2626", [{ label: "Document", value: docId.slice(0, 8) }]);
       return NextResponse.json({ success: true, message: "Téléchargement bloqué." });
     }
     case "delete": {
@@ -210,11 +263,13 @@ export async function POST(req: NextRequest) {
       } else {
         await (prisma as any)[table].update({ where: { id: docId }, data: { deletedAt: new Date(), deletedBy: `admin:${reason}` } });
       }
+      notifyOwner(docId, source, "Document supprimé", `L'un de vos documents a été supprimé par l'équipe Tuatha conformément à la procédure en vigueur. Motif : ${reason}`, "#64748b", [{ label: "Document", value: docId.slice(0, 8) }, { label: "Motif", value: reason }]);
       return NextResponse.json({ success: true, message: "Document supprimé selon procédure." });
     }
     case "restore": {
       const table = source === "video" ? "athleteVideo" : "sharedDocument";
       await (prisma as any)[table].update({ where: { id: docId }, data: { deletedAt: null, deletedBy: null } });
+      notifyOwner(docId, source, "Document restauré", "L'un de vos documents précédemment restreint a été restauré par l'équipe Tuatha. Vous pouvez à nouveau y accéder normalement.", "#16a34a", [{ label: "Document", value: docId.slice(0, 8) }]);
       return NextResponse.json({ success: true, message: "Document restauré." });
     }
     default:
