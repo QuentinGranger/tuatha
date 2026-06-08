@@ -231,7 +231,7 @@ export async function GET(req: NextRequest) {
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
     // Fetch all Athlete records (pro-created) with their linked pro and optional user account
-    const [allAthletes, totalUsers, unverifiedUsers, failedPayments, riskHigh, openTicketsCount, deletionRequests, exportRequests] = await Promise.all([
+    const [allAthletes, totalUsers, unverifiedUsers, failedPayments, riskHigh, openTicketsCount, deletionRequests, exportRequests, failedPaymentUsers] = await Promise.all([
       (prisma as any).athlete.findMany({
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
@@ -258,10 +258,16 @@ export async function GET(req: NextRequest) {
       (prisma as any).athleteUser.count(),
       (prisma as any).athleteUser.count({ where: { emailVerified: false } }),
       (prisma as any).payment.count({ where: { status: "payment_failed" } }),
-      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "SecurityAlert" WHERE resolved = false`.then((r: any) => r[0]?.c ?? 0),
+      (prisma as any).athlete.count({ where: { riskLevel: { in: ["HIGH", "CRITICAL"] }, deletedAt: null } }).catch(() => 0),
       (prisma as any).supportTicket.count({ where: { status: { in: ["open", "in_progress"] }, createdByRole: "athlete" } }),
       (prisma as any).athleteUser.count({ where: { accountStatus: "deleted" } }),
       (prisma as any).athleteUser.count({ where: { accountStatus: { in: ["export_requested", "deletion_requested"] } } }).catch(() => 0),
+      // Get athlete user IDs with failed payments for per-athlete flag
+      (prisma as any).payment.findMany({
+        where: { status: "payment_failed" },
+        select: { athleteUserId: true },
+        distinct: ["athleteUserId"],
+      }).then((ps: any[]) => new Set(ps.map((p: any) => p.athleteUserId).filter(Boolean))).catch(() => new Set()),
     ]);
 
     // Also get AthleteUser records that are NOT linked to any Athlete (standalone accounts)
@@ -307,7 +313,7 @@ export async function GET(req: NextRequest) {
         proCount,
         docCount: a.sharedDocs?.length ?? 0,
         consentCount: (a.consentement ? 1 : 0) + (a.consentementPartage ? 1 : 0),
-        hasFailedPayment: false,
+        hasFailedPayment: a.athleteUserId ? (failedPaymentUsers as Set<string>).has(a.athleteUserId) : false,
         riskLevel: riskLabel,
         statusKey,
         openTickets: ticketMap.get(a.athleteUserId ?? a.id) ?? 0,
@@ -330,7 +336,7 @@ export async function GET(req: NextRequest) {
         proCount: 0,
         docCount: 0,
         consentCount: 0,
-        hasFailedPayment: false,
+        hasFailedPayment: (failedPaymentUsers as Set<string>).has(u.id),
         riskLevel: "Normal",
         statusKey: u.emailVerified ? "Actif" : "Non vérifié",
         openTickets: ticketMap.get(u.id) ?? 0,

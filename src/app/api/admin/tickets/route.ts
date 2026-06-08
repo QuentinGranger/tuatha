@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
       (prisma as any).supportTicket.count({ where: { status: { in: ["open", "new"] } } }),
       (prisma as any).supportTicket.count({ where: { status: "in_progress" } }),
       (prisma as any).supportTicket.count({ where: { status: "blocked" } }),
-      (prisma as any).supportTicket.count({ where: { priority: { in: ["urgent", "p0", "p1"] } } }),
+      (prisma as any).supportTicket.count({ where: { priority: { in: ["urgent", "p0", "p1"] }, status: { notIn: ["resolved", "closed"] } } }),
       (prisma as any).investigation.count({ where: { status: { in: ["open", "in_progress", "pending_info"] } } }),
     ]),
   ]);

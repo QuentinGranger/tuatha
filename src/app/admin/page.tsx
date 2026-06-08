@@ -79,7 +79,7 @@ export default function AdminCommandCenter() {
         <Col title="Santé plateforme">
           <Row label="Utilisateurs actifs aujourd'hui" val={loading ? "..." : v("sessions.active")} />
           <Row label="Inscriptions du jour" val={loading ? "..." : String(Number(v("users.prosToday")) + Number(v("users.athletesToday")))} />
-          <Row label="Connexions échouées" val={loading ? "..." : v("billing.failedPayments")} />
+          <Row label="Paiements échoués" val={loading ? "..." : v("billing.failedPayments")} badge={Number(v("billing.failedPayments")) > 0 ? "orange" : "green"} />
           <Row label="Erreurs API (24h)" val={loading ? "..." : v("security.apiErrors24h")} badge={Number(v("security.apiErrors24h")) > 0 ? "orange" : "green"} />
           <Row label="Temps moyen réponse" val={loading ? "..." : `${v("health.avgResponseTime")} ms`} />
           <Row label="Disponibilité" val={loading ? "..." : (v("health.dbStatus") === "healthy" ? "OK" : v("health.dbStatus") === "unknown" ? "Inconnu" : "Dégradé")} badge={v("health.dbStatus") === "healthy" ? "green" : v("health.dbStatus") === "unknown" ? undefined : "orange"} />

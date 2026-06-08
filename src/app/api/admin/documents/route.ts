@@ -86,9 +86,15 @@ export async function GET(req: NextRequest) {
         downloads: 0,
         lastAccess: null,
         risk: vDoc.aiVerified === false ? "eleve" : "faible",
+        aiConfidence: vDoc.aiConfidence ?? null,
+        aiSummary: vDoc.aiSummary ?? null,
         accessHistory: [],
       });
     }
+
+    const isBigFile = doc.size > 10 * 1024 * 1024;
+    const isAdminDeleted = doc.deletedAt && doc.deletedBy?.includes("admin");
+    const docRisk = isAdminDeleted ? "eleve" : isBigFile ? "moyen" : "faible";
 
     return NextResponse.json({
       ...doc,
@@ -99,7 +105,7 @@ export async function GET(req: NextRequest) {
       visibility: doc.receiverProId ? "Pro partagé" : doc.receiverAthleteId ? "Athlète" : "Espace professionnel",
       downloads: doc.readAt ? 1 : 0,
       lastAccess: doc.readAt,
-      risk: "faible",
+      risk: docRisk,
       accessHistory: [
         ...(doc.readAt ? [{ user: doc.receiverPro ? `${doc.receiverPro.prenom} ${doc.receiverPro.nom}` : doc.receiverAthlete?.name ?? "—", date: doc.readAt, action: "Consultation", result: "Autorisé" }] : []),
         { user: `${doc.senderPro.prenom} ${doc.senderPro.nom}`, date: doc.createdAt, action: "Upload", result: "Autorisé" },
@@ -142,23 +148,28 @@ export async function GET(req: NextRequest) {
 
   // Normalize all into unified format
   const documents = [
-    ...sharedDocs.map((d: any) => ({
-      id: d.id,
-      originalName: d.originalName,
-      owner: `${d.senderPro.prenom} ${d.senderPro.nom}`,
-      ownerRole: "Pro",
-      type: d.mimeType,
-      category: d.category,
-      size: d.size,
-      createdAt: d.createdAt,
-      antivirus: d.deletedAt ? "supprime" : "sain",
-      visibility: d.receiverProId ? "Pro partagé" : d.receiverAthleteId ? "Athlète" : "Espace pro",
-      downloads: d.readAt ? 1 : 0,
-      lastAccess: d.readAt,
-      risk: "faible",
-      deletedAt: d.deletedAt,
-      source: "document",
-    })),
+    ...sharedDocs.map((d: any) => {
+      const isBigFile = d.size > 10 * 1024 * 1024; // > 10 MB
+      const isDeleted = !!d.deletedAt;
+      const risk = isDeleted && d.deletedBy?.includes("admin") ? "eleve" : isBigFile ? "moyen" : "faible";
+      return {
+        id: d.id,
+        originalName: d.originalName,
+        owner: `${d.senderPro.prenom} ${d.senderPro.nom}`,
+        ownerRole: "Pro",
+        type: d.mimeType,
+        category: d.category,
+        size: d.size,
+        createdAt: d.createdAt,
+        antivirus: isDeleted ? "supprime" : "sain",
+        visibility: d.receiverProId ? "Pro partagé" : d.receiverAthleteId ? "Athlète" : "Espace pro",
+        downloads: d.readAt ? 1 : 0,
+        lastAccess: d.readAt,
+        risk,
+        deletedAt: d.deletedAt,
+        source: "document",
+      };
+    }),
     ...verDocs.map((d: any) => ({
       id: d.id,
       originalName: d.label,
@@ -200,8 +211,18 @@ export async function GET(req: NextRequest) {
   const pendingAntivirus = documents.filter(d => d.antivirus === "en_analyse").length;
   const blocked = documents.filter(d => d.antivirus === "bloque").length;
   const downloadsToday = documents.filter(d => d.lastAccess && new Date(d.lastAccess) >= todayStart).length;
-  const accessDenied = 0; // Would come from access logs if tracked
   const deleted = documents.filter(d => d.deletedAt).length;
+
+  // Access denied: count access logs where resource starts with 'document:' and action suggests denial
+  let accessDenied = 0;
+  try {
+    accessDenied = await (prisma as any).athleteAccessLog.count({
+      where: {
+        action: "delete_document",
+        createdAt: { gte: sevenDaysAgo },
+      },
+    });
+  } catch { /* table may not have data yet */ }
 
   return NextResponse.json({
     documents,

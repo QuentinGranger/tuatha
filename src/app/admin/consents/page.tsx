@@ -475,7 +475,7 @@ export default function ConsentsPage() {
                   <div style={{ background: "#f8fafc", borderRadius: "10px", padding: "1rem", border: "1px solid #e2e8f0" }}>
                     <div className="admin-detail-grid-2">
                       <InfoRow label="Horodatage" value={fmtDateTime(detail.respondedAt ?? detail.createdAt)} />
-                      <InfoRow label="Version" value={detail.athleteConsents?.[0]?.documentVersion ?? "v1.0"} />
+                      <InfoRow label="Version" value={detail.athleteConsents?.[0]?.documentVersion ?? "—"} />
                       <InfoRow label="Validé par" value={detail.status === "accepted" ? (detail.requestedBy === "athlete" ? proName(detail) : athleteName(detail)) : "—"} />
                       <InfoRow label="Méthode" value={detail.athleteConsents?.[0]?.method === "digital" ? "Signature numérique" : detail.athleteConsents?.[0]?.method ?? "Acceptation in-app"} />
                       <InfoRow label="ID Partage" value={detail.id} />

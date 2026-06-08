@@ -93,21 +93,21 @@ export async function GET() {
       prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "Investigation"`.then((r: any) => r[0]?.c ?? 0),
 
       // API Errors (45-46)
-      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "ApiErrorLog" WHERE "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => r[0]?.c ?? 0),
-      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "ApiErrorLog" WHERE "statusCode" = 403 AND "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => r[0]?.c ?? 0),
+      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "ApiErrorLog" WHERE "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => r[0]?.c ?? 0).catch(() => 0),
+      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "ApiErrorLog" WHERE "statusCode" = 403 AND "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => r[0]?.c ?? 0).catch(() => 0),
 
       // Request Performance (24h avg)
-      prisma.$queryRaw`SELECT AVG(duration) as avg FROM "RequestLog" WHERE "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => ({ _avg: { duration: Number(r[0]?.avg) || 0 } })),
+      prisma.$queryRaw`SELECT AVG(duration) as avg FROM "RequestLog" WHERE "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => ({ _avg: { duration: Number(r[0]?.avg) || 0 } })).catch(() => ({ _avg: { duration: 0 } })),
 
       // Backup status (last 24h)
-      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "BackupLog" WHERE "createdAt" >= ${twentyFourHoursAgo} AND status = 'success'`.then((r: any) => r[0]?.c ?? 0),
+      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "BackupLog" WHERE "createdAt" >= ${twentyFourHoursAgo} AND status = 'success'`.then((r: any) => r[0]?.c ?? 0).catch(() => 0),
 
       // Email status (24h)
-      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "EmailLog" WHERE "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => r[0]?.c ?? 0),
-      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "EmailLog" WHERE "createdAt" >= ${twentyFourHoursAgo} AND status IN ('bounced','failed')`.then((r: any) => r[0]?.c ?? 0),
+      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "EmailLog" WHERE "createdAt" >= ${twentyFourHoursAgo}`.then((r: any) => r[0]?.c ?? 0).catch(() => 0),
+      prisma.$queryRaw`SELECT COUNT(*)::int as c FROM "EmailLog" WHERE "createdAt" >= ${twentyFourHoursAgo} AND status IN ('bounced','failed')`.then((r: any) => r[0]?.c ?? 0).catch(() => 0),
 
       // Health checks (latest per service)
-      prisma.$queryRaw`SELECT DISTINCT ON (service) service, status, "responseTime" FROM "HealthCheckLog" WHERE "checkedAt" >= ${twentyFourHoursAgo} ORDER BY service, "checkedAt" DESC`.then((r: any) => r || []),
+      prisma.$queryRaw`SELECT DISTINCT ON (service) service, status, "responseTime" FROM "HealthCheckLog" WHERE "checkedAt" >= ${twentyFourHoursAgo} ORDER BY service, "checkedAt" DESC`.then((r: any) => r || []).catch(() => []),
     ]) as any[];
 
     // Unpack all metrics from results array

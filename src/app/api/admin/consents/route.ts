@@ -121,11 +121,14 @@ export async function GET(req: NextRequest) {
   const pending = shares.filter((s: any) => s.status === "pending").length;
 
   // Count health/marketing consents from AthleteConsent table
-  const [healthConsents, marketingConsents, recentRevocations] = await Promise.all([
+  const [healthConsents, marketingConsents, revokedConsents, revokedLogs, revokedConnections] = await Promise.all([
     (prisma as any).athleteConsent.count({ where: { consentType: "health_data", granted: true } }).catch(() => 0),
     (prisma as any).athleteConsent.count({ where: { consentType: "marketing", granted: true } }).catch(() => 0),
     (prisma as any).athleteConsent.count({ where: { action: "revoked", createdAt: { gte: yesterday } } }).catch(() => 0),
+    (prisma as any).consentLog.count({ where: { action: "revoked", createdAt: { gte: yesterday } } }).catch(() => 0),
+    (prisma as any).connectionRequest.count({ where: { status: "rejected", respondedAt: { gte: yesterday } } }).catch(() => 0),
   ]);
+  const recentRevocations = revokedConsents + revokedLogs + revokedConnections;
 
   // Health consents from Athlete table (consentement = health data consent)
   const healthFromAthletes = athleteRecords.filter((a: any) => a.consentement === true).length;

@@ -252,12 +252,13 @@ function DetailPanel({ detail, detailTab, setDetailTab, setDetail, setSelected, 
           <div>
             <SectionTitle>Antivirus & Sécurité</SectionTitle>
             <InfoRow label="Dernier scan" value={fmtDateTime(detail.updatedAt ?? detail.createdAt)} />
-            <InfoRow label="Moteur" value="ClamAV Enterprise" />
+            <InfoRow label="Moteur" value={detail.docType === "verification" ? "IA Tuatha (vérification)" : "Scan intégré Tuatha"} />
             <InfoRow label="Statut" value={STATUS_MAP[detail.antivirus]?.label ?? "—"} />
-            <InfoRow label="Hash (SHA-256)" value={`a9b2c3...${detail.id.slice(-8)}`} />
-            <InfoRow label="Anomalie" value="Aucune" />
+            <InfoRow label="ID fichier" value={detail.id} />
+            <InfoRow label="Anomalie" value={detail.antivirus === "bloque" ? "Fichier rejeté / suspect" : detail.antivirus === "quarantaine" ? "En quarantaine" : detail.antivirus === "en_analyse" ? "En attente d'analyse" : "Aucune détectée"} />
             <InfoRow label="Risque" value={RISK_MAP[detail.risk]?.label ?? "Faible"} />
             {detail.aiSummary && <div style={{ marginTop: "0.6rem", padding: "0.5rem", background: "#f8fafc", borderRadius: "8px", fontSize: "0.7rem", color: "#475569" }}><strong>IA:</strong> {detail.aiSummary}</div>}
+            {detail.aiConfidence != null && <InfoRow label="Confiance IA" value={`${Math.round(detail.aiConfidence * 100)}%`} />}
           </div>
         )}
         {detailTab === 3 && (
